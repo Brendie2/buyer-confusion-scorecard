@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The LinkedIn Buyer Confusion Scorecard — Brenda Blanche</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,900;1,400;1,600;1,900&family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#14100F;
+  --secondary:#F5EDE4;
+  --accent1:#E4007C;
+  --accent2:#9E0057;
+  --muted:#5a5f6e;
+  --border:rgba(245,237,228,0.08);
+  --border-strong:rgba(245,237,228,0.14);
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Space Grotesk',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--primary);color:var(--secondary);
+  font-family:var(--sans);font-weight:300;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;
+  position:relative;
+}
+/* Grain texture — static, ~3% opacity, never touches text contrast */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.hero-glow{
+  position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(circle at 72% 32%, rgba(228,0,124,0.16), transparent 45%);
+}
+.editorial-grid{
+  position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:repeating-linear-gradient(90deg, rgba(245,237,228,0.04) 0, rgba(245,237,228,0.04) 1px, transparent 1px, transparent calc(100%/12));
+}
+.screen{display:none;flex-direction:column;min-height:100vh;position:relative;z-index:2}
+.screen.active{display:flex;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes drawLine{from{width:0}to{width:32px}}
+
+/* ── SHARED ── */
+.site-nav{
+  position:sticky;top:0;z-index:20;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 44px;background:rgba(20,16,15,0.88);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border);
+}
+.site-nav-brand{
+  font-family:var(--mono);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--secondary);
+  cursor:pointer;
+}
+.site-nav-brand span{color:var(--accent1)}
+.site-nav-links{display:flex;align-items:center;gap:28px}
+.site-nav-link{
+  font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(245,237,228,0.5);text-decoration:none;cursor:pointer;transition:color .18s;background:none;border:none;
+}
+.site-nav-link:hover{color:var(--secondary)}
+.site-nav-cta{
+  font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  color:var(--accent1);border:1px solid var(--accent1);padding:8px 16px;text-decoration:none;
+  transition:all .18s;
+}
+.site-nav-cta:hover{background:var(--accent1);color:var(--secondary)}
+@media(max-width:640px){
+  .site-nav{padding:14px 20px}
+  .site-nav-links{gap:10px}
+  .site-nav-link{font-size:.44rem}
+  .site-nav-brand{font-size:.46rem}
+  .site-nav-cta{padding:6px 10px;font-size:.4rem}
+}
+/* Landing sections (on the cover screen) */
+.land-section{padding:3rem 44px;max-width:900px;width:100%;align-self:center;border-top:1px solid var(--border);opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.land-section.revealed{opacity:1;transform:none}
+.land-section.ivory{background:rgba(245,237,228,0.03)}
+.land-eyebrow{font-family:var(--mono);font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent1);margin-bottom:14px}
+.land-headline{font-family:var(--serif);font-weight:900;font-size:clamp(1.5rem,3.4vw,2.4rem);line-height:1.15;letter-spacing:-.01em;margin-bottom:16px}
+.land-body{font-size:.88rem;line-height:1.8;color:rgba(245,237,228,0.55);max-width:640px;margin-bottom:14px}
+.gap-contrast{display:flex;flex-direction:column;gap:14px;margin-top:20px}
+.gap-row{display:flex;align-items:center;gap:16px;font-size:.85rem;flex-wrap:wrap}
+.gap-old{color:rgba(245,237,228,0.35);font-style:italic}
+.gap-arrow{color:var(--accent1);font-family:var(--mono)}
+.gap-new{color:var(--secondary)}
+.dim-question-row{display:flex;gap:20px;align-items:baseline;padding:16px 0;border-top:1px solid var(--border)}
+.dim-question-num{font-family:var(--serif);font-weight:900;font-size:1.6rem;color:rgba(245,237,228,0.15);flex-shrink:0;width:36px}
+.dim-question-name{font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent1);margin-bottom:4px}
+.dim-question-text{font-family:var(--serif);font-style:italic;font-size:1rem;color:rgba(245,237,228,0.7)}
+.weight-row{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+.weight-label{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,237,228,0.45);width:120px;flex-shrink:0}
+.weight-track{flex:1;height:6px;background:rgba(245,237,228,0.06);position:relative;overflow:hidden}
+.weight-fill{height:100%;background:var(--accent1);opacity:.7}
+.weight-pct{font-family:var(--mono);font-size:.5rem;color:rgba(245,237,228,0.4);width:32px;text-align:right}
+.forfor-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.forfor-col{padding:2rem;font-size:.85rem;line-height:1.8}
+.forfor-col.yes{background:rgba(245,237,228,0.03)}
+.forfor-col.no{background:rgba(228,0,124,0.03)}
+.forfor-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.forfor-col li{color:rgba(245,237,228,0.55);padding-left:16px;position:relative}
+.forfor-col li::before{content:'\2014';position:absolute;left:0;color:var(--accent1)}
+.faq-item{border-top:1px solid var(--border);padding:16px 0}
+.faq-q{font-family:var(--serif);font-size:.95rem;color:var(--secondary);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-q::after{content:'+';color:var(--accent1);font-size:1.2rem;transition:transform .2s}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-item.open .faq-a{max-height:300px}
+.faq-a p{font-size:.83rem;line-height:1.7;color:rgba(245,237,228,0.5);padding-top:10px}
+.land-footer{padding:2rem 44px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center}
+.land-footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.land-footer a{color:rgba(245,237,228,0.3);font-family:var(--mono);font-size:.46rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none}
+.land-footer a:hover{color:var(--secondary)}
+@media(max-width:700px){
+  .forfor-grid{grid-template-columns:1fr}
+  .land-section{padding:2rem 20px}
+}
+
+/* ── HERO MOCKUP ── */
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;position:relative;z-index:1;max-width:1100px;width:100%}
+.hero-text-col{order:1}
+.hero-mock-col{order:2;display:flex;justify-content:center}
+.mock-wrap{position:relative;width:100%;max-width:460px;animation:floatY 6s ease-in-out infinite}
+.mock-laptop{
+  background:var(--secondary);border-radius:6px;overflow:hidden;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,0.6),0 0 0 1px rgba(245,237,228,0.1);
+  border:1px solid rgba(245,237,228,0.14);
+}
+.mock-bar{background:#2a2422;padding:8px 12px;display:flex;gap:6px}
+.mock-dot{width:7px;height:7px;border-radius:50%;background:rgba(245,237,228,0.2)}
+.mock-body{padding:18px 20px;color:var(--primary)}
+.mock-title{font-family:var(--serif);font-weight:900;font-size:.85rem;color:var(--primary);margin-bottom:2px}
+.mock-badge{display:inline-block;background:var(--accent1);color:#fff;font-family:var(--mono);font-size:.42rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-top:6px}
+.mock-dims{margin-top:16px;display:flex;flex-direction:column;gap:9px}
+.mock-dim-row{display:flex;align-items:center;gap:8px}
+.mock-dim-label{font-family:var(--sans);font-size:.52rem;color:rgba(20,16,15,0.6);width:88px;flex-shrink:0}
+.mock-dim-track{flex:1;height:5px;background:rgba(20,16,15,0.08);border-radius:3px;overflow:hidden}
+.mock-dim-fill{height:100%;border-radius:3px;background:rgba(20,16,15,0.35)}
+.mock-dim-fill.gap{background:var(--accent1)}
+.mock-dim-val{font-family:var(--mono);font-size:.44rem;color:rgba(20,16,15,0.4);width:26px;text-align:right}
+.mock-phone{
+  position:absolute;bottom:-30px;right:-24px;width:150px;
+  background:var(--secondary);border-radius:16px;padding:14px 12px;
+  box-shadow:0 20px 45px -12px rgba(228,0,124,0.35),0 0 0 1px rgba(245,237,228,0.16);
+  border:2px solid var(--primary);
+}
+.mock-phone-label{font-family:var(--mono);font-size:.4rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(20,16,15,0.4);text-align:center;margin-bottom:6px}
+.mock-phone-score{font-family:var(--serif);font-weight:900;font-size:1.7rem;color:var(--accent1);text-align:center;line-height:1}
+.mock-phone-score span{font-size:.6rem;color:rgba(20,16,15,0.35)}
+.mock-phone-gap{background:var(--accent1);color:#fff;font-family:var(--mono);font-size:.4rem;letter-spacing:.06em;text-align:center;padding:5px;border-radius:3px;margin-top:8px}
+.mock-example-tag{font-family:var(--mono);font-size:.4rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,237,228,0.25);text-align:center;margin-top:14px}
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:24px}
+  .hero-text-col{order:1}
+  .hero-mock-col{order:2;margin-top:8px}
+  .mock-wrap{max-width:340px}
+  .mock-phone{width:110px;right:-14px;bottom:-20px}
+  .mock-phone-score{font-size:1.2rem}
+}
+.body-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:1.5rem 44px 2.5rem;max-width:760px;width:100%;align-self:center}
+.eyebrow{font-family:var(--mono);font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent1);display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.eyebrow::before{content:'';width:32px;height:1px;background:var(--accent1)}
+.headline{font-family:var(--serif);font-weight:900;font-size:clamp(2rem,4.8vw,3.6rem);line-height:1.02;letter-spacing:-.02em;color:var(--secondary);margin-bottom:20px}
+.headline em{font-style:italic;color:var(--accent1)}
+.sub{font-family:var(--serif);font-size:clamp(.95rem,1.5vw,1.15rem);font-style:italic;color:rgba(245,237,228,0.6);max-width:560px;line-height:1.6;margin-bottom:28px}
+.desc{font-size:.87rem;line-height:1.8;color:rgba(245,237,228,0.5);max-width:540px;margin-bottom:12px}
+.desc strong{color:rgba(245,237,228,0.7)}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:14px;background:var(--accent1);color:var(--secondary);
+  font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  padding:16px 32px;border:none;cursor:pointer;transition:opacity .18s,transform .18s;
+}
+.btn-primary:hover{opacity:.88;transform:translateY(-2px)}
+.btn-primary:disabled{opacity:.25;cursor:default;transform:none}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:12px;background:transparent;border:1px solid var(--accent1);color:var(--accent1);
+  font-family:var(--mono);font-size:.54rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  padding:12px 24px;cursor:pointer;transition:all .18s;text-decoration:none;
+}
+.btn-outline:hover{background:var(--accent1);color:var(--secondary)}
+
+.footer-bar{padding:18px 44px;display:flex;gap:28px;flex-wrap:wrap;border-top:1px solid var(--border)}
+.fb-meta{font-family:var(--mono);font-size:.44rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,237,228,0.22)}
+
+/* ── FORM FIELDS ── */
+.field-wrap{margin-bottom:18px}
+.field-wrap label{display:block;font-family:var(--mono);font-size:.46rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,237,228,0.35);margin-bottom:8px}
+.field-wrap input[type=text],.field-wrap input[type=email],.field-wrap input[type=tel],.field-wrap textarea,.field-wrap select{
+  width:100%;background:rgba(245,237,228,0.03);border:1px solid var(--border-strong);outline:none;
+  color:var(--secondary);font-family:var(--sans);font-size:.95rem;font-weight:300;padding:13px 15px;
+  transition:border-color .2s,background .2s;
+}
+.field-wrap textarea{resize:vertical;min-height:70px;font-family:var(--sans)}
+.field-wrap input:focus,.field-wrap textarea:focus,.field-wrap select:focus{border-color:rgba(228,0,124,0.4);background:rgba(245,237,228,0.05)}
+.field-hint{font-size:.72rem;color:rgba(245,237,228,0.3);margin-top:6px;font-style:italic}
+.radio-grid{display:flex;flex-direction:column;gap:8px}
+.radio-opt{
+  display:flex;align-items:center;gap:12px;background:rgba(245,237,228,0.02);border:1px solid var(--border);
+  padding:12px 14px;cursor:pointer;transition:all .15s;
+}
+.radio-opt:hover{border-color:var(--border-strong)}
+.radio-opt.selected{border-color:var(--accent1);background:rgba(228,0,124,0.06)}
+.radio-dot{width:9px;height:9px;border-radius:50%;border:1px solid rgba(245,237,228,0.25);flex-shrink:0}
+.radio-opt.selected .radio-dot{background:var(--accent1);border-color:var(--accent1)}
+.radio-label{font-size:.85rem;color:rgba(245,237,228,0.65)}
+.radio-opt.selected .radio-label{color:var(--secondary)}
+.error-msg{font-family:var(--mono);font-size:.5rem;color:var(--accent1);letter-spacing:.08em;text-transform:uppercase;margin:10px 0;display:none;padding:8px 12px;border-left:2px solid var(--accent1);background:rgba(228,0,124,0.06)}
+
+/* ── QUIZ ── */
+.quiz-top{padding:20px 44px 0;display:flex;justify-content:space-between;align-items:center}
+.section-tag{font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent1)}
+.progress-track{width:130px;height:1px;background:rgba(245,237,228,0.08);overflow:hidden}
+.progress-fill{height:100%;background:var(--accent1);transition:width .4s ease;width:0%}
+.progress-wrap{display:flex;align-items:center;gap:12px}
+.q-counter{font-family:var(--mono);font-size:.46rem;color:rgba(245,237,228,0.22)}
+.q-text{font-family:var(--serif);font-weight:600;font-size:clamp(1.1rem,2.2vw,1.5rem);line-height:1.35;color:var(--secondary);margin-bottom:1.8rem}
+.answer-grid{display:flex;flex-direction:column}
+.answer-btn{
+  display:flex;align-items:center;gap:14px;background:transparent;border:none;border-top:1px solid var(--border);
+  padding:15px 0;cursor:pointer;text-align:left;color:var(--secondary);font-family:var(--sans);transition:all .18s ease;
+}
+.answer-btn:last-child{border-bottom:1px solid var(--border)}
+.answer-btn:hover{padding-left:8px}
+.a-dot{width:9px;height:9px;border-radius:50%;border:1px solid rgba(245,237,228,0.22);flex-shrink:0;transition:all .18s ease}
+.answer-btn.selected .a-dot{background:var(--accent1);border-color:var(--accent1)}
+.a-label{font-size:.88rem;color:rgba(245,237,228,0.55);transition:color .18s}
+.answer-btn.selected .a-label{color:var(--secondary)}
+.quiz-nav{padding:16px 44px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)}
+.btn-back{background:transparent;border:1px solid rgba(245,237,228,0.14);color:rgba(245,237,228,0.35);font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;padding:9px 18px;cursor:pointer}
+.btn-back:disabled{opacity:.15;cursor:default}
+.btn-next{background:transparent;border:1px solid var(--accent1);color:var(--accent1);font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;padding:9px 22px;cursor:pointer}
+.btn-next:hover:not(:disabled){background:var(--accent1);color:var(--secondary)}
+.btn-next:disabled{opacity:.18;cursor:default;border-color:rgba(245,237,228,0.12);color:rgba(245,237,228,0.15)}
+
+/* ── CONSENT ── */
+.consent-block{margin-bottom:14px;display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);cursor:pointer}
+.consent-block.checked{border-color:var(--accent1);background:rgba(228,0,124,0.05)}
+.consent-check{width:16px;height:16px;border:1px solid rgba(245,237,228,0.3);flex-shrink:0;margin-top:2px;position:relative}
+.consent-block.checked .consent-check{background:var(--accent1);border-color:var(--accent1)}
+.consent-text{font-size:.78rem;line-height:1.6;color:rgba(245,237,228,0.55)}
+.consent-text .req{color:var(--accent1);font-family:var(--mono);font-size:.6rem;text-transform:uppercase;margin-right:6px}
+
+/* ── RESULTS ── */
+#screen-results{padding:0}
+.res-header{padding:2rem 44px 1.4rem;border-bottom:1px solid var(--border)}
+.res-brand{font-family:var(--mono);font-size:.44rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem}
+.res-badge{display:inline-block;background:var(--accent1);color:var(--secondary);font-family:var(--mono);font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;padding:7px 18px;margin-bottom:10px}
+.res-score{font-family:var(--serif);font-weight:900;font-size:clamp(1.8rem,3.6vw,2.6rem);letter-spacing:-.02em;color:var(--secondary)}
+.res-score span{font-size:.5em;color:rgba(245,237,228,0.35);font-weight:400}
+.res-body{padding:1.8rem 44px 3rem;max-width:740px;width:100%;align-self:center}
+.res-block{border-top:1px solid var(--border);padding-top:1.5rem;margin-bottom:1.5rem}
+.res-label{font-family:var(--mono);font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent1);margin-bottom:.7rem}
+.res-label.working{color:#8fbf3f}
+.res-p{font-size:.86rem;line-height:1.85;color:rgba(245,237,228,0.55);margin-bottom:.9rem}
+.dim-bars{display:flex;flex-direction:column;gap:14px;margin-bottom:1.5rem}
+.dim-row-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.dim-name{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,237,228,0.4)}
+.dim-name.gap{color:var(--accent1)}
+.dim-val{font-family:var(--mono);font-size:.56rem;color:rgba(245,237,228,0.3)}
+.dim-track{width:100%;height:1px;background:rgba(245,237,228,0.06)}
+.dim-fill{height:100%;background:rgba(245,237,228,0.18);transition:width 1s ease;width:0%}
+.dim-fill.gap{background:var(--accent1)}
+.moves-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.moves-list li{font-size:.85rem;line-height:1.65;color:rgba(245,237,228,0.6);display:flex;gap:12px}
+.move-num{font-family:var(--mono);font-size:.5rem;color:var(--accent1);font-weight:700;margin-top:3px;flex-shrink:0}
+.reset-cta{border:1px solid var(--border-strong);padding:1.6rem 1.8rem;margin-top:1rem;border-left:3px solid var(--accent1)}
+.reset-cta-label{font-family:var(--mono);font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+.reset-cta p{font-size:.85rem;line-height:1.7;color:rgba(245,237,228,0.55);margin-bottom:1rem}
+.routing-block{border:1px solid rgba(228,0,124,0.2);padding:1.4rem 1.6rem;margin-bottom:1.5rem;background:rgba(228,0,124,0.03)}
+.routing-label{font-family:var(--mono);font-size:.44rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent1);margin-bottom:.6rem}
+.disclaimer{font-size:.72rem;font-style:italic;color:rgba(245,237,228,0.3);line-height:1.6;margin-top:2rem;padding-top:1.2rem;border-top:1px solid var(--border)}
+.res-footer{padding:1.4rem 44px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.restart-btn{background:transparent;border:none;color:rgba(245,237,228,0.2);font-family:var(--mono);font-size:.46rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.restart-btn:hover{color:var(--secondary)}
+.res-note{font-family:var(--mono);font-size:.42rem;color:rgba(245,237,228,0.1);letter-spacing:.1em;text-transform:uppercase}
+
+@media(max-width:700px){
+  .top-brand,.body-wrap,.footer-bar,.quiz-top,.quiz-nav,.res-header,.res-body,.res-footer{padding-left:20px;padding-right:20px}
+  .progress-track{width:70px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ COVER ══ -->
+<div id="screen-cover" class="screen active">
+  <div class="site-nav">
+    <div class="site-nav-brand" onclick="goHome(event)">BRENDA BLANCHE<span>™</span></div>
+    <div class="site-nav-links">
+      <a class="site-nav-link" href="#" onclick="goHome(event)">Home</a>
+      <a class="site-nav-link" href="#" onclick="goFaq(event)">FAQ</a>
+      <a class="site-nav-cta" href="https://calendly.com/unapologeticquenn/brand-clarity-call" target="_blank">Book a Call</a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="body-wrap" style="position:relative;padding-top:2.5rem;padding-bottom:3rem;max-width:1100px">
+    <div class="hero-glow"></div>
+    <div class="editorial-grid"></div>
+    <div class="hero-grid">
+      <div class="hero-text-col">
+        <div class="eyebrow">The LinkedIn Buyer Confusion Scorecard</div>
+        <h1 class="headline">How clearly does the market <em>understand what you do?</em></h1>
+        <p class="sub">Capability is not the same as market clarity.</p>
+        <p class="desc">You may have real expertise, an existing service, and proof of your work — but if your LinkedIn profile does not make the buyer, problem, outcome, proof, and next step clear, qualified people may still hesitate.</p>
+        <p class="desc">Take this short diagnostic to identify where your message is creating uncertainty. About 5–7 minutes. You'll get a <strong>Buyer Clarity Score</strong> out of 100 — the higher it is, the easier your value is for the market to understand.</p>
+        <div style="margin-top:20px">
+          <button class="btn-primary" onclick="showScreen('screen-lead')">Start the Scorecard →</button>
+        </div>
+        <p style="font-size:.72rem;color:rgba(245,237,228,0.3);margin-top:14px;font-style:italic">Directional guidance only. Not an objective market study, a guarantee, or a judgment of your professional worth.</p>
+      </div>
+      <div class="hero-mock-col">
+        <div class="mock-wrap">
+          <div class="mock-laptop">
+            <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+            <div class="mock-body">
+              <div class="mock-title">Your Buyer Clarity Score: 68/100</div>
+              <div class="mock-badge">Partial Buyer Clarity</div>
+              <div class="mock-dims">
+                <div class="mock-dim-row"><div class="mock-dim-label">Buyer Clarity</div><div class="mock-dim-track"><div class="mock-dim-fill" style="width:72%"></div></div><div class="mock-dim-val">18/25</div></div>
+                <div class="mock-dim-row"><div class="mock-dim-label">Problem Clarity</div><div class="mock-dim-track"><div class="mock-dim-fill gap" style="width:48%"></div></div><div class="mock-dim-val">12/25</div></div>
+                <div class="mock-dim-row"><div class="mock-dim-label">Outcome Clarity</div><div class="mock-dim-track"><div class="mock-dim-fill" style="width:67%"></div></div><div class="mock-dim-val">10/15</div></div>
+                <div class="mock-dim-row"><div class="mock-dim-label">Proof Clarity</div><div class="mock-dim-track"><div class="mock-dim-fill" style="width:73%"></div></div><div class="mock-dim-val">11/15</div></div>
+                <div class="mock-dim-row"><div class="mock-dim-label">Action Clarity</div><div class="mock-dim-track"><div class="mock-dim-fill" style="width:85%"></div></div><div class="mock-dim-val">17/20</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="mock-phone">
+            <div class="mock-phone-label">Your Result</div>
+            <div class="mock-phone-score">68<span>/100</span></div>
+            <div class="mock-phone-gap">Primary Gap: Problem Clarity</div>
+          </div>
+        </div>
+        <div class="mock-example-tag">Example profile — not your result</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Market Translation Gap -->
+  <div class="land-section ivory">
+    <div class="land-eyebrow">The Problem</div>
+    <h2 class="land-headline">Expertise is not automatically legible to the market.</h2>
+    <p class="land-body">You can be highly capable, experienced, and deeply committed to your work while still being difficult for the right buyer to place, trust, or choose.</p>
+    <div class="gap-contrast">
+      <div class="gap-row"><span class="gap-old">"I have many skills"</span><span class="gap-arrow">→</span><span class="gap-new">"This is the problem I solve."</span></div>
+      <div class="gap-row"><span class="gap-old">"I have experience"</span><span class="gap-arrow">→</span><span class="gap-new">"Here is evidence a buyer can understand."</span></div>
+      <div class="gap-row"><span class="gap-old">"I can help in many ways"</span><span class="gap-arrow">→</span><span class="gap-new">"This is the next action available to you."</span></div>
+    </div>
+  </div>
+
+  <!-- Five buyer questions -->
+  <div class="land-section">
+    <div class="land-eyebrow">What It Measures</div>
+    <h2 class="land-headline">Five questions a buyer is silently asking.</h2>
+    <p class="land-body">The Scorecard doesn't measure how impressive you are. It examines how much usable meaning a buyer can extract from the way your expertise is presented.</p>
+    <div style="margin-top:10px">
+      <div class="dim-question-row" style="border-top:none">
+        <div class="dim-question-num">01</div>
+        <div><div class="dim-question-name">Buyer Clarity</div><div class="dim-question-text">"Do I understand who this is for?"</div></div>
+      </div>
+      <div class="dim-question-row">
+        <div class="dim-question-num">02</div>
+        <div><div class="dim-question-name">Problem Clarity</div><div class="dim-question-text">"Do I recognize the problem this solves?"</div></div>
+      </div>
+      <div class="dim-question-row">
+        <div class="dim-question-num">03</div>
+        <div><div class="dim-question-name">Outcome Clarity</div><div class="dim-question-text">"Can I see what changes after working with them?"</div></div>
+      </div>
+      <div class="dim-question-row">
+        <div class="dim-question-num">04</div>
+        <div><div class="dim-question-name">Proof Clarity</div><div class="dim-question-text">"Do I have a credible reason to trust this?"</div></div>
+      </div>
+      <div class="dim-question-row">
+        <div class="dim-question-num">05</div>
+        <div><div class="dim-question-name">Action Clarity</div><div class="dim-question-text">"Do I know what to do next?"</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weighted view -->
+  <div class="land-section ivory">
+    <div class="land-eyebrow">How It's Weighted</div>
+    <h2 class="land-headline">A weighted view of where buyer meaning breaks down.</h2>
+    <p class="land-body">Buyer Clarity and Problem Clarity carry the highest weight because buyers need to understand who you help and what problem you address before proof or action can do its work.</p>
+    <div style="margin-top:20px">
+      <div class="weight-row"><div class="weight-label">Buyer Clarity</div><div class="weight-track"><div class="weight-fill" style="width:25%"></div></div><div class="weight-pct">25%</div></div>
+      <div class="weight-row"><div class="weight-label">Problem Clarity</div><div class="weight-track"><div class="weight-fill" style="width:25%"></div></div><div class="weight-pct">25%</div></div>
+      <div class="weight-row"><div class="weight-label">Outcome Clarity</div><div class="weight-track"><div class="weight-fill" style="width:15%"></div></div><div class="weight-pct">15%</div></div>
+      <div class="weight-row"><div class="weight-label">Proof Clarity</div><div class="weight-track"><div class="weight-fill" style="width:15%"></div></div><div class="weight-pct">15%</div></div>
+      <div class="weight-row"><div class="weight-label">Action Clarity</div><div class="weight-track"><div class="weight-fill" style="width:20%"></div></div><div class="weight-pct">20%</div></div>
+    </div>
+    <p style="font-size:.75rem;color:rgba(245,237,228,0.3);margin-top:18px;font-style:italic">This is a directional diagnostic based on your responses. It is not a popularity score, content score, personality test, revenue prediction, objective market study, or guarantee.</p>
+  </div>
+
+  <!-- Who it's for -->
+  <div class="land-section" style="padding:0;max-width:900px">
+    <div style="padding:3rem 44px 1.5rem">
+      <div class="land-eyebrow">Fit Check</div>
+      <h2 class="land-headline">Who this is for — and who it isn't.</h2>
+    </div>
+    <div class="forfor-grid">
+      <div class="forfor-col yes">
+        <div class="land-eyebrow" style="color:#8fbf3f">For You If</div>
+        <ul>
+          <li>You are capable but difficult for the market to place.</li>
+          <li>Your LinkedIn presence doesn't clearly communicate your commercial value.</li>
+          <li>You have several skills but need a more coherent market-facing direction.</li>
+          <li>Your offer exists but is hard to explain or choose.</li>
+          <li>You have proof but don't know how to use it ethically.</li>
+          <li>Your content is active but your next action is unclear.</li>
+        </ul>
+      </div>
+      <div class="forfor-col no">
+        <div class="land-eyebrow">Not Designed For</div>
+        <ul>
+          <li>People looking for a popularity or virality score.</li>
+          <li>People seeking a guaranteed revenue prediction.</li>
+          <li>People expecting a diagnostic to replace strategic judgment.</li>
+          <li>People wanting fabricated testimonials or exaggerated claims.</li>
+          <li>People whose immediate need is specialized legal, medical, or financial advice.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="land-section ivory">
+    <div class="land-eyebrow">Questions</div>
+    <h2 class="land-headline" style="margin-bottom:6px">Before you start.</h2>
+    <div id="faq-list">
+      <div class="faq-item open">
+        <div class="faq-q" onclick="toggleFaq(this)">How long does the Scorecard take?</div>
+        <div class="faq-a"><p>About 5–7 minutes for 20 scored statements plus a few context questions. There's no way to save and return mid-way, so it's easiest to complete in one sitting.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is this a popularity or LinkedIn performance score?</div>
+        <div class="faq-a"><p>No. It has nothing to do with followers, likes, or reach. It measures whether a buyer can understand who you help, what problem you solve, and what to do next — based on your own honest assessment of your profile.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Does the Scorecard predict revenue?</div>
+        <div class="faq-a"><p>No. It's a directional diagnostic, not a guarantee of inquiries, clients, or revenue. It identifies where your message may be creating uncertainty and gives you a specific next step.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What happens after I receive my result?</div>
+        <div class="faq-a"><p>You'll see your Buyer Clarity Score, your primary gap, and a recommended route based on your specific situation — that might be a self-directed correction, or a conversation with Brenda if your case is more complex.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is my information private?</div>
+        <div class="faq-a"><p>Yes. Your answers are used only to calculate and deliver your result and, if you opt in, for relevant follow-up. You control what you consent to on the final screen before seeing your result.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What if my result doesn't feel accurate?</div>
+        <div class="faq-a"><p>That's useful information too. Your self-assessment is compared against your reported real-world signals — if the two conflict, the result will say so rather than pretending the score is the whole picture.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-wrap" style="padding-top:2.5rem;padding-bottom:2.5rem;text-align:left">
+    <h2 class="land-headline" style="font-size:clamp(1.4rem,2.6vw,1.9rem)">Find the gap between your expertise and what buyers can understand.</h2>
+    <p class="desc">Start with a clearer signal. Then choose the next step that matches your actual situation.</p>
+    <button class="btn-primary" onclick="showScreen('screen-lead')">Start the Scorecard →</button>
+  </div>
+
+  <div class="land-footer">
+    <div>
+      <div class="fb-meta" style="margin-bottom:4px">Brenda Blanche™ · Market Perception Strategist</div>
+      <div class="fb-meta">#UnapologeticallyYou</div>
+    </div>
+    <div class="land-footer-links">
+      <a href="#" onclick="return false">Privacy Policy</a>
+      <a href="#" onclick="return false">Scorecard Terms</a>
+      <a href="#" onclick="return false">Contact</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LEAD CAPTURE ══ -->
+<div id="screen-lead" class="screen">
+  <div class="site-nav">
+    <div class="site-nav-brand" onclick="goHome(event)">BRENDA BLANCHE<span>™</span></div>
+    <div class="site-nav-links">
+      <a class="site-nav-link" href="#" onclick="goHome(event)">Home</a>
+      <a class="site-nav-link" href="#" onclick="goFaq(event)">FAQ</a>
+      <a class="site-nav-cta" href="https://calendly.com/unapologeticquenn/brand-clarity-call" target="_blank">Book a Call</a>
+    </div>
+  </div>
+  <div class="body-wrap" style="position:relative">
+    <div class="hero-glow" style="opacity:.5"></div>
+    <div style="position:relative;z-index:1">
+    <div class="eyebrow">Before You Start</div>
+    <h2 class="headline" style="font-size:clamp(1.5rem,3vw,2.1rem)">A few quick details.</h2>
+    <p class="desc">Answer based on what a relevant buyer could visibly understand from your profile — not only what you know about your own expertise. There are no "good" or "bad" answers.</p>
+
+    <div class="field-wrap">
+      <label for="lead-name">Full Name</label>
+      <input type="text" id="lead-name" placeholder="Your name">
+    </div>
+    <div class="field-wrap">
+      <label for="lead-email">Email Address</label>
+      <input type="email" id="lead-email" placeholder="you@email.com">
+    </div>
+    <div class="field-wrap">
+      <label for="lead-whatsapp">WhatsApp Number (optional, with country code)</label>
+      <input type="tel" id="lead-whatsapp" placeholder="+233 XX XXX XXXX">
+    </div>
+
+    <div class="field-wrap">
+      <label>What best describes your current work?</label>
+      <div class="radio-grid" id="q-work-type"></div>
+    </div>
+
+    <div class="field-wrap">
+      <label for="lead-desc">What do you currently help people or organisations with?</label>
+      <textarea id="lead-desc" placeholder="Use your own words. Do not worry about making it sound polished."></textarea>
+    </div>
+
+    <div class="field-wrap">
+      <label>How long have you been doing this work or using this expertise?</label>
+      <div class="radio-grid" id="q-years"></div>
+    </div>
+
+    <div class="field-wrap">
+      <label>Do you currently have an existing service, consulting offer, or defined area of work?</label>
+      <div class="radio-grid" id="q-offer-status"></div>
+    </div>
+
+    <div class="field-wrap">
+      <label>How urgent is solving this for you right now?</label>
+      <div class="radio-grid" id="q-urgency"></div>
+    </div>
+
+    <div class="error-msg" id="lead-error">Please complete the required fields (name, email, and all four questions) to continue.</div>
+    <button class="btn-primary" onclick="submitLead()">Continue to the Scorecard →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TRANSITION ══ -->
+<div id="screen-transition" class="screen">
+  <div class="site-nav">
+    <div class="site-nav-brand" onclick="goHome(event)">BRENDA BLANCHE<span>™</span></div>
+    <div class="site-nav-links">
+      <a class="site-nav-link" href="#" onclick="goHome(event)">Home</a>
+      <a class="site-nav-link" href="#" onclick="goFaq(event)">FAQ</a>
+      <a class="site-nav-cta" href="https://calendly.com/unapologeticquenn/brand-clarity-call" target="_blank">Book a Call</a>
+    </div>
+  </div>
+  <div class="body-wrap">
+    <div class="eyebrow" id="t-eyebrow">Dimension 1 of 5</div>
+    <h2 class="headline" id="t-heading" style="font-size:clamp(1.8rem,4vw,3rem)"></h2>
+    <p class="desc" id="t-body" style="max-width:600px"></p>
+    <div style="margin-top:16px">
+      <button class="btn-primary" onclick="continueFromTransition()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ QUIZ (scored + evidence + routing all flow through here) ══ -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-top">
+    <div class="section-tag" id="section-tag">Buyer Clarity</div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="q-counter" id="q-counter">1 of 20</div>
+    </div>
+  </div>
+  <div class="body-wrap" style="max-width:700px">
+    <p class="q-text" id="q-text"></p>
+    <div class="answer-grid" id="answer-grid"></div>
+  </div>
+  <div class="quiz-nav">
+    <button class="btn-back" id="btn-back" onclick="goBack()" disabled>← Back</button>
+    <button class="btn-next" id="btn-next" onclick="goNext()" disabled>Next →</button>
+  </div>
+</div>
+
+<!-- ══ CONSENT ══ -->
+<div id="screen-consent" class="screen">
+  <div class="site-nav">
+    <div class="site-nav-brand" onclick="goHome(event)">BRENDA BLANCHE<span>™</span></div>
+    <div class="site-nav-links">
+      <a class="site-nav-link" href="#" onclick="goHome(event)">Home</a>
+      <a class="site-nav-link" href="#" onclick="goFaq(event)">FAQ</a>
+      <a class="site-nav-cta" href="https://calendly.com/unapologeticquenn/brand-clarity-call" target="_blank">Book a Call</a>
+    </div>
+  </div>
+  <div class="body-wrap">
+    <div class="eyebrow">Last Step</div>
+    <h2 class="headline" style="font-size:clamp(1.5rem,3vw,2.1rem)">One quick consent check.</h2>
+    <p class="desc" style="margin-bottom:22px">We collect your answers to calculate and deliver your result. We do not present this Scorecard as an objective market study. Please do not include confidential client information in any open text field.</p>
+
+    <div class="consent-block" id="consent-required" onclick="toggleConsent('required')">
+      <div class="consent-check"></div>
+      <div class="consent-text"><span class="req">Required</span>I consent to Brenda Blanche collecting and using the information I submit to calculate and deliver my LinkedIn Buyer Confusion Scorecard result.</div>
+    </div>
+    <div class="consent-block" id="consent-marketing" onclick="toggleConsent('marketing')">
+      <div class="consent-check"></div>
+      <div class="consent-text">Send me Brenda's practical LinkedIn and market-perception guidance.</div>
+    </div>
+    <div class="consent-block" id="consent-whatsapp" onclick="toggleConsent('whatsapp')">
+      <div class="consent-check"></div>
+      <div class="consent-text">Send my result and reminders through WhatsApp at the number provided.</div>
+    </div>
+
+    <div class="error-msg" id="consent-error">Please accept the required consent to see your result.</div>
+    <button class="btn-primary" onclick="submitScorecard()">
+      <span id="submit-btn-text">See My Result →</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ RESULTS ══ -->
+<div id="screen-results" class="screen">
+  <div class="res-header">
+    <div class="res-brand">Brenda Blanche™ · The LinkedIn Buyer Confusion Scorecard</div>
+    <div class="res-badge" id="res-badge">—</div>
+    <div class="res-score">Your Buyer Clarity Score: <span id="res-score">—</span>/100</div>
+    <p style="font-size:.72rem;color:rgba(245,237,228,0.35);margin-top:8px;font-style:italic">The higher your Buyer Clarity Score, the easier it is for the market to understand your value.</p>
+  </div>
+  <div class="res-body">
+    <div class="res-block" style="border-top:none;padding-top:0">
+      <p class="res-p" id="res-intro" style="font-size:.95rem"></p>
+      <p style="font-size:.75rem;color:rgba(245,237,228,0.35);font-style:italic">This is a maturity category, not your complete diagnosis \u2014 the primary gap and recommended route below matter more than the band name.</p>
+    </div>
+    <div class="dim-bars" id="dim-bars"></div>
+    <div class="res-block">
+      <div class="res-label">Your Primary Gap</div>
+      <p class="res-p" id="res-gap-body"></p>
+    </div>
+    <div class="res-block" id="supporting-gaps-block" style="display:none">
+      <div class="res-label">Supporting Gaps</div>
+      <p class="res-p" id="res-supporting-body"></p>
+    </div>
+    <div class="res-block">
+      <div class="res-label">Reported Market Signals</div>
+      <p class="res-p" id="res-evidence-body"></p>
+      <p class="res-p" id="res-conflict-body" style="display:none;color:#E4007C;font-style:italic"></p>
+    </div>
+    <div class="res-block">
+      <div class="res-label">Three Immediate Corrections</div>
+      <ul class="moves-list" id="res-corrections"></ul>
+    </div>
+    <div class="res-block">
+      <div class="res-label">One Next Step</div>
+      <p class="res-p" id="res-nextstep"></p>
+    </div>
+    <div id="whatsapp-block"></div>
+    <div class="reset-cta">
+      <div class="reset-cta-label">Recommended Route</div>
+      <div id="res-route-name" style="font-family:var(--serif);font-weight:900;font-size:1.15rem;color:var(--secondary);margin-bottom:8px"></div>
+      <p id="res-route-price" style="font-size:.72rem;color:rgba(245,237,228,0.4);margin-bottom:12px"></p>
+      <p id="res-cta-text"></p>
+      <p id="res-sequence-text" style="display:none;font-size:.8rem;color:rgba(245,237,228,0.5);margin-top:10px"></p>
+      <a class="btn-outline" id="res-route-link" href="https://calendly.com/unapologeticquenn/brand-clarity-call" target="_blank" style="margin-top:14px">Talk It Through With Brenda →</a>
+    </div>
+    <p class="disclaimer" id="res-disclaimer">This Scorecard is a directional diagnostic based on your responses and reported market signals. It is not an objective market study, a guarantee of demand, or a prediction of revenue. It identifies likely clarity and routing needs. The recommended products guide implementation, while a Perception Call helps with personalization and complex decisions.</p>
+  </div>
+  <div class="res-footer">
+    <button class="restart-btn" onclick="restart()">← Retake the Scorecard</button>
+    <div class="res-note">LinkedIn Buyer Confusion Scorecard · Brenda Blanche™ · #UnapologeticallyYou</div>
+  </div>
+</div>
+
+<script>
+const CONFIG={ API_ENDPOINT:'/api/notify', CLARITY_CALL:'https://calendly.com/unapologeticquenn/brand-clarity-call',
+  // ⚠️ REPLACE THIS: Brenda's WhatsApp Business number, digits only, country code, no + or spaces.
+  BRENDA_WHATSAPP:'237672411155' };
+
+const SUPPORTING_GAP_THRESHOLD=0.60; // normalized (avg/5) below this = supporting gap
+
+const PRODUCTS={
+  offerBuilder:{name:'Offer Builder',price:'50,000\u2013100,000 CFA',
+    blurb:'Helps you turn undefined or scattered expertise into one clearly defined, sellable offer \u2014 audience, problem, outcome, method, scope, and price direction.'},
+  proofCreation:{name:'Proof Creation',price:'20,000\u201330,000 CFA',
+    blurb:'For when your direction is clear but your evidence isn\u2019t \u2014 helps you create or organise a pilot, portfolio, audit, or demonstration a buyer can actually evaluate.'},
+  playbook:{name:'Expertise-to-Recognition Playbook',price:'Existing offer pricing',
+    blurb:'For when your offer and evidence already exist but the market isn\u2019t translating them \u2014 message, proof placement, and public signal correction.'},
+  perceptionCall:{name:'Perception Call',price:'Personalised',
+    blurb:'A judgment call for complex, urgent, or contradictory cases \u2014 where the standard route would be incomplete or irresponsible to automate.'}
+};
+
+const SCALE=['Very clear and consistently visible','Clearly visible','Partly visible or inconsistent','Barely visible','Not visible or not true'];
+// scored 5,4,3,2,1 in that order (best first)
+
+const WORK_TYPES=['Independent consultant','Specialist service provider','Coach or advisor','Fractional executive or operator','Agency or boutique firm owner','Senior professional preparing to consult','Other'];
+const YEARS=['Less than 1 year','1\u20133 years','4\u20137 years','8\u201315 years','More than 15 years'];
+const OFFER_STATUS=['Yes, and I actively sell it','Yes, but it is not clearly packaged','I have expertise but not a clear consulting offer','I am still deciding','No'];
+const URGENCY=['I am only exploring','I want to improve it eventually','Within the next 90 days','Actively looking for help now'];
+
+const DIMENSIONS=[
+  {key:'BC',name:'Buyer Clarity',weight:25,
+   intro:'These four statements are about Buyer Clarity \u2014 whether a specific potential buyer can understand who you help and what type of service they should associate with you.',
+   qs:[
+     'My profile clearly identifies the type of buyer or organisation I help.',
+     'A relevant buyer could tell from my profile whether I am relevant to their specific situation.',
+     'My headline or opening profile section connects my expertise to a service someone could hire me for.',
+     'If someone referred my profile to a potential buyer, that buyer would understand what they could approach me about.'
+   ]},
+  {key:'PC',name:'Problem Clarity',weight:25,
+   intro:'These four are about Problem Clarity \u2014 whether your profile makes the buyer\u2019s relevant problem, situation, or trigger recognisable.',
+   qs:[
+     'My profile names a specific problem, situation, or business challenge that my buyers recognise.',
+     'My profile shows what usually causes a buyer to seek my help.',
+     'My profile makes clear what is at stake when the problem I address remains unresolved.',
+     'A potential buyer could use the language on my profile to describe their own problem or need.'
+   ]},
+  {key:'OC',name:'Outcome Clarity',weight:15,
+   intro:'These four are about Outcome Clarity \u2014 whether your profile communicates the meaningful change or outcome a buyer can reasonably expect.',
+   qs:[
+     'My profile explains the practical change a buyer can expect from working with me.',
+     'The outcomes I mention are connected to the buyer\u2019s situation, not only to my skills or activities.',
+     'My profile distinguishes the result of my work from simply "support," "advice," or "consulting."',
+     'A potential buyer could explain what would be different after engaging me.'
+   ]},
+  {key:'PR',name:'Proof Clarity',weight:15,
+   intro:'These four are about Proof Clarity \u2014 whether your profile makes evidence of relevant experience and results visible, specific, and connected to the service.',
+   qs:[
+     'My profile includes proof that is relevant to the specific problem or service I describe.',
+     'My proof includes enough context for a buyer to understand what I actually helped with.',
+     'My profile makes outcomes, improvements, decisions, or changes visible rather than listing only responsibilities and credentials.',
+     'A potential buyer could connect my past experience or evidence to the service they might hire me for now.'
+   ]},
+  {key:'AC',name:'Action Clarity',weight:20,
+   intro:'These four are about Action Clarity \u2014 whether your profile gives an interested buyer a clear next step and enough direction to act.',
+   qs:[
+     'My profile gives an interested buyer a clear next step.',
+     'The action I invite people to take matches the service or conversation I want to have.',
+     'My profile makes it clear whether someone should message me, book a call, download something, or take another specific action.',
+     'My call to action does not make the buyer guess what will happen after they respond.'
+   ]}
+];
+
+const EVIDENCE_INTRO='Now consider what potential buyers have actually done or asked. These answers do not determine your score, but they help interpret whether the message gap is showing up in real interactions.';
+
+const EVIDENCE_QS=[
+  {key:'profile_views_frequency',text:'How often do relevant people view your LinkedIn profile?',
+   options:['I do not know','Rarely or almost never','Occasionally','Regularly','Often, but I do not know what they do next']},
+  {key:'what_do_you_do_frequency',text:'How often do people ask you a version of "What do you actually do?"',
+   options:['Never','Rarely','Sometimes','Often','Very often']},
+  {key:'referral_accuracy',text:'When people refer you, how accurately do they describe the service or problem you help with?',
+   options:['I have not been referred recently','They usually describe me by my job title or general expertise','They describe me broadly but not specifically','They usually describe the problem I solve','They accurately describe the service I offer and who it is for']},
+  {key:'inquiry_type',text:'What do most LinkedIn inquiries currently ask about?',
+   options:['I do not receive inquiries','People ask for general advice','People ask what I do','People ask about a specific service','People ask about a clearly defined problem or outcome','The inquiries are unrelated to the work I want']},
+  {key:'prospect_offer_recall',text:'Can a recent prospect repeat your offer accurately after viewing your profile?',
+   options:['I have not tested this','No','Not consistently','Usually','Yes, in language close to how I describe it']},
+  {key:'most_concerning_signal',text:'Which real signal most concerns you right now?',
+   options:['People view my profile but do not respond','People ask what I do','Referrals describe me too broadly','Inquiries are unrelated to my preferred work','People value my experience but do not understand the offer','I have proof but it is difficult to show','I do not know what signal to look at']}
+];
+
+const ROUTING_QS=[
+  {key:'proof_location',text:'Where is most of your relevant proof currently stored?',
+   options:['Clearly presented on my LinkedIn profile or website','In case studies or formal documents','In client emails or private WhatsApp messages','In scattered files, presentations, or old proposals','Mostly in my memory','I do not yet have much proof'],
+   routing:'proof',triggerIndexes:[2,3,4,5]},
+  {key:'offer_translation_status',text:'Which statement best describes your current offer?',
+   options:['My offer is clear and easy to explain','I have a service, but the scope is still broad','I know my expertise, but not how to package it for consulting','I have done this work inside organisations but have not translated it into an external offer','I have several possible offers and do not know which one to lead with'],
+   routing:'offer',triggerIndexes:[2,3,4]}
+];
+
+const CATEGORIES={
+  critical:{title:'Critical Buyer Confusion',
+    intro:'Your profile may contain substantial experience, but a relevant buyer is likely working too hard to understand who you help, what problem you address, what they could hire you for, and what would change after working with you. This does not mean you lack expertise. It means your expertise is not yet being translated into a buyer-readable message.',
+    gapBody:(gap)=>'Your most urgent gap is '+gap+'. The likely issue is not that you have nothing to say. It is that too many possible meanings are competing for attention.',
+    evidence:'Your observed evidence suggests that the message may be creating real-world uncertainty. Signals such as "What do you do?", broad referrals, unclear inquiries, or profile visits without relevant action usually indicate that the buyer cannot quickly connect your experience to a specific need. Your result is directional, not an objective market study. The next step is to simplify the message and then validate whether buyers understand it more easily.',
+    corrections:['Rewrite the headline so it identifies a specific buyer, problem, and service.','Rewrite the first section of your About section around the buyer\u2019s situation before listing your background.','Remove or move secondary services, broad skill lists, and unrelated credentials that compete with the main message.'],
+    nextStep:'Start with a LinkedIn message review focused on what a qualified buyer can understand in the first 10 seconds.'
+  },
+  unclear:{title:'Unclear Market Meaning',
+    intro:'Your profile communicates some real expertise, but the meaning is still too broad or inconsistent for a specific buyer to confidently connect you with a clear service. A buyer may think you\u2019re experienced and capable, but may still not know whether you are right for their current problem, what to ask you for, or which service should come first.',
+    gapBody:(gap)=>'Your most urgent gap is '+gap+'. You may be explaining your experience more clearly than you are explaining the buying situation your experience is relevant to.',
+    evidence:'If people ask what you do, describe you by your general profession, or send unrelated inquiries, the issue may be market meaning rather than lack of visibility. Being seen is not the same as being understood. Your score is directional and should be validated with real buyer conversations.',
+    corrections:['Choose one priority buyer situation for the profile to lead with.','Replace activity-based language with problem-and-outcome language.','Add one specific proof example that shows what changed because of your work.'],
+    nextStep:'Ask three recent contacts to answer this question without explanation: "Based on my LinkedIn profile, what would you say I help people with?" Compare their answers with the service you want to sell.'
+  },
+  partial:{title:'Partial Buyer Clarity',
+    intro:'Your profile is beginning to communicate a recognisable area of value, but the message is not yet consistent across the buyer, problem, outcome, proof, and next step. Some buyers may understand part of your offer while making different assumptions about the rest.',
+    gapBody:(gap)=>'Your most urgent gap is '+gap+'. The opportunity is to connect the parts of your message so that your profile tells one coherent story rather than several individually reasonable stories.',
+    evidence:'You may already be receiving some relevant attention or conversations. However, if prospects cannot repeat your offer accurately, or if they understand your expertise but not your service, the profile still has a conversion gap. The score is directional. Treat it as a prioritisation tool, not proof of how every buyer perceives you.',
+    corrections:['Make the first two lines of your About section match the service named in your headline.','Connect each proof example to a problem and outcome a buyer recognises.','Replace a general CTA with one specific action that matches your current offer.'],
+    nextStep:'Review your profile as if you were a buyer with a specific problem. Write down the first service you believe you would ask for. If that answer is not obvious, simplify the message.'
+  },
+  strong:{title:'Strong Market Clarity with Conversion Gaps',
+    intro:'Your profile likely gives a relevant buyer a reasonably clear understanding of your area of value. The next issue is helping that understanding lead to confident action. Your profile may still have gaps in proof placement, specific outcome language, the transition from profile interest to conversation, or the consistency between your profile and your content.',
+    gapBody:(gap)=>'Your most urgent gap is '+gap+'. This is likely less about explaining who you are and more about strengthening the evidence or action path that supports the message.',
+    evidence:'If people understand your work but do not move forward, the issue may be conversion clarity rather than basic visibility. Buyers may need a clearer reason to trust the claim and a lower-friction next step. Your score remains directional. It does not predict inquiries or revenue.',
+    corrections:['Place one strong, relevant proof example near the central service message.','Clarify the first conversation or action a buyer should take.','Publish starter content that repeatedly reinforces the same buyer-problem-outcome association.'],
+    nextStep:'Audit the distance between your strongest claim and your strongest proof. Reduce that distance so a buyer does not have to search for evidence.'
+  },
+  ready:{title:'Buyer-Ready Message',
+    intro:'Your profile appears to make your buyer, problem, service, outcome, proof, and next step relatively clear. That is a strong foundation. It does not guarantee inquiries or revenue, but it means your profile is less likely to make a qualified buyer guess what to hire you for.',
+    gapBody:(gap)=>'Your lowest dimension is '+gap+'. Even a clear profile can lose momentum when one important signal, usually proof, action, or consistency, is weaker than the rest.',
+    evidence:'Compare this result with your observed evidence. If your score is high but people still ask what you do or send unrelated inquiries, your intended message and market perception may still differ. That is useful information, not a contradiction. Your score is directional and should be validated through real buyer conversations and observed behaviour.',
+    corrections:['Strengthen the weakest dimension rather than adding more services or credentials.','Check that your recent content repeats the same buyer-problem-outcome association.','Ask a recent prospect to repeat your offer in their own words.'],
+    nextStep:'Use your profile as a controlled message: make one focused improvement, then observe whether the quality of conversations and referrals becomes more aligned.'
+  }
+};
+
+const GAP_RECOMMENDATIONS={
+  'Buyer Clarity':'Make the buyer more specific. Name the type of person or organisation, the role or context they are in, and the service they should associate with you.',
+  'Problem Clarity':'Name the buyer\u2019s trigger. Explain what is happening, what is becoming difficult, or what decision the buyer is trying to make when they need your help.',
+  'Outcome Clarity':'Replace general descriptions of support with the practical change your work enables. Keep the outcome connected to the buyer\u2019s situation and avoid guarantees.',
+  'Proof Clarity':'Choose one relevant example and show the context, intervention, and change. Do not rely on credentials, years of experience, or client logos alone.',
+  'Action Clarity':'Give one clear next step. Tell the buyer whether to message you, book a conversation, request an assessment, or use another specific path.'
+};
+
+function getBand(score){
+  if(score<=39)return'critical';
+  if(score<=59)return'unclear';
+  if(score<=74)return'partial';
+  if(score<=89)return'strong';
+  return'ready';
+}
+
+// Build the full linear question list: 20 scored (grouped by dimension with
+// transitions), then evidence questions, then routing questions.
+let quizItems=[];
+DIMENSIONS.forEach((dim,di)=>{
+  dim.qs.forEach((q,qi)=>{
+    quizItems.push({type:'scored',dimKey:dim.key,dimName:dim.name,text:q,
+      isFirstInDim:qi===0,dimIntro:dim.intro,dimIndex:di});
+  });
+});
+EVIDENCE_QS.forEach((eq,i)=>{
+  quizItems.push({type:'choice',key:eq.key,text:eq.text,options:eq.options,
+    isFirstInDim:i===0,dimIntro:EVIDENCE_INTRO,section:'Observed Evidence'});
+});
+quizItems.push({type:'text',key:'recent_interaction',
+  text:'Please describe one recent interaction that made you question whether your LinkedIn message is clear. (Optional)',
+  section:'Observed Evidence'});
+ROUTING_QS.forEach((rq,i)=>{
+  quizItems.push({type:'choice',key:rq.key,text:rq.text,options:rq.options,
+    routing:rq.routing,triggerIndexes:rq.triggerIndexes,section:'A Bit More Context',
+    isFirstInDim:i===0,dimIntro:'A couple of final questions to route you to the right supporting resource, if one applies.'});
+});
+
+let currentQ=0,quizAnswers={},selectedVal=null;
+let leadData={},consentState={required:false,marketing:false,whatsapp:false};
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function toggleFaq(el){
+  const item=el.parentElement;
+  item.classList.toggle('open');
+}
+
+function goHome(event){
+  if(event)event.preventDefault();
+  showScreen('screen-cover');
+  window.scrollTo(0,0);
+}
+
+function goFaq(event){
+  if(event)event.preventDefault();
+  showScreen('screen-cover');
+  setTimeout(()=>{
+    const faqList=document.getElementById('faq-list');
+    if(faqList)faqList.scrollIntoView({behavior:'smooth',block:'start'});
+  },80);
+}
+
+// Scroll-reveal for landing sections — grouped, staggered, one-time
+if('IntersectionObserver' in window){
+  const revealObserver=new IntersectionObserver((entries)=>{
+    entries.forEach((entry,i)=>{
+      if(entry.isIntersecting){
+        setTimeout(()=>entry.target.classList.add('revealed'), i*80);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },{threshold:0.15});
+  document.querySelectorAll('.land-section').forEach(el=>revealObserver.observe(el));
+}
+
+// ── LEAD CAPTURE SCREEN ──
+function renderRadioGroup(containerId,options,storeKey){
+  const el=document.getElementById(containerId);
+  el.innerHTML='';
+  options.forEach(opt=>{
+    const div=document.createElement('div');
+    div.className='radio-opt';
+    div.innerHTML='<div class="radio-dot"></div><div class="radio-label">'+opt+'</div>';
+    div.onclick=()=>{
+      leadData[storeKey]=opt;
+      el.querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('selected'));
+      div.classList.add('selected');
+    };
+    el.appendChild(div);
+  });
+}
+renderRadioGroup('q-work-type',WORK_TYPES,'work_type');
+renderRadioGroup('q-years',YEARS,'years_experience');
+renderRadioGroup('q-offer-status',OFFER_STATUS,'existing_offer_status');
+renderRadioGroup('q-urgency',URGENCY,'urgency');
+
+function submitLead(){
+  const name=document.getElementById('lead-name').value.trim();
+  const email=document.getElementById('lead-email').value.trim();
+  const whatsapp=document.getElementById('lead-whatsapp').value.trim();
+  const desc=document.getElementById('lead-desc').value.trim();
+  const emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const errEl=document.getElementById('lead-error');
+  if(!name||!emailOk||!leadData.work_type||!leadData.years_experience||!leadData.existing_offer_status||!leadData.urgency){
+    errEl.style.display='block';return;
+  }
+  errEl.style.display='none';
+  leadData.name=name;leadData.email=email;leadData.whatsapp=whatsapp;leadData.work_description=desc;
+  currentQ=0;
+  showTransitionOrQuestion(0);
+}
+
+// ── QUIZ FLOW ──
+function showTransitionOrQuestion(idx){
+  const item=quizItems[idx];
+  if(item.isFirstInDim){
+    showTransition(idx);
+  }else{
+    loadQuestion(idx);
+    showScreen('screen-quiz');
+  }
+}
+function showTransition(idx){
+  const item=quizItems[idx];
+  const label=item.dimName||item.section;
+  document.getElementById('t-eyebrow').textContent=label;
+  document.getElementById('t-heading').innerHTML=label;
+  document.getElementById('t-body').textContent=item.dimIntro;
+  showScreen('screen-transition');
+}
+function continueFromTransition(){
+  loadQuestion(currentQ);
+  showScreen('screen-quiz');
+}
+function loadQuestion(idx){
+  const item=quizItems[idx];
+  document.getElementById('section-tag').textContent=item.dimName||item.section;
+  document.getElementById('q-counter').textContent=(idx+1)+' of '+quizItems.length;
+  document.getElementById('progress-fill').style.width=(idx/quizItems.length*100)+'%';
+  document.getElementById('q-text').textContent=item.text;
+  const grid=document.getElementById('answer-grid');
+  grid.innerHTML='';
+
+  if(item.type==='text'){
+    const ta=document.createElement('textarea');
+    ta.style.cssText='width:100%;background:rgba(245,237,228,0.03);border:1px solid rgba(245,237,228,0.14);outline:none;color:#F5EDE4;font-family:inherit;font-size:.9rem;padding:14px;min-height:100px';
+    ta.value=quizAnswers[item.key]||'';
+    ta.oninput=()=>{quizAnswers[item.key]=ta.value;document.getElementById('btn-next').disabled=false;};
+    grid.appendChild(ta);
+    document.getElementById('btn-next').disabled=false; // optional field, always allow proceeding
+  }else{
+    const options=item.type==='scored'?SCALE:item.options;
+    options.forEach((opt,i)=>{
+      const val=item.type==='scored'?(5-i):i; // scored: 5..1; choice: store index
+      const btn=document.createElement('button');
+      btn.className='answer-btn'+(quizAnswers[item.key||item.dimKey+'_'+idx]===val?' selected':'');
+      btn.dataset.val=val;
+      btn.innerHTML='<div class="a-dot"></div><span class="a-label">'+opt+'</span>';
+      btn.onclick=()=>selectAnswer(idx,val);
+      grid.appendChild(btn);
+    });
+    const ansKey=item.type==='scored'?(item.dimKey+'_q'+idx):item.key;
+    selectedVal=quizAnswers[ansKey];
+    document.getElementById('btn-next').disabled=(selectedVal===undefined);
+  }
+  document.getElementById('btn-back').disabled=(idx===0);
+}
+function selectAnswer(idx,val){
+  const item=quizItems[idx];
+  const ansKey=item.type==='scored'?(item.dimKey+'_q'+idx):item.key;
+  quizAnswers[ansKey]=val;
+  selectedVal=val;
+  document.querySelectorAll('.answer-btn').forEach(b=>{
+    b.classList.toggle('selected',parseInt(b.dataset.val)===val);
+  });
+  document.getElementById('btn-next').disabled=false;
+}
+function goBack(){
+  if(currentQ===0)return;
+  currentQ--;
+  loadQuestion(currentQ);
+}
+function goNext(){
+  const item=quizItems[currentQ];
+  const ansKey=item.type==='scored'?(item.dimKey+'_q'+currentQ):item.key;
+  if(item.type!=='text'&&quizAnswers[ansKey]===undefined)return;
+  currentQ++;
+  if(currentQ>=quizItems.length){
+    showScreen('screen-consent');
+    return;
+  }
+  showTransitionOrQuestion(currentQ);
+}
+
+// ── CONSENT ──
+function toggleConsent(which){
+  consentState[which]=!consentState[which];
+  document.getElementById('consent-'+which).classList.toggle('checked',consentState[which]);
+}
+
+// ── SCORING ──
+function computeResults(){
+  const dimScores={},dimNormalized={};
+  DIMENSIONS.forEach((dim,di)=>{
+    let sum=0,count=0;
+    dim.qs.forEach((q,qi)=>{
+      const idx=di*4+qi;
+      const val=quizAnswers[dim.key+'_q'+idx]||3;
+      sum+=val;count++;
+    });
+    const avg=sum/count;
+    const normalized=avg/5; // new formula per Section 3.4: dimensionAverage / maximum (5)
+    dimNormalized[dim.key]=normalized;
+    dimScores[dim.key]=Math.round(normalized*dim.weight);
+  });
+  const overall=Math.round(DIMENSIONS.reduce((s,d)=>s+d.weight*dimNormalized[d.key],0));
+  const band=getBand(overall);
+
+  // Primary gap: lowest normalized score (avg/5), tie-break by dependency order BC>PC>OC>PR>AC
+  let minNorm=Infinity,gapKey=DIMENSIONS[0].key;
+  DIMENSIONS.forEach(d=>{
+    if(dimNormalized[d.key]<minNorm-0.0001){minNorm=dimNormalized[d.key];gapKey=d.key;}
+  });
+
+  // Supporting gaps: other dimensions below threshold, excluding the primary gap
+  const supportingGaps=DIMENSIONS
+    .filter(d=>d.key!==gapKey && dimNormalized[d.key]<SUPPORTING_GAP_THRESHOLD)
+    .map(d=>d.key);
+
+  return {dimScores,dimNormalized,overall,band,gapKey,supportingGaps};
+}
+
+// Derive offer status from the lead-capture qualification answer (Q7)
+function deriveOfferStatus(){
+  const s=leadData.existing_offer_status;
+  if(s==='Yes, and I actively sell it')return 'defined';
+  if(s==='Yes, but it is not clearly packaged')return 'defined'; // defined enough to work with, per spec's offer/proof-status split
+  if(s==='I have expertise but not a clear consulting offer')return 'internal expertise not translated';
+  if(s==='I am still deciding')return 'undefined';
+  if(s==='No')return 'undefined';
+  return 'undefined';
+}
+// Derive proof status from the proof-location routing answer (Q35)
+function deriveProofStatus(){
+  const ans=quizAnswers['proof_location'];
+  if(ans===0||ans===1)return 'relevant evidence exists'; // on profile/website, or in formal case studies/docs
+  if(ans===2||ans===3)return 'scattered or private'; // WhatsApp/email, or scattered files
+  if(ans===4||ans===5)return 'none'; // mostly memory, or not much proof at all
+  return 'none';
+}
+// Reported Market Signals -> market-conflict detection.
+// A high score with real-world confusion signals means the score alone
+// cannot be trusted to drive the route — this overrides a clean routing
+// even when the numbers look strong (Section 6.8 / 8.6).
+function detectMarketConflict(overall){
+  const whatDoYouDo=quizAnswers['what_do_you_do_frequency']; // 0=Never..4=Very often (index into options array)
+  const referralAcc=quizAnswers['referral_accuracy'];
+  const offerRecall=quizAnswers['prospect_offer_recall'];
+  const inquiryType=quizAnswers['inquiry_type'];
+  let confusionSignals=0;
+  if(whatDoYouDo!==undefined&&whatDoYouDo>=3)confusionSignals++; // "Often"/"Very often" asked what they do
+  if(referralAcc!==undefined&&referralAcc<=1)confusionSignals++; // not referred recently, or described by job title only
+  if(offerRecall!==undefined&&(offerRecall===1||offerRecall===2))confusionSignals++; // No / Not consistently
+  if(inquiryType!==undefined&&(inquiryType===1||inquiryType===2||inquiryType===5))confusionSignals++; // general advice / what I do / unrelated
+  return overall>=75 && confusionSignals>=2;
+}
+
+function determineRoute(results){
+  const offerStatus=deriveOfferStatus();
+  const proofStatus=deriveProofStatus();
+  const urgency=leadData.urgency==='Actively looking for help now'||leadData.urgency==='Within the next 90 days';
+  const marketConflict=detectMarketConflict(results.overall);
+  const weakCount=DIMENSIONS.filter(d=>results.dimNormalized[d.key]<SUPPORTING_GAP_THRESHOLD).length;
+  const commercialHigh=offerStatus==='defined'&&leadData.existing_offer_status==='Yes, and I actively sell it';
+
+  // 1. Market conflict + (urgent OR high score OR commercially active) -> Perception Call
+  if(marketConflict&&(urgency||commercialHigh||results.overall>=75)){
+    return {product:'perceptionCall',reason:'Your reported market signals conflict with your Scorecard result. A personalized review can identify the real source of the mismatch before you invest in further message or profile changes.',startingSection:null,sequence:null,offerStatus,proofStatus};
+  }
+  // 2. Undefined / multiple / untranslated offer -> Offer Builder (then chain if no proof either)
+  if(offerStatus==='undefined'||offerStatus==='internal expertise not translated'){
+    const sequence=proofStatus==='none'?['Offer Builder','Proof Creation','Expertise-to-Recognition Playbook']:['Offer Builder'];
+    return {product:'offerBuilder',reason:'The market cannot yet clearly understand what you\u2019re offering, who it\u2019s for, or what problem it solves. Public visibility won\u2019t resolve an offer that hasn\u2019t been properly defined yet.',startingSection:null,sequence,offerStatus,proofStatus};
+  }
+  // 3. Defined offer, no proof -> Proof Creation
+  if(offerStatus==='defined'&&proofStatus==='none'){
+    return {product:'proofCreation',reason:'Your direction is becoming clear, but you don\u2019t yet have usable evidence that lets a buyer assess the claim. Proof can\u2019t be invented \u2014 it has to be created, collected, or documented.',startingSection:null,sequence:['Proof Creation','Expertise-to-Recognition Playbook'],offerStatus,proofStatus};
+  }
+  // 4. Defined offer, scattered/private proof, weak Proof Clarity -> Playbook starting with Proof Bank
+  if(offerStatus==='defined'&&proofStatus==='scattered or private'&&results.dimNormalized.PR<SUPPORTING_GAP_THRESHOLD){
+    return {product:'playbook',reason:'You likely have relevant evidence already \u2014 it just isn\u2019t structured or visible in a way a buyer can use. This needs organizing and connecting to your offer, not creating from scratch.',startingSection:'Proof Bank, Case Study/Proof Narrative, and Credibility Signal Plan',sequence:null,offerStatus,proofStatus};
+  }
+  // 5. Multiple weak dimensions with defined offer + evidence -> full Playbook
+  if(offerStatus==='defined'&&proofStatus!=='none'&&weakCount>=3){
+    return {product:'playbook',reason:'Your offer and experience give you a workable foundation, but several market-translation gaps are interacting. The recommended sequence is to clarify your position first, organize the proof that supports it, then correct the public signals.',startingSection:'Recognition-Gap Diagnosis, Final Market Position, Core Message Kit, Proof Bank, Public Signal Correction Plan, and 30-Day Recognition Plan',sequence:null,offerStatus,proofStatus};
+  }
+  // 6. Defined offer + evidence + one primary gap -> Playbook, starting section keyed by gap
+  if(offerStatus==='defined'&&proofStatus!=='none'&&results.dimNormalized[results.gapKey]<SUPPORTING_GAP_THRESHOLD){
+    const startMap={
+      BC:'Recognition-Gap Diagnosis and Final Market Position',
+      PC:'Final Market Position and Core Message Kit',
+      OC:'Core Message Kit and Case Study/Proof Narrative',
+      PR:'Proof Bank and Case Study/Proof Narrative',
+      AC:'Core Message Kit, Public Signal Correction Plan, and 30-Day Recognition Plan'
+    };
+    return {product:'playbook',reason:'Your offer and evidence are sufficiently developed, but your message and public signals aren\u2019t consistently translating them yet.',startingSection:startMap[results.gapKey],sequence:null,offerStatus,proofStatus};
+  }
+  // 7. Strong foundation, no urgency -> optional Playbook, no pressure
+  if(offerStatus==='defined'&&proofStatus!=='none'&&weakCount===0&&!urgency){
+    return {product:'playbook',reason:'You have a strong foundation \u2014 clear offer, workable evidence, and no dimension standing out as a real gap. From here it\u2019s about structured implementation and maintaining the signal, not fixing something broken.',startingSection:null,sequence:null,offerStatus,proofStatus};
+  }
+  // Default fallback: Perception Call for manual judgment
+  return {product:'perceptionCall',reason:'Your answers don\u2019t point cleanly to one route \u2014 a short conversation is the most responsible way to sequence what comes next rather than guessing.',startingSection:null,sequence:null,offerStatus,proofStatus};
+}
+
+async function submitScorecard(){
+  const errEl=document.getElementById('consent-error');
+  if(!consentState.required){errEl.style.display='block';return}
+  errEl.style.display='none';
+
+  const results=computeResults();
+  const route=determineRoute(results);
+  const marketConflict=detectMarketConflict(results.overall);
+
+  showResults(results,route,marketConflict);
+  notifyBrenda(results,route,marketConflict); // fire-and-forget, non-blocking
+}
+
+function dimNameFromKey(key){
+  return DIMENSIONS.find(d=>d.key===key).name;
+
+}
+
+function showResults(results,route,marketConflict){
+  const cat=CATEGORIES[results.band];
+  const gapName=dimNameFromKey(results.gapKey);
+  const product=PRODUCTS[route.product];
+
+  document.getElementById('res-badge').textContent=cat.title;
+  document.getElementById('res-score').textContent=results.overall;
+  document.getElementById('res-intro').textContent=cat.intro;
+  document.getElementById('res-gap-body').innerHTML=cat.gapBody(gapName)+'<br><br>'+GAP_RECOMMENDATIONS[gapName];
+  document.getElementById('res-nextstep').textContent=cat.nextStep;
+
+  // Supporting gaps
+  const sgBlock=document.getElementById('supporting-gaps-block');
+  if(results.supportingGaps.length>0){
+    sgBlock.style.display='block';
+    const names=results.supportingGaps.map(dimNameFromKey).join(' and ');
+    document.getElementById('res-supporting-body').textContent=
+      'Even after your primary gap is addressed, buyers may still hesitate because of '+names+'. Treat these as constraints worth watching, not the first priority.';
+  }else{
+    sgBlock.style.display='none';
+  }
+
+  // Reported Market Signals + conflict flag
+  document.getElementById('res-evidence-body').textContent=cat.evidence;
+  const conflictEl=document.getElementById('res-conflict-body');
+  if(marketConflict){
+    conflictEl.style.display='block';
+    conflictEl.textContent='Your score suggests strong clarity, but your reported signals suggest ongoing confusion \u2014 people repeatedly asking what you do, inaccurate referrals, or inquiries that don\u2019t match what you want. This is why a personalized review may be more useful right now than another profile edit.';
+  }else{
+    conflictEl.style.display='none';
+  }
+
+  const cl=document.getElementById('res-corrections');
+  cl.innerHTML='';
+  cat.corrections.forEach((c,i)=>{
+    const li=document.createElement('li');
+    li.innerHTML='<span class="move-num">0'+(i+1)+'</span><span>'+c+'</span>';
+    cl.appendChild(li);
+  });
+
+  const bars=document.getElementById('dim-bars');
+  bars.innerHTML='';
+  DIMENSIONS.forEach(d=>{
+    const score=results.dimScores[d.key];
+    const pct=(results.dimNormalized[d.key]*100).toFixed(0);
+    const isGap=d.key===results.gapKey;
+    const isSupporting=results.supportingGaps.includes(d.key);
+    const row=document.createElement('div');
+    row.innerHTML=`
+      <div class="dim-row-top">
+        <div class="dim-name${isGap||isSupporting?' gap':''}">${d.name}${isGap?' (primary)':isSupporting?' (supporting)':''}</div>
+        <div class="dim-val">${score}/${d.weight}</div>
+      </div>
+      <div class="dim-track"><div class="dim-fill${isGap||isSupporting?' gap':''}" data-pct="${pct}" style="width:0%"></div></div>
+    `;
+    bars.appendChild(row);
+  });
+
+  // Recommended route (replaces the old static Perception Reset CTA)
+  document.getElementById('res-route-name').textContent=product.name;
+  document.getElementById('res-route-price').textContent='Indicative: '+product.price;
+  document.getElementById('res-cta-text').textContent=route.reason+' '+product.blurb;
+  const seqEl=document.getElementById('res-sequence-text');
+  if(route.startingSection){
+    seqEl.style.display='block';
+    seqEl.textContent='Starting point: '+route.startingSection;
+  }else if(route.sequence){
+    seqEl.style.display='block';
+    seqEl.textContent='Recommended sequence: '+route.sequence.join(' \u2192 ');
+  }else{
+    seqEl.style.display='none';
+  }
+  const linkText=route.product==='perceptionCall'?'Book a Perception Call \u2192':'Talk It Through With Brenda \u2192';
+  document.getElementById('res-route-link').textContent=linkText;
+
+  const wsBlock=document.getElementById('whatsapp-block');
+  wsBlock.innerHTML='';
+  if(consentState.whatsapp&&leadData.whatsapp){
+    const div=document.createElement('div');
+    div.className='res-block';
+    div.innerHTML='<div class="res-label">Get This On WhatsApp Too</div><button class="btn-outline" style="cursor:pointer;margin-top:6px" onclick="messageOnWhatsApp(\''+cat.title+'\','+results.overall+',\''+gapName+'\')">Message Brenda on WhatsApp →</button>';
+    wsBlock.appendChild(div);
+  }
+
+  showScreen('screen-results');
+  setTimeout(()=>{
+    document.querySelectorAll('.dim-fill').forEach(el=>{
+      el.style.transition='width 1s ease';
+      el.style.width=el.dataset.pct+'%';
+    });
+  },150);
+}
+
+async function notifyBrenda(results,route,marketConflict){
+  try{
+    await fetch(CONFIG.API_ENDPOINT,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        name:leadData.name,email:leadData.email,whatsapp:leadData.whatsapp,
+        workType:leadData.work_type,workDescription:leadData.work_description,
+        yearsExperience:leadData.years_experience,offerStatusRaw:leadData.existing_offer_status,
+        urgency:leadData.urgency,
+        overallScore:results.overall,category:CATEGORIES[results.band].title,
+        dimensionScores:results.dimScores,primaryGap:dimNameFromKey(results.gapKey),
+        supportingGaps:results.supportingGaps.map(dimNameFromKey),
+        recommendedProduct:PRODUCTS[route.product].name,routeReason:route.reason,
+        derivedOfferStatus:route.offerStatus,derivedProofStatus:route.proofStatus,
+        marketConflict:marketConflict,
+        marketingConsent:consentState.marketing,whatsappConsent:consentState.whatsapp,
+        evidenceAnswers:quizAnswers
+      })
+    });
+  }catch(e){console.warn('Notify failed (non-blocking):',e)}
+}
+
+function messageOnWhatsApp(category,score,gap){
+  const num=CONFIG.BRENDA_WHATSAPP;
+  if(!num||num.indexOf('REPLACE')===0){
+    alert('WhatsApp number not configured yet.');
+    return;
+  }
+  const msg='Hi Brenda, I just completed the LinkedIn Buyer Confusion Scorecard. '
+    +'My name is '+leadData.name+', my result was '+category+' ('+score+'/100), '
+    +'and my primary gap was '+gap+'. I\'d like to talk through it.';
+  window.open('https://wa.me/'+num+'?text='+encodeURIComponent(msg),'_blank');
+}
+
+function restart(){
+  currentQ=0;quizAnswers={};selectedVal=null;leadData={};
+  consentState={required:false,marketing:false,whatsapp:false};
+  ['required','marketing','whatsapp'].forEach(k=>document.getElementById('consent-'+k).classList.remove('checked'));
+  document.getElementById('lead-name').value='';
+  document.getElementById('lead-email').value='';
+  document.getElementById('lead-whatsapp').value='';
+  document.getElementById('lead-desc').value='';
+  document.querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('selected'));
+  document.getElementById('lead-error').style.display='none';
+  document.getElementById('consent-error').style.display='none';
+  showScreen('screen-cover');
+}
+</script>
+
+</body>
+</html>
