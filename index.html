@@ -675,14 +675,12 @@ const CONFIG={ API_ENDPOINT:'/api/notify', CLARITY_CALL:'https://calendly.com/un
 const SUPPORTING_GAP_THRESHOLD=0.60; // normalized (avg/5) below this = supporting gap
 
 const PRODUCTS={
-  offerBuilder:{name:'Offer Builder',price:'50,000\u2013100,000 CFA',
-    blurb:'Helps you turn undefined or scattered expertise into one clearly defined, sellable offer \u2014 audience, problem, outcome, method, scope, and price direction.'},
-  proofCreation:{name:'Proof Creation',price:'20,000\u201330,000 CFA',
-    blurb:'For when your direction is clear but your evidence isn\u2019t \u2014 helps you create or organise a pilot, portfolio, audit, or demonstration a buyer can actually evaluate.'},
   playbook:{name:'Expertise-to-Recognition Playbook',price:'Existing offer pricing',
+    link:'PLACEHOLDER_PLAYBOOK_LANDING_PAGE_LINK', // ⚠️ REPLACE with the real Playbook landing page URL once it's live
     blurb:'For when your offer and evidence already exist but the market isn\u2019t translating them \u2014 message, proof placement, and public signal correction.'},
-  perceptionCall:{name:'Perception Call',price:'Personalised',
-    blurb:'A judgment call for complex, urgent, or contradictory cases \u2014 where the standard route would be incomplete or irresponsible to automate.'}
+  bookCall:{name:'Book a Perception Call',price:'',
+    link:CONFIG.CLARITY_CALL,
+    blurb:'A short strategic conversation to map exactly where things stand, which gap matters most, and what to do about it.'}
 };
 
 const SCALE=['Very clear and consistently visible','Clearly visible','Partly visible or inconsistent','Barely visible','Not visible or not true'];
@@ -1080,18 +1078,17 @@ function determineRoute(results){
   const weakCount=DIMENSIONS.filter(d=>results.dimNormalized[d.key]<SUPPORTING_GAP_THRESHOLD).length;
   const commercialHigh=offerStatus==='defined'&&leadData.existing_offer_status==='Yes, and I actively sell it';
 
-  // 1. Market conflict + (urgent OR high score OR commercially active) -> Perception Call
+  // 1. Market conflict + (urgent OR high score OR commercially active) -> Book a Call
   if(marketConflict&&(urgency||commercialHigh||results.overall>=75)){
-    return {product:'perceptionCall',reason:'Your reported market signals conflict with your Scorecard result. A personalized review can identify the real source of the mismatch before you invest in further message or profile changes.',startingSection:null,sequence:null,offerStatus,proofStatus};
+    return {product:'bookCall',reason:'Your reported market signals conflict with your Scorecard result. A personalized conversation can identify the real source of the mismatch before you invest in further message or profile changes.',startingSection:null,sequence:null,offerStatus,proofStatus};
   }
-  // 2. Undefined / multiple / untranslated offer -> Offer Builder (then chain if no proof either)
+  // 2. Undefined / multiple / untranslated offer -> Book a Call
   if(offerStatus==='undefined'||offerStatus==='internal expertise not translated'){
-    const sequence=proofStatus==='none'?['Offer Builder','Proof Creation','Expertise-to-Recognition Playbook']:['Offer Builder'];
-    return {product:'offerBuilder',reason:'The market cannot yet clearly understand what you\u2019re offering, who it\u2019s for, or what problem it solves. Public visibility won\u2019t resolve an offer that hasn\u2019t been properly defined yet.',startingSection:null,sequence,offerStatus,proofStatus};
+    return {product:'bookCall',reason:'The market cannot yet clearly understand what you\u2019re offering, who it\u2019s for, or what problem it solves. That\u2019s a conversation worth having before any implementation work.',startingSection:null,sequence:null,offerStatus,proofStatus};
   }
-  // 3. Defined offer, no proof -> Proof Creation
+  // 3. Defined offer, no proof -> Book a Call
   if(offerStatus==='defined'&&proofStatus==='none'){
-    return {product:'proofCreation',reason:'Your direction is becoming clear, but you don\u2019t yet have usable evidence that lets a buyer assess the claim. Proof can\u2019t be invented \u2014 it has to be created, collected, or documented.',startingSection:null,sequence:['Proof Creation','Expertise-to-Recognition Playbook'],offerStatus,proofStatus};
+    return {product:'bookCall',reason:'Your direction is becoming clear, but you don\u2019t yet have usable evidence that lets a buyer assess the claim. Worth talking through what evidence to create first.',startingSection:null,sequence:null,offerStatus,proofStatus};
   }
   // 4. Defined offer, scattered/private proof, weak Proof Clarity -> Playbook starting with Proof Bank
   if(offerStatus==='defined'&&proofStatus==='scattered or private'&&results.dimNormalized.PR<SUPPORTING_GAP_THRESHOLD){
@@ -1116,8 +1113,8 @@ function determineRoute(results){
   if(offerStatus==='defined'&&proofStatus!=='none'&&weakCount===0&&!urgency){
     return {product:'playbook',reason:'You have a strong foundation \u2014 clear offer, workable evidence, and no dimension standing out as a real gap. From here it\u2019s about structured implementation and maintaining the signal, not fixing something broken.',startingSection:null,sequence:null,offerStatus,proofStatus};
   }
-  // Default fallback: Perception Call for manual judgment
-  return {product:'perceptionCall',reason:'Your answers don\u2019t point cleanly to one route \u2014 a short conversation is the most responsible way to sequence what comes next rather than guessing.',startingSection:null,sequence:null,offerStatus,proofStatus};
+  // Default fallback: Book a Call for manual judgment
+  return {product:'bookCall',reason:'Your answers don\u2019t point cleanly to one route \u2014 a short conversation is the most responsible way to sequence what comes next rather than guessing.',startingSection:null,sequence:null,offerStatus,proofStatus};
 }
 
 async function submitScorecard(){
@@ -1199,7 +1196,12 @@ function showResults(results,route,marketConflict){
   // Recommended route (replaces the old static Perception Reset CTA)
   document.getElementById('res-route-name').textContent=product.name;
   document.getElementById('res-route-price').textContent='Indicative: '+product.price;
-  document.getElementById('res-cta-text').textContent=route.reason+' '+product.blurb;
+  if(route.product==='bookCall'){
+    document.getElementById('res-cta-text').innerHTML=route.reason+
+      '<br><br><em>This isn\u2019t a sales call.</em> It\u2019s a focused conversation to map exactly where things stand, which gap is costing you the most, and what the clearest path forward looks like \u2014 using your Buyer Clarity Score as the starting point.';
+  }else{
+    document.getElementById('res-cta-text').textContent=route.reason+' '+product.blurb;
+  }
   const seqEl=document.getElementById('res-sequence-text');
   if(route.startingSection){
     seqEl.style.display='block';
@@ -1210,8 +1212,9 @@ function showResults(results,route,marketConflict){
   }else{
     seqEl.style.display='none';
   }
-  const linkText=route.product==='perceptionCall'?'Book a Perception Call \u2192':'Talk It Through With Brenda \u2192';
+  const linkText=route.product==='playbook'?'Explore the Playbook \u2192':'Book a Perception Call \u2192';
   document.getElementById('res-route-link').textContent=linkText;
+  document.getElementById('res-route-link').href=product.link;
 
   const wsBlock=document.getElementById('whatsapp-block');
   wsBlock.innerHTML='';
