@@ -81,7 +81,12 @@ body::before{
 /* Landing sections (on the cover screen) */
 .land-section{padding:3rem 44px;max-width:900px;width:100%;align-self:center;border-top:1px solid var(--border);opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
 .land-section.revealed{opacity:1;transform:none}
-.land-section.ivory{background:rgba(245,237,228,0.03)}
+.land-section.ivory{
+  background:linear-gradient(135deg, rgba(245,237,228,0.05) 0%, rgba(245,237,228,0.02) 100%);
+  border-radius:20px;margin:0 20px;max-width:860px;
+  box-shadow:0 24px 60px -20px rgba(0,0,0,0.35),inset 0 1px 0 rgba(245,237,228,0.06);
+  border-top:1px solid rgba(245,237,228,0.1);
+}
 .land-eyebrow{font-family:var(--mono);font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent1);margin-bottom:14px}
 .land-headline{font-family:var(--serif);font-weight:900;font-size:clamp(1.5rem,3.4vw,2.4rem);line-height:1.15;letter-spacing:-.01em;margin-bottom:16px}
 .land-body{font-size:.88rem;line-height:1.8;color:rgba(245,237,228,0.55);max-width:640px;margin-bottom:14px}
@@ -91,7 +96,8 @@ body::before{
 .gap-arrow{color:var(--accent1);font-family:var(--mono)}
 .gap-new{color:var(--secondary)}
 .dim-question-row{display:flex;gap:20px;align-items:baseline;padding:16px 0;border-top:1px solid var(--border)}
-.dim-question-num{font-family:var(--serif);font-weight:900;font-size:1.6rem;color:rgba(245,237,228,0.15);flex-shrink:0;width:36px}
+.dim-question-icon{width:44px;height:44px;object-fit:contain;flex-shrink:0}
+.diagnostic-strip-img{width:100%;max-width:720px;height:auto;display:block;margin:24px 0 8px;border-radius:12px}
 .dim-question-name{font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent1);margin-bottom:4px}
 .dim-question-text{font-family:var(--serif);font-style:italic;font-size:1rem;color:rgba(245,237,228,0.7)}
 .weight-row{display:flex;align-items:center;gap:16px;margin-bottom:12px}
@@ -126,7 +132,11 @@ body::before{
 .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;position:relative;z-index:1;max-width:1100px;width:100%}
 .hero-text-col{order:1}
 .hero-mock-col{order:2;display:flex;justify-content:center}
-.mock-wrap{position:relative;width:100%;max-width:460px;animation:floatY 6s ease-in-out infinite}
+.mock-wrap{position:relative;width:100%;max-width:560px;animation:floatY 6s ease-in-out infinite}
+.hero-mockup-img{
+  width:100%;height:auto;display:block;object-fit:contain;
+  filter:drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 0 40px rgba(228,0,124,0.15));
+}
 .mock-laptop{
   background:var(--secondary);border-radius:6px;overflow:hidden;
   box-shadow:0 30px 60px -20px rgba(0,0,0,0.6),0 0 0 1px rgba(245,237,228,0.1);
@@ -160,7 +170,6 @@ body::before{
   .hero-text-col{order:1}
   .hero-mock-col{order:2;margin-top:8px}
   .mock-wrap{max-width:340px}
-  .mock-phone{width:110px;right:-14px;bottom:-20px}
   .mock-phone-score{font-size:1.2rem}
 }
 .body-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:1.5rem 44px 2.5rem;max-width:760px;width:100%;align-self:center}
@@ -269,7 +278,12 @@ body::before{
 .moves-list{list-style:none;display:flex;flex-direction:column;gap:10px}
 .moves-list li{font-size:.85rem;line-height:1.65;color:rgba(245,237,228,0.6);display:flex;gap:12px}
 .move-num{font-family:var(--mono);font-size:.5rem;color:var(--accent1);font-weight:700;margin-top:3px;flex-shrink:0}
-.reset-cta{border:1px solid var(--border-strong);padding:1.6rem 1.8rem;margin-top:1rem;border-left:3px solid var(--accent1)}
+.reset-cta{
+  border:1px solid var(--border-strong);padding:1.8rem 2rem;margin-top:1rem;
+  border-left:3px solid var(--accent1);border-radius:0 14px 14px 0;
+  background:linear-gradient(135deg, rgba(228,0,124,0.06) 0%, rgba(245,237,228,0.02) 100%);
+  box-shadow:0 20px 50px -20px rgba(228,0,124,0.2);
+}
 .reset-cta-label{font-family:var(--mono);font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
 .reset-cta p{font-size:.85rem;line-height:1.7;color:rgba(245,237,228,0.55);margin-bottom:1rem}
 .routing-block{border:1px solid rgba(228,0,124,0.2);padding:1.4rem 1.6rem;margin-bottom:1.5rem;background:rgba(228,0,124,0.03)}
@@ -295,7 +309,6 @@ body::before{
     <div class="site-nav-links">
       <a class="site-nav-link" href="#" onclick="goHome(event)">Home</a>
       <a class="site-nav-link" href="#" onclick="goFaq(event)">FAQ</a>
-      <a class="site-nav-cta" href="https://calendly.com/unapologeticquenn/brand-clarity-call" target="_blank">Book a Call</a>
     </div>
   </div>
 
@@ -305,37 +318,18 @@ body::before{
     <div class="editorial-grid"></div>
     <div class="hero-grid">
       <div class="hero-text-col">
-        <div class="eyebrow">The LinkedIn Buyer Confusion Scorecard</div>
-        <h1 class="headline">How clearly does the market <em>understand what you do?</em></h1>
-        <p class="sub">Capability is not the same as market clarity.</p>
-        <p class="desc">You may have real expertise, an existing service, and proof of your work — but if your LinkedIn profile does not make the buyer, problem, outcome, proof, and next step clear, qualified people may still hesitate.</p>
-        <p class="desc">Take this short diagnostic to identify where your message is creating uncertainty. About 5–7 minutes. You'll get a <strong>Buyer Clarity Score</strong> out of 100 — the higher it is, the easier your value is for the market to understand.</p>
+        <div class="eyebrow">YOU KNOW YOU'RE GOOD AT WHAT YOU DO.</div>
+        <h1 class="headline">So why is it still <em>so hard for the right people to see it?</em></h1>
+        <p class="desc">In 5 to 7 minutes, find out whether the problem is your position, the problem you lead with, the outcome you promise, the proof you show, or the next step you offer.</p>
         <div style="margin-top:20px">
-          <button class="btn-primary" onclick="showScreen('screen-lead')">Start the Scorecard →</button>
+          <button class="btn-primary" onclick="showScreen('screen-lead')">SHOW ME WHAT TO FIX FIRST</button>
         </div>
-        <p style="font-size:.72rem;color:rgba(245,237,228,0.3);margin-top:14px;font-style:italic">Directional guidance only. Not an objective market study, a guarantee, or a judgment of your professional worth.</p>
+        <p style="font-size:.78rem;color:rgba(245,237,228,0.4);margin-top:14px">5 to 7 minutes. Get your Buyer Clarity Score, primary gap, and recommended next route.</p>
+        <p style="font-size:.72rem;color:rgba(245,237,228,0.3);margin-top:10px;font-style:italic">This is a clarity diagnostic, not a measure of your talent, intelligence, or professional worth.</p>
       </div>
       <div class="hero-mock-col">
         <div class="mock-wrap">
-          <div class="mock-laptop">
-            <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
-            <div class="mock-body">
-              <div class="mock-title">Your Buyer Clarity Score: 68/100</div>
-              <div class="mock-badge">Partial Buyer Clarity</div>
-              <div class="mock-dims">
-                <div class="mock-dim-row"><div class="mock-dim-label">Buyer Clarity</div><div class="mock-dim-track"><div class="mock-dim-fill" style="width:72%"></div></div><div class="mock-dim-val">18/25</div></div>
-                <div class="mock-dim-row"><div class="mock-dim-label">Problem Clarity</div><div class="mock-dim-track"><div class="mock-dim-fill gap" style="width:48%"></div></div><div class="mock-dim-val">12/25</div></div>
-                <div class="mock-dim-row"><div class="mock-dim-label">Outcome Clarity</div><div class="mock-dim-track"><div class="mock-dim-fill" style="width:67%"></div></div><div class="mock-dim-val">10/15</div></div>
-                <div class="mock-dim-row"><div class="mock-dim-label">Proof Clarity</div><div class="mock-dim-track"><div class="mock-dim-fill" style="width:73%"></div></div><div class="mock-dim-val">11/15</div></div>
-                <div class="mock-dim-row"><div class="mock-dim-label">Action Clarity</div><div class="mock-dim-track"><div class="mock-dim-fill" style="width:85%"></div></div><div class="mock-dim-val">17/20</div></div>
-              </div>
-            </div>
-          </div>
-          <div class="mock-phone">
-            <div class="mock-phone-label">Your Result</div>
-            <div class="mock-phone-score">68<span>/100</span></div>
-            <div class="mock-phone-gap">Primary Gap: Problem Clarity</div>
-          </div>
+          <img src="assets/hero-mockup.jpg" alt="LinkedIn Buyer Confusion Scorecard result showing a Buyer Clarity Score of 68 out of 100, with Problem Clarity as the primary gap" class="hero-mockup-img">
         </div>
         <div class="mock-example-tag">Example profile — not your result</div>
       </div>
@@ -359,25 +353,26 @@ body::before{
     <div class="land-eyebrow">What It Measures</div>
     <h2 class="land-headline">Five questions a buyer is silently asking.</h2>
     <p class="land-body">The Scorecard doesn't measure how impressive you are. It examines how much usable meaning a buyer can extract from the way your expertise is presented.</p>
+    <img src="assets/dimension-diagnostic.jpg" alt="The five diagnostic dimensions: Buyer, Problem, Outcome, Proof, Action" class="diagnostic-strip-img">
     <div style="margin-top:10px">
       <div class="dim-question-row" style="border-top:none">
-        <div class="dim-question-num">01</div>
+        <img class="dim-question-icon" src="assets/icon-buyer.png" alt="">
         <div><div class="dim-question-name">Buyer Clarity</div><div class="dim-question-text">"Do I understand who this is for?"</div></div>
       </div>
       <div class="dim-question-row">
-        <div class="dim-question-num">02</div>
+        <img class="dim-question-icon" src="assets/icon-problem.png" alt="">
         <div><div class="dim-question-name">Problem Clarity</div><div class="dim-question-text">"Do I recognize the problem this solves?"</div></div>
       </div>
       <div class="dim-question-row">
-        <div class="dim-question-num">03</div>
+        <img class="dim-question-icon" src="assets/icon-outcome.png" alt="">
         <div><div class="dim-question-name">Outcome Clarity</div><div class="dim-question-text">"Can I see what changes after working with them?"</div></div>
       </div>
       <div class="dim-question-row">
-        <div class="dim-question-num">04</div>
+        <img class="dim-question-icon" src="assets/icon-proof.png" alt="">
         <div><div class="dim-question-name">Proof Clarity</div><div class="dim-question-text">"Do I have a credible reason to trust this?"</div></div>
       </div>
       <div class="dim-question-row">
-        <div class="dim-question-num">05</div>
+        <img class="dim-question-icon" src="assets/icon-action.png" alt="">
         <div><div class="dim-question-name">Action Clarity</div><div class="dim-question-text">"Do I know what to do next?"</div></div>
       </div>
     </div>
@@ -464,7 +459,7 @@ body::before{
   <div class="body-wrap" style="padding-top:2.5rem;padding-bottom:2.5rem;text-align:left">
     <h2 class="land-headline" style="font-size:clamp(1.4rem,2.6vw,1.9rem)">Find the gap between your expertise and what buyers can understand.</h2>
     <p class="desc">Start with a clearer signal. Then choose the next step that matches your actual situation.</p>
-    <button class="btn-primary" onclick="showScreen('screen-lead')">Start the Scorecard →</button>
+    <button class="btn-primary" onclick="showScreen('screen-lead')">SHOW ME WHAT TO FIX FIRST</button>
   </div>
 
   <div class="land-footer">
@@ -473,9 +468,9 @@ body::before{
       <div class="fb-meta">#UnapologeticallyYou</div>
     </div>
     <div class="land-footer-links">
-      <a href="#" onclick="return false">Privacy Policy</a>
-      <a href="#" onclick="return false">Scorecard Terms</a>
-      <a href="#" onclick="return false">Contact</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Scorecard Terms</a>
+      <a href="mailto:brenda@brendablanche.site">Contact</a>
     </div>
   </div>
 </div>
@@ -487,7 +482,6 @@ body::before{
     <div class="site-nav-links">
       <a class="site-nav-link" href="#" onclick="goHome(event)">Home</a>
       <a class="site-nav-link" href="#" onclick="goFaq(event)">FAQ</a>
-      <a class="site-nav-cta" href="https://calendly.com/unapologeticquenn/brand-clarity-call" target="_blank">Book a Call</a>
     </div>
   </div>
   <div class="body-wrap" style="position:relative">
@@ -548,7 +542,6 @@ body::before{
     <div class="site-nav-links">
       <a class="site-nav-link" href="#" onclick="goHome(event)">Home</a>
       <a class="site-nav-link" href="#" onclick="goFaq(event)">FAQ</a>
-      <a class="site-nav-cta" href="https://calendly.com/unapologeticquenn/brand-clarity-call" target="_blank">Book a Call</a>
     </div>
   </div>
   <div class="body-wrap">
@@ -587,7 +580,6 @@ body::before{
     <div class="site-nav-links">
       <a class="site-nav-link" href="#" onclick="goHome(event)">Home</a>
       <a class="site-nav-link" href="#" onclick="goFaq(event)">FAQ</a>
-      <a class="site-nav-cta" href="https://calendly.com/unapologeticquenn/brand-clarity-call" target="_blank">Book a Call</a>
     </div>
   </div>
   <div class="body-wrap">
