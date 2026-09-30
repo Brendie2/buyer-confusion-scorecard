@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Why Clients Aren't Buying — Free Scorecard | Brenda Blanche</title>
+<meta name="description" content="A free 12-question diagnostic that shows skilled service providers exactly where their offer, market clarity, or content signals are costing them clients.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{ --ink:#14100F; --bone:#F5EDE4; --fuchsia:#E4007C; --border:rgba(245,237,228,.16);
+ box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); }
+html{ scroll-padding-top:env(safe-area-inset-top,0px); }
+*{box-sizing:border-box;}
+body{ margin:0; background:var(--ink); color:var(--bone); font-family:'Space Grotesk',system-ui,sans-serif; line-height:1.55; overflow-x:hidden; }
+@media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+h1,h2{ font-family:'Fraunces',serif; font-weight:900; margin:0; }
+.mono{ font-family:'JetBrains Mono',monospace; }
+img{ max-width:100%; display:block; }
+
+nav{ display:flex; justify-content:space-between; align-items:center; gap:.5rem; flex-wrap:nowrap; padding:1rem 1rem; max-width:1100px; margin:0 auto; }
+.logo{ font-family:'Fraunces',serif; font-weight:900; font-size:clamp(.85rem,4vw,1.15rem); white-space:nowrap; flex:none; }
+.logo span{ color:var(--fuchsia); }
+.nav-cta{ font-family:'JetBrains Mono',monospace; font-size:clamp(.6rem,2.6vw,.75rem); border:1px solid var(--border); border-radius:999px; padding:.45rem .7rem; text-decoration:none; color:var(--bone); white-space:nowrap; flex:none; }
+
+.hero{ position:relative; padding:.8rem 1.4rem 3.5rem; overflow:hidden; text-align:center;
+  background-image: radial-gradient(rgba(245,237,228,.35) 1px, transparent 1px), radial-gradient(rgba(245,237,228,.22) 1px, transparent 1px);
+  background-size:120px 120px, 90px 90px; background-position:0 0, 45px 60px; }
+.hero::after{ content:""; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 20%, rgba(228,0,124,.14), transparent 60%); pointer-events:none; }
+.hero-inner{ position:relative; z-index:1; max-width:680px; margin:0 auto; display:flex; flex-direction:column; align-items:center; }
+.kicker{ font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--fuchsia); border:1px solid var(--border); display:inline-block; padding:.4rem .8rem; border-radius:999px; margin-bottom:1.2rem; background:rgba(20,16,15,.5); }
+.hero h1{ font-size:clamp(2.1rem,7vw,3.6rem); line-height:1.08; }
+.hero h1 .accent{ display:block; color:var(--fuchsia); }
+.hero p{ font-size:1.05rem; opacity:.85; margin:1.2rem 0 1.7rem; max-width:52ch; }
+.btn{ display:inline-flex; align-items:center; gap:.5rem; background:var(--bone); color:var(--ink); border:none; border-radius:999px; padding:1rem 1.8rem; font-weight:700; font-size:1.02rem; text-decoration:none; }
+.stat-row{ display:flex; gap:2.4rem; margin-top:2.6rem; flex-wrap:wrap; justify-content:center; }
+.stat{ font-family:'JetBrains Mono',monospace; font-size:.75rem; opacity:.7; text-align:center; }
+.stat b{ display:block; font-family:'Fraunces',serif; font-size:1.5rem; color:var(--bone); }
+
+.mockup-wrap{ max-width:1100px; margin:0 auto; padding:0 1.4rem 3rem; }
+.mockup-wrap img{ border-radius:14px; }
+
+section.dark{ padding:3.5rem 1.4rem; }
+.section-inner{ max-width:1100px; margin:0 auto; }
+.belief{ font-family:'Fraunces',serif; font-weight:900; font-size:clamp(1.4rem,4.4vw,2.1rem); line-height:1.3; color:var(--fuchsia); max-width:22ch; }
+
+section.bone{ background:var(--bone); color:var(--ink); padding:3.5rem 1.4rem; }
+.cat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-top:1.6rem; }
+.cat-card{ background:#fff; border:1px solid rgba(20,16,15,.12); border-radius:12px; padding:1.4rem; }
+.cat-card h3{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.05rem; margin:0 0 .4rem; }
+.cat-card p{ font-size:.92rem; opacity:.8; margin:0; }
+.dot{ width:10px; height:10px; border-radius:50%; background:var(--fuchsia); display:inline-block; margin-bottom:.7rem; }
+
+.getlist{ list-style:none; padding:0; margin:1.6rem 0 0; }
+.getlist li{ padding:.9rem 0; border-top:1px solid rgba(20,16,15,.12); font-size:.98rem; }
+.getlist li:last-child{ border-bottom:1px solid rgba(20,16,15,.12); }
+
+.final-cta{ text-align:center; padding:4rem 1.4rem; }
+.final-cta h2{ font-size:clamp(1.7rem,6vw,2.6rem); max-width:20ch; margin:0 auto 1.3rem; }
+.final-cta .btn{ background:var(--fuchsia); color:#fff; }
+
+footer{ text-align:center; padding:2rem 1.4rem 3rem; font-family:'JetBrains Mono',monospace; font-size:.72rem; opacity:.6; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Brenda<span>Blanche</span></div>
+  <a class="nav-cta" href="scorecard.html">Start the Scorecard →</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Free Diagnostic — Market Perception Scorecard</div>
+    <h1>Why Clients<span class="accent">Aren't Buying</span></h1>
+    <p>You're good at what you do. So why does the client still go to someone else? Twelve questions. Ninety seconds. A real, specific read of what your profile and content are currently signaling — not a grade, an actual diagnosis.</p>
+    <a class="btn" href="scorecard.html">Take the Free Scorecard →</a>
+    <div class="stat-row">
+      <div class="stat"><b>12</b>Questions</div>
+      <div class="stat"><b>3</b>Signal areas scored</div>
+      <div class="stat"><b>0</b>Cost to find out</div>
+    </div>
+  </div>
+</div>
+
+<div class="mockup-wrap">
+  <img src="results-mockup-devices.webp" width="1400" height="1078" alt="Preview of the Scorecard results dashboard on laptop and phone" loading="lazy">
+</div>
+
+<section class="dark">
+  <div class="section-inner">
+    <p class="belief">"Most skilled people don't have a visibility problem. They have a translation problem."</p>
+  </div>
+</section>
+
+<section class="bone">
+  <div class="section-inner">
+    <h2 style="font-size:clamp(1.4rem,4vw,1.9rem);">The market never sees your actual expertise — only the signals you put out.</h2>
+    <div class="cat-grid">
+      <div class="cat-card"><div class="dot"></div><h3>Offer Clarity</h3><p>Can a stranger tell, in one sentence, exactly what you help people do?</p></div>
+      <div class="cat-card"><div class="dot"></div><h3>Market Clarity</h3><p>Would three people who know your work describe you the same way?</p></div>
+      <div class="cat-card"><div class="dot"></div><h3>Content Signals</h3><p>Does your content show your thinking, or just your conclusions?</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="mockup-wrap" style="padding-top:1rem;">
+  <img src="results-mockup-mobile-card.webp" width="1400" height="933" alt="Detailed breakdown view of a Scorecard result" loading="lazy" style="max-width:420px; margin:0 auto;">
+</div>
+
+<section class="dark">
+  <div class="section-inner" style="max-width:640px;">
+    <h2 style="font-size:clamp(1.4rem,4vw,1.9rem); margin-bottom:1rem;">What you leave with</h2>
+    <ul class="getlist">
+      <li>Your scored breakdown across all three signal areas — not just a single number.</li>
+      <li>A plain-language diagnosis of your single biggest gap.</li>
+      <li>A short reflection exercise you can act on immediately.</li>
+      <li>One clear next step — matched to what your actual results show, not a generic pitch.</li>
+    </ul>
+  </div>
+</section>
+
+<div class="final-cta">
+  <h2>Find out what your profile is actually saying — before your next prospect does.</h2>
+  <a class="btn" href="scorecard.html">Take the Free Scorecard →</a>
+</div>
+
+<footer>Brenda Blanche · Market Perception Strategist · Unapologetically You™</footer>
+</body>
+</html>
