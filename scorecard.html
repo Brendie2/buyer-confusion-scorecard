@@ -111,10 +111,10 @@ footer{ text-align:center; font-family:'JetBrains Mono',monospace; font-size:.7r
   <div class="dark-wrap">
     <div class="kicker">Free Diagnostic — Market Perception Scorecard</div>
     <h1 class="intro-h1">Why Clients Aren't Buying</h1>
-    <p class="intro-sub">A short, specific read of what your profile and content are currently signaling to a buyer who's never met you — not a grade, an actual diagnosis.</p>
+    <p class="intro-sub">A short, specific read of what your profile and content are currently signaling to a buyer who's never met you, not a grade, an actual diagnosis.</p>
     <ul class="intro-list">
       <li><span class="num">1</span><div><b>Who it's for</b>Skilled service providers, freelancers, and consultants who can do the work but aren't sure why it isn't translating into paying clients.</div></li>
-      <li><span class="num">2</span><div><b>What it helps you understand</b>Where the gap sits — offer clarity, market clarity, or content signals — and which one is quietly costing you the most.</div></li>
+      <li><span class="num">2</span><div><b>What it helps you understand</b>Where the gap sits, offer clarity, market clarity, or content signals and which one is quietly costing you the most.</div></li>
       <li><span class="num">3</span><div><b>What you leave with</b>Your scored breakdown, a plain-language diagnosis, a short reflection exercise, and one clear next step.</div></li>
     </ul>
     <button class="btn-primary" id="startBtn">Start the Scorecard →</button>
@@ -175,7 +175,7 @@ footer{ text-align:center; font-family:'JetBrains Mono',monospace; font-size:.7r
         <input type="email" id="emEmail" placeholder="Email address">
         <button id="emSubmit">Send</button>
       </div>
-      <p class="note-text" id="emNote">Optional — viewing your result above doesn't require this.</p>
+      <p class="note-text" id="emNote">Optional, viewing your result above doesn't require this.</p>
     </div>
 
     <!-- printable worksheet -->
@@ -221,7 +221,7 @@ const QUESTIONS = [
  {cat:"offer", text:"When someone asks what you do, how long does your answer take?", opts:[["One sentence",4],["A paragraph",2],["I usually have to think about it first",1]]},
  {cat:"offer", text:"Can you name the exact outcome a buyer gets from working with you?", opts:[["Yes, specific and measurable",4],["Roughly, but it's vague",2],["Not really — it depends",1]]},
  {cat:"market", text:"If three people who know your work described what you're known for, would they say the same thing?", opts:[["Yes",4],["Close, but not identical",2],["No, all different",1]]},
- {cat:"market", text:"Do you know specifically who you're trying to reach — not just \"professionals\" or \"business owners\"?", opts:[["Yes, a specific buyer type",4],["A general category",2],["Not really defined",1]]},
+ {cat:"market", text:"Do you know specifically who you're trying to reach, not just \"professionals\" or \"business owners\"?", opts:[["Yes, a specific buyer type",4],["A general category",2],["Not really defined",1]]},
  {cat:"market", text:"Can you name a real competitor and explain exactly what makes you different from them?", opts:[["Yes, clearly",4],["Sort of",2],["No",1]]},
  {cat:"market", text:"Do people ever describe you using a label you didn't choose for yourself?", opts:[["No, my label sticks",4],["Sometimes",2],["Often",1]]},
  {cat:"content", text:"Does your content mostly show your conclusions, or does it also show how you actually think and work?", opts:[["Shows my process/mechanism",4],["Mostly conclusions, no process",2],["Mostly random topics",1]]},
@@ -235,10 +235,10 @@ const CAT_LABEL = {offer:"Offer Clarity", market:"Market Clarity", content:"Cont
 const COPY = {
  offer:{s:"Your offer is clear enough that most people who land on your profile can describe what you do. That's rarer than you'd think. Your gap, if you have one, is probably not clarity — it's whether that clear offer is reaching the right buyer.",
         m:"People can tell you're skilled. They can't always tell what, specifically, they'd hire you for. You know internally what you do, but it hasn't been translated into a sentence a stranger could repeat back to someone else.",
-        w:"Right now, a stranger looking at your profile would have to guess what you actually sell. That's not a content problem — it means the offer itself hasn't been defined narrowly enough yet to describe."},
+        w:"Right now, a stranger looking at your profile would have to guess what you actually sell. That's not a content problem, it means the offer itself hasn't been defined narrowly enough yet to describe."},
  market:{s:"People who know your work would describe you consistently. That consistency is what recognition is built from.",
-        m:"You have an association, but it's inconsistent — some people would call you a content person, some a coach, some something else entirely. Nobody's wrong. They're each reacting to a different signal.",
-        w:"Right now there isn't a consistent answer to \"what is this person known for.\" That's the actual translation problem — not a lack of expertise, a lack of a decided association."},
+        m:"You have an association, but it's inconsistent, some people would call you a content person, some a coach, some something else entirely. Nobody's wrong. They're each reacting to a different signal.",
+        w:"Right now there isn't a consistent answer to \"what is this person known for.\" That's the actual translation problem, not a lack of expertise, a lack of a decided association."},
  content:{s:"Your content shows your thinking, not just your conclusions — which is what makes someone trust the process, not just the opinion.",
         m:"Your content is useful, but it mostly shows what you believe, not how you got there. That's the gap between content that gets liked and content that gets someone to think \"I need to hire this person specifically.\"",
         w:"Right now your content isn't yet connected to a clear next step or a repeated idea — which means even consistent posting isn't compounding into recognition."}
