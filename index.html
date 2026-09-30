@@ -17,7 +17,7 @@ body{ margin:0; background:var(--ink); color:var(--bone); font-family:'Space Gro
 @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
 h1,h2{ font-family:'Fraunces',serif; font-weight:900; margin:0; }
 .mono{ font-family:'JetBrains Mono',monospace; }
-img{ max-width:100%; display:block; }
+img{ max-width:100%; height:auto; display:block; }
 
 nav{ display:flex; justify-content:space-between; align-items:center; gap:.5rem; flex-wrap:nowrap; padding:1rem 1rem; max-width:1100px; margin:0 auto; }
 .logo{ font-family:'Fraunces',serif; font-weight:900; font-size:clamp(.85rem,4vw,1.15rem); white-space:nowrap; flex:none; }
@@ -39,7 +39,7 @@ nav{ display:flex; justify-content:space-between; align-items:center; gap:.5rem;
 .stat b{ display:block; font-family:'Fraunces',serif; font-size:1.5rem; color:var(--bone); }
 
 .mockup-wrap{ max-width:1100px; margin:0 auto; padding:0 1.4rem 3rem; }
-.mockup-wrap img{ border-radius:14px; }
+.mockup-wrap img{ width:100%; height:auto; border-radius:14px; }
 
 section.dark{ padding:3.5rem 1.4rem; }
 .section-inner{ max-width:1100px; margin:0 auto; }
@@ -85,7 +85,7 @@ footer{ text-align:center; padding:2rem 1.4rem 3rem; font-family:'JetBrains Mono
 </div>
 
 <div class="mockup-wrap">
-  <img src="assets/results-mockup-devices.webp" width="1400" height="1078" alt="Preview of the Scorecard results dashboard on laptop and phone" loading="lazy">
+  <img src="assets/results-mockup-devices.webp" width="1400" height="1048" alt="Preview of the Scorecard results dashboard on laptop and phone" loading="lazy">
 </div>
 
 <section class="dark">
@@ -96,7 +96,7 @@ footer{ text-align:center; padding:2rem 1.4rem 3rem; font-family:'JetBrains Mono
 
 <section class="bone">
   <div class="section-inner">
-    <h2 style="font-size:clamp(1.4rem,4vw,1.9rem);">The market never sees your actual expertise only the signals you put out.</h2>
+    <h2 style="font-size:clamp(1.4rem,4vw,1.9rem);">The market never sees your actual expertise, only the signals you put out.</h2>
     <div class="cat-grid">
       <div class="cat-card"><div class="dot"></div><h3>Offer Clarity</h3><p>Can a stranger tell, in one sentence, exactly what you help people do?</p></div>
       <div class="cat-card"><div class="dot"></div><h3>Market Clarity</h3><p>Would three people who know your work describe you the same way?</p></div>
@@ -106,17 +106,17 @@ footer{ text-align:center; padding:2rem 1.4rem 3rem; font-family:'JetBrains Mono
 </section>
 
 <div class="mockup-wrap" style="padding-top:1rem;">
-  <img src="assets/results-mockup-mobile-card.webp" width="1400" height="933" alt="Detailed breakdown view of a Scorecard result" loading="lazy" style="max-width:420px; margin:0 auto;">
+  <img src="assets/results-mockup-mobile-card.webp" width="1400" height="977" alt="Detailed breakdown view of a Scorecard result" loading="lazy" style="max-width:560px; margin:0 auto;">
 </div>
 
 <section class="dark">
   <div class="section-inner" style="max-width:640px;">
     <h2 style="font-size:clamp(1.4rem,4vw,1.9rem); margin-bottom:1rem;">What you leave with</h2>
     <ul class="getlist">
-      <li>Your scored breakdown across all three signal areas — not just a single number.</li>
+      <li>Your scored breakdown across all 3 signal areas, not just a single number.</li>
       <li>A plain-language diagnosis of your single biggest gap.</li>
       <li>A short reflection exercise you can act on immediately.</li>
-      <li>One clear next step matched to what your actual results show, not a generic pitch.</li>
+      <li>One clear next step, matched to what your actual results show, not a generic pitch.</li>
     </ul>
   </div>
 </section>
