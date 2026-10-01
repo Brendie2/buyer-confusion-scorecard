@@ -1,391 +1,389 @@
-‎<!DOCTYPE html>
-‎<html lang="en">
-‎<head>
-‎<meta charset="UTF-8">
-‎<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-‎<title>Why Clients Aren't Buying — Free Scorecard | Brenda Blanche</title>
-‎<link rel="preconnect" href="https://fonts.googleapis.com">
-‎<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-‎<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-‎<style>
-‎/* ===== DESIGN TOKENS ===== */
-‎:root{
-‎  --ink:#14100F; --bone:#F5EDE4; --fuchsia:#E4007C;
-‎  --ink-2:#211a18; --bone-2:#ffffff; --border-dark:rgba(245,237,228,.14); --border-light:rgba(20,16,15,.13);
-‎  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
-‎}
-‎html{ scroll-padding-top:env(safe-area-inset-top,0px); }
-‎*{box-sizing:border-box;}
-‎body{ margin:0; font-family:'Space Grotesk',system-ui,sans-serif; line-height:1.55; background:var(--ink); color:var(--bone); }
-‎@media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
-‎.stage{ display:none; min-height:100vh; }
-‎.stage.active{ display:block; }
-‎.mono{ font-family:'JetBrains Mono',monospace; }
-‎h1,h2,h3{ font-family:'Fraunces',serif; font-weight:900; margin:0; }
-‎button{ font-family:'Space Grotesk',sans-serif; cursor:pointer; }
-‎a{ color:inherit; }
-‎
-‎/* ===== DARK STAGES: intro + quiz ===== */
-‎#stageIntro, #stageQuiz{ background:var(--ink); color:var(--bone); }
-‎#stageIntro{ position:relative; overflow:hidden; }
-‎#stageIntro::before{ content:""; position:absolute; top:-20%; right:-25%; width:70vw; max-width:560px; height:70vw; max-height:560px; background:radial-gradient(circle at 40% 40%, rgba(228,0,124,.55), rgba(228,0,124,0) 70%); pointer-events:none; }
-‎.dark-wrap{ max-width:620px; margin:0 auto; padding:2.4rem 1.2rem 4rem; position:relative; z-index:1; }
-‎.kicker{ font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--fuchsia); }
-‎.intro-h1{ font-size:clamp(2rem,8vw,3.4rem); line-height:1.03; margin:.5rem 0 1rem; }
-‎.intro-sub{ font-size:1.05rem; opacity:.85; max-width:52ch; }
-‎.intro-list{ margin:1.8rem 0; padding:0; list-style:none; display:grid; gap:.7rem; }
-‎.intro-list li{ display:flex; gap:.9rem; align-items:flex-start; background:linear-gradient(180deg, rgba(245,237,228,.05), rgba(245,237,228,.02)); border:1px solid var(--border-dark); border-radius:12px; padding:1.1rem 1.2rem; font-size:.95rem; backdrop-filter:blur(2px); }
-‎.intro-list .num{ flex:none; width:28px; height:28px; border-radius:50%; background:var(--fuchsia); color:#fff; font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
-‎.intro-list b{ color:var(--fuchsia); font-family:'JetBrains Mono',monospace; font-size:.72rem; text-transform:uppercase; display:block; margin-bottom:.3rem; letter-spacing:.05em; }
-‎.btn-primary{ display:inline-flex; align-items:center; gap:.5rem; background:var(--fuchsia); color:#fff; border:none; border-radius:9px; padding:1rem 1.6rem; font-weight:700; font-size:1.02rem; width:100%; justify-content:center; }
-‎.btn-primary:disabled{ opacity:.35; cursor:not-allowed; }
-‎.btn-ghost{ background:transparent; border:1px solid var(--border-dark); color:var(--bone); border-radius:9px; padding:.85rem 1.2rem; font-weight:700; }
-‎.meta-row{ display:flex; gap:1.4rem; margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:.72rem; opacity:.65; }
-‎
-‎/* progress */
-‎.progress-wrap{ margin-bottom:1.6rem; }
-‎.progress-label{ font-family:'JetBrains Mono',monospace; font-size:.7rem; opacity:.65; margin-bottom:.5rem; display:flex; justify-content:space-between; }
-‎.progress-track{ height:4px; background:var(--border-dark); border-radius:3px; overflow:hidden; }
-‎.progress-fill{ height:100%; background:var(--fuchsia); width:0%; transition:width .35s ease; }
-‎
-‎/* question card */
-‎.qcard{ margin-top:1.2rem; }
-‎.qtext{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(1.25rem,4.6vw,1.6rem); line-height:1.3; margin-bottom:1.4rem; }
-‎.opt{ display:block; width:100%; text-align:left; background:var(--ink-2); border:1px solid var(--border-dark); color:var(--bone); border-radius:10px; padding:.95rem 1.1rem; margin:.55rem 0; font-size:.98rem; }
-‎.opt[aria-checked="true"]{ border-color:var(--fuchsia); background:rgba(228,0,124,.1); }
-‎.opt:focus-visible{ outline:2px solid var(--fuchsia); outline-offset:2px; }
-‎.warn{ color:var(--fuchsia); font-size:.85rem; margin:.4rem 0 0; display:none; }
-‎.warn.show{ display:block; }
-‎.nav-row{ display:flex; gap:.7rem; margin-top:1.4rem; }
-‎.nav-row .btn-primary{ flex:1; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Why Clients Aren't Buying — Free Scorecard | Brenda Blanche</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===== DESIGN TOKENS ===== */
+:root{
+  --ink:#14100F; --bone:#F5EDE4; --fuchsia:#E4007C;
+  --ink-2:#211a18; --bone-2:#ffffff; --border-dark:rgba(245,237,228,.14); --border-light:rgba(20,16,15,.13);
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{ scroll-padding-top:env(safe-area-inset-top,0px); }
+*{box-sizing:border-box;}
+body{ margin:0; font-family:'Space Grotesk',system-ui,sans-serif; line-height:1.55; background:var(--ink); color:var(--bone); }
+@media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+.stage{ display:none; min-height:100vh; }
+.stage.active{ display:block; }
+.mono{ font-family:'JetBrains Mono',monospace; }
+h1,h2,h3{ font-family:'Fraunces',serif; font-weight:900; margin:0; }
+button{ font-family:'Space Grotesk',sans-serif; cursor:pointer; }
+a{ color:inherit; }
 
-‎/* ===== LIGHT STAGE: results ===== */
-‎#stageResults{ background:var(--bone); color:var(--ink); }
-‎.light-wrap{ max-width:760px; margin:0 auto; padding:2.2rem 1.1rem 6rem; }
-‎.res-kicker{ font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--fuchsia); }
-‎.res-h1{ font-size:clamp(1.9rem,7vw,2.7rem); line-height:1.08; margin:.4rem 0 .6rem; }
-‎.res-sub{ font-size:1.02rem; opacity:.85; max-width:58ch; }
-‎.card{ background:var(--bone-2); border:1px solid var(--border-light); border-radius:12px; padding:1.2rem 1.3rem; margin:1rem 0; }
-‎.score-panel{ display:flex; align-items:baseline; gap:.8rem; flex-wrap:wrap; }
-‎.score-big{ font-family:'Fraunces',serif; font-weight:900; font-size:3.2rem; color:var(--fuchsia); line-height:1; }
-‎.score-scale{ font-family:'JetBrains Mono',monospace; font-size:.85rem; opacity:.65; }
-‎.cat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:.8rem; margin:1rem 0; }
-‎.cat-card{ background:var(--bone-2); border:1px solid var(--border-light); border-radius:10px; padding:1rem; }
-‎.cat-card.weakest{ border-color:var(--fuchsia); }
-‎.cat-name{ font-family:'JetBrains Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; opacity:.6; }
-‎.cat-score{ font-family:'Fraunces',serif; font-weight:900; font-size:1.7rem; margin:.2rem 0; }
-‎.bar-track{ height:8px; background:var(--border-light); border-radius:4px; overflow:hidden; margin:.4rem 0 .5rem; }
-‎.bar-fill{ height:100%; background:var(--fuchsia); }
-‎.cat-tier{ font-family:'JetBrains Mono',monospace; font-size:.66rem; text-transform:uppercase; opacity:.7; }
-‎.diagnosis-title{ font-family:'Fraunces',serif; font-weight:900; font-size:1.4rem; color:var(--fuchsia); margin-bottom:.4rem; }
-‎.exercise-field{ margin:.8rem 0; }
-‎.exercise-field label{ display:block; font-size:.9rem; font-weight:700; margin-bottom:.35rem; }
-‎.exercise-field textarea{ width:100%; min-height:64px; font-family:'Space Grotesk',sans-serif; font-size:.95rem; padding:.6rem .7rem; border:1px solid var(--border-light); border-radius:8px; background:var(--bone); color:var(--ink); resize:vertical; }
-‎.cta-block{ text-align:center; }
-‎.cta-link{ display:inline-block; background:var(--fuchsia); color:#fff; text-decoration:none; font-weight:700; border-radius:9px; padding:.9rem 1.6rem; margin-top:.8rem; }
-‎.gate-form{ display:flex; flex-direction:column; gap:.8rem; margin:1.4rem 0 .4rem; }
-‎.gate-form label{ font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; opacity:.75; }
-‎.gate-form input{ width:100%; box-sizing:border-box; font-family:'Space Grotesk',sans-serif; font-size:1rem; padding:.9rem 1rem; border:1px solid rgba(245,237,228,.3); border-radius:9px; background:rgba(245,237,228,.06); color:var(--bone); }
-‎.gate-form input:focus{ outline:2px solid var(--fuchsia); border-color:transparent; }
-‎.gate-consent{ font-size:.78rem; opacity:.6; margin:.2rem 0 0; }
-‎.email-row{ display:flex; gap:.5rem; flex-wrap:wrap; }
-‎.email-row input{ flex:1; min-width:160px; font-family:'Space Grotesk',sans-serif; font-size:.95rem; padding:.65rem .8rem; border:1px solid var(--border-light); border-radius:8px; background:var(--bone); color:var(--ink); }
-‎.email-row button{ background:var(--ink); color:var(--bone); border:none; border-radius:8px; padding:.65rem 1.1rem; font-weight:700; }
-‎.note-text{ font-size:.82rem; opacity:.65; margin-top:.5rem; }
-‎.util-row{ display:flex; gap:.8rem; justify-content:center; margin-top:2rem; flex-wrap:wrap; }
-‎.util-row button, .util-row a{ background:transparent; border:1px solid var(--border-light); color:var(--ink); border-radius:8px; padding:.6rem 1rem; font-size:.85rem; text-decoration:none; }
-‎footer{ text-align:center; font-family:'JetBrains Mono',monospace; font-size:.7rem; opacity:.6; margin-top:2.5rem; }
-‎
-‎/* worksheet (screen preview, printed separately) */
-‎.worksheet{ border:2px solid var(--ink); border-radius:12px; padding:1.4rem; margin-top:1.5rem; }
-‎.worksheet h3{ font-family:'Fraunces',serif; font-size:1.1rem; margin-bottom:.4rem; }
-‎.worksheet .wm-header{ display:flex; justify-content:space-between; align-items:baseline; border-bottom:2px solid var(--fuchsia); padding-bottom:.6rem; margin-bottom:.8rem; }
-‎
-‎@media print{
-‎  body *{ visibility:hidden; }
-‎  #printArea, #printArea *{ visibility:visible; }
-‎  #printArea{ position:absolute; top:0; left:0; width:100%; background:#fff; color:#000; padding:1cm; }
-‎  .no-print{ display:none !important; }
-‎}
-‎</style>
-‎</head>
-‎<body>
-‎
-‎<!-- ============ STAGE A: INTRO ============ -->
-‎<section id="stageIntro" class="stage active">
-‎  <div class="dark-wrap">
-‎    <div class="kicker">Free Diagnostic — Market Perception Scorecard</div>
-‎    <h1 class="intro-h1">Why Clients Aren't Buying</h1>
-‎    <p class="intro-sub">A short, specific read of what your profile and content are currently signaling to a buyer who's never met you — not a grade, an actual diagnosis.</p>
-‎    <ul class="intro-list">
-‎      <li><span class="num">1</span><div><b>Who it's for</b>Skilled service providers, freelancers, and consultants who can do the work but aren't sure why it isn't translating into paying clients.</div></li>
-‎      <li><span class="num">2</span><div><b>What it helps you understand</b>Where the gap sits — offer clarity, market clarity, or content signals — and which one is quietly costing you the most.</div></li>
-‎      <li><span class="num">3</span><div><b>What you leave with</b>Your scored breakdown, a plain-language diagnosis, a short reflection exercise, and one clear next step.</div></li>
-‎    </ul>
-‎    <button class="btn-primary" id="startBtn">Start the Scorecard →</button>
-‎    <div class="meta-row"><span>12 questions</span><span>About 90 seconds</span><span>Your result is emailed to you</span></div>
-‎  </div>
-‎</section>
-‎
-‎<!-- ============ STAGE B: QUIZ ============ -->
-‎<section id="stageQuiz" class="stage">
-‎  <div class="dark-wrap">
-‎    <div class="progress-wrap">
-‎      <div class="progress-label"><span id="progLabel">Question 1 of 12</span><span id="progCat" class="mono"></span></div>
-‎      <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
-‎    </div>
-‎    <div class="qcard" id="qcard" role="radiogroup" aria-label="Scorecard question"></div>
-‎    <p class="warn" id="warnMsg">Select an answer to continue.</p>
-‎    <div class="nav-row">
-‎      <button class="btn-ghost" id="backBtn">Back</button>
-‎      <button class="btn-primary" id="nextBtn">Continue</button>
-‎    </div>
-‎  </div>
-‎</section>
-‎
-‎<!-- ============ STAGE B2: LEAD GATE ============ -->
-‎<section id="stageGate" class="stage">
-‎  <div class="dark-wrap">
-‎    <div class="kicker">Your scorecard is ready</div>
-‎    <h1 class="intro-h1" style="font-size:clamp(1.8rem,7vw,2.6rem);">Where should we send your results?</h1>
-‎    <p class="intro-sub">Enter your name and email to see your scored breakdown and diagnosis. A copy goes straight to your inbox.</p>
-‎    <div class="gate-form">
-‎      <div><label for="gName">First name</label><input type="text" id="gName" autocomplete="given-name" placeholder="Your first name"></div>
-‎      <div><label for="gEmail">Email address</label><input type="email" id="gEmail" autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
-‎      <p class="warn" id="gWarn"></p>
-‎      <button class="btn-primary" id="gSubmit">Show Me My Results →</button>
-‎      <p class="gate-consent">By continuing, you agree to get your results by email and occasional emails from Brenda Blanche. Unsubscribe anytime.</p>
-‎    </div>
-‎  </div>
-‎</section>
-‎
-‎<!-- ============ STAGE C: RESULTS ============ -->
-‎<section id="stageResults" class="stage">
-‎  <div class="light-wrap">
-‎    <div class="res-kicker">Your Result</div>
-‎    <h1 class="res-h1" id="resVerdict"></h1>
-‎    <p class="res-sub" id="resOpener"></p>
-‎
-‎    <div class="card score-panel">
-‎      <div class="score-big" id="scoreBig"></div>
-‎      <div class="score-scale">out of 48 — reflects three signal areas, not a percentage or a comparison to anyone else</div>
-‎    </div>
-‎
-‎    <div class="cat-grid" id="catGrid"></div>
-‎
-‎    <div class="card">
-‎      <div class="diagnosis-title" id="diagTitle"></div>
-‎      <p id="diagCopy"></p>
-‎    </div>
-‎
-‎    <div class="card">
-‎      <h3>A Short Exercise — Worth Actually Writing</h3>
-‎      <div id="exerciseFields"></div>
-‎    </div>
-‎
-‎    <div class="card cta-block">
-‎      <h3 id="nextStepsTitle" style="font-size:1.2rem;"></h3>
-‎      <p id="routeCopy"></p>
-‎      <a class="cta-link" id="routeCta" href="#" target="_blank" rel="noopener">Continue →</a>
-‎    </div>
-‎
-‎    <div class="card">
-‎      <h3 style="font-size:1.05rem;">Your emailed copy</h3>
-‎      <p class="note-text" id="emNote" style="opacity:1;">Sending...</p>
-‎      <div class="email-row"><button id="emSubmit" style="display:none;">Try sending again</button></div>
-‎    </div>
-‎
-‎    <!-- printable worksheet -->
-‎    <div id="printArea" class="worksheet">
-‎      <div class="wm-header">
-‎        <div><strong>Brenda Blanche</strong><br><span class="mono" style="font-size:.7rem;">Unapologetically You™ — Market Perception Scorecard</span></div>
-‎        <div class="mono" style="font-size:.75rem;" id="wsDate"></div>
-‎      </div>
-‎      <h3>Overall: <span id="wsScore"></span> / 48 — <span id="wsVerdict"></span></h3>
-‎      <p id="wsOpener"></p>
-‎      <h3>Category Breakdown</h3>
-‎      <p id="wsCats"></p>
-‎      <h3>Diagnosis</h3>
-‎      <p id="wsDiag"></p>
-‎      <h3>Your Exercise</h3>
-‎      <div id="wsExercise"></div>
-‎      <h3>Next Step</h3>
-‎      <p id="wsRoute"></p>
-‎    </div>
-‎
-‎    <div class="util-row no-print">
-‎      <button id="printBtn">Print / Save as PDF</button>
-‎      <button id="restartBtn">Retake the Scorecard</button>
-‎    </div>
-‎    <footer>Brenda Blanche · Market Perception Strategist</footer>
-‎  </div>
-‎</section>
-‎
-‎<script src="/config.js"></script>
-‎<script>
-‎/* =========================================================
-‎   CONFIG — replace before going live
-‎   ========================================================= */
-‎// Edit links in config.js, not here.
-‎const { LEAD_CAPTURE_ENDPOINT, CLARITY_CALL_LINK, BLUEPRINT_LINK, NURTURE_LINK } = window.SCORECARD_CONFIG;
-‎
-‎/* =========================================================
+/* ===== DARK STAGES: intro + quiz ===== */
+#stageIntro, #stageQuiz{ background:var(--ink); color:var(--bone); }
+#stageIntro{ position:relative; overflow:hidden; }
+#stageIntro::before{ content:""; position:absolute; top:-20%; right:-25%; width:70vw; max-width:560px; height:70vw; max-height:560px; background:radial-gradient(circle at 40% 40%, rgba(228,0,124,.55), rgba(228,0,124,0) 70%); pointer-events:none; }
+.dark-wrap{ max-width:620px; margin:0 auto; padding:2.4rem 1.2rem 4rem; position:relative; z-index:1; }
+.kicker{ font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--fuchsia); }
+.intro-h1{ font-size:clamp(2rem,8vw,3.4rem); line-height:1.03; margin:.5rem 0 1rem; }
+.intro-sub{ font-size:1.05rem; opacity:.85; max-width:52ch; }
+.intro-list{ margin:1.8rem 0; padding:0; list-style:none; display:grid; gap:.7rem; }
+.intro-list li{ display:flex; gap:.9rem; align-items:flex-start; background:linear-gradient(180deg, rgba(245,237,228,.05), rgba(245,237,228,.02)); border:1px solid var(--border-dark); border-radius:12px; padding:1.1rem 1.2rem; font-size:.95rem; backdrop-filter:blur(2px); }
+.intro-list .num{ flex:none; width:28px; height:28px; border-radius:50%; background:var(--fuchsia); color:#fff; font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.intro-list b{ color:var(--fuchsia); font-family:'JetBrains Mono',monospace; font-size:.72rem; text-transform:uppercase; display:block; margin-bottom:.3rem; letter-spacing:.05em; }
+.btn-primary{ display:inline-flex; align-items:center; gap:.5rem; background:var(--fuchsia); color:#fff; border:none; border-radius:9px; padding:1rem 1.6rem; font-weight:700; font-size:1.02rem; width:100%; justify-content:center; }
+.btn-primary:disabled{ opacity:.35; cursor:not-allowed; }
+.btn-ghost{ background:transparent; border:1px solid var(--border-dark); color:var(--bone); border-radius:9px; padding:.85rem 1.2rem; font-weight:700; }
+.meta-row{ display:flex; gap:1.4rem; margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:.72rem; opacity:.65; }
 
-QUESTION CONFIG — approved, unchanged from prior build
-‎   ========================================================= */
-‎const QUESTIONS = [
-‎ {cat:"offer", text:"If a stranger looked at your profile with zero context, could they describe in one sentence what you help people do?", opts:[["Yes, clearly",4],["Sort of, they'd have to piece it together",2],["No, they'd guess wrong",1]]},
-‎ {cat:"offer", text:"How many distinct things do you currently present yourself as capable of?", opts:[["One clear service",4],["Two or three related things",2],["A long list of skills",1]]},
-‎ {cat:"offer", text:"When someone asks what you do, how long does your answer take?", opts:[["One sentence",4],["A paragraph",2],["I usually have to think about it first",1]]},
-‎ {cat:"offer", text:"Can you name the exact outcome a buyer gets from working with you?", opts:[["Yes, specific and measurable",4],["Roughly, but it's vague",2],["Not really — it depends",1]]},
-‎ {cat:"market", text:"If three people who know your work described what you're known for, would they say the same thing?", opts:[["Yes",4],["Close, but not identical",2],["No, all different",1]]},
-‎ {cat:"market", text:"Do you know specifically who you're trying to reach — not just \"professionals\" or \"business owners\"?", opts:[["Yes, a specific buyer type",4],["A general category",2],["Not really defined",1]]},
-‎ {cat:"market", text:"Can you name a real competitor and explain exactly what makes you different from them?", opts:[["Yes, clearly",4],["Sort of",2],["No",1]]},
-‎ {cat:"market", text:"Do people ever describe you using a label you didn't choose for yourself?", opts:[["No, my label sticks",4],["Sometimes",2],["Often",1]]},
-‎ {cat:"content", text:"Does your content mostly show your conclusions, or does it also show how you actually think and work?", opts:[["Shows my process/mechanism",4],["Mostly conclusions, no process",2],["Mostly random topics",1]]},
-‎ {cat:"content", text:"Do you have a recurring idea or phrase people associate specifically with you?", opts:[["Yes",4],["Sort of",2],["No",1]]},
-‎ {cat:"content", text:"Does your content connect to an actual next step?", opts:[["Yes, clearly",4],["Sometimes",2],["Rarely",1]]},
-‎ {cat:"content", text:"Looking at your last 10 posts, could a stranger tell what you sell?", opts:[["Yes",4],["Maybe",2],["No",1]]}
-‎];
-‎
-‎const CAT_LABEL = {offer:"Offer Clarity", market:"Market Clarity", content:"Content Signals"};
-‎
-‎const COPY = {
-‎ offer:{s:"Your offer is clear enough that most people who land on your profile can describe what you do. That's rarer than you'd think. Your gap, if you have one, is probably not clarity — it's whether that clear offer is reaching the right buyer.",
-‎        m:"People can tell you're skilled. They can't always tell what, specifically, they'd hire you for. You know internally what you do, but it hasn't been translated into a sentence a stranger could repeat back to someone else.",
-‎        w:"Right now, a stranger looking at your profile would have to guess what you actually sell. That's not a content problem — it means the offer itself hasn't been defined narrowly enough yet to describe."},
-‎ market:{s:"People who know your work would describe you consistently. That consistency is what recognition is built from.",
-‎        m:"You have an association, but it's inconsistent — some people would call you a content person, some a coach, some something else entirely. Nobody's wrong. They're each reacting to a different signal.",
-‎        w:"Right now there isn't a consistent answer to \"what is this person known for.\" That's the actual translation problem — not a lack of expertise, a lack of a decided association."},
-‎ content:{s:"Your content shows your thinking, not just your conclusions — which is what makes someone trust the process, not just the opinion.",
-‎        m:"Your content is useful, but it mostly shows what you believe, not how you got there. That's the gap between content that gets liked and content that gets someone to think \"I need to hire this person specifically.\"",
-‎        w:"Right now your content isn't yet connected to a clear next step or a repeated idea — which means even consistent posting isn't compounding into recognition."}
-‎};
-‎
-‎const EXERCISES = {
-‎ offer:[["In one sentence, no jargon: what do you actually help people do?",""],["Name the exact outcome someone gets after working with you — a result, not a feeling.",""]],
-‎ market:["If three people who know your work were asked what you're known for, what would each of them say right now?","What's the one thing you want all three to say instead?"].map(q=>[q,""]),
-‎ content:[["Look at your last 3 posts. Do they show a conclusion, or the thinking behind it? Write one sentence showing your process instead of your opinion.",""],["What's one phrase or idea you keep coming back to that could become recognizably yours?",""]]
-‎};
-‎
-‎const VERDICTS = {
-‎ aligned:{label:"Aligned Perception", opener:"Your signals are largely doing their job. The work from here isn't a rebuild — it's refinement."},
-‎ competing:{label:"Competing Signals", opener:"You're not invisible. You're inconsistent. Different people are getting different, incomplete versions of who you are — and none of them are wrong, which is exactly the problem."},
-‎ invisible:{label:"Invisible Expert", opener:"The gap here isn't your skill. It's that almost none of your actual capability is currently visible in what the market can see."}
-‎};
-‎
-‎/* =========================================================
-‎   STATE + NAV
-‎   ========================================================= */
-‎let idx = 0;
-‎const saved = sessionStorage.getItem("scorecard_answers");
-‎let answers = saved ? JSON.parse(saved) : new Array(QUESTIONS.length).fill(null);
-‎
-‎const stageIntro = document.getElementById("stageIntro");
-‎const stageQuiz = document.getElementById("stageQuiz");
-‎const stageResults = document.getElementById("stageResults");
-‎const stageGate = document.getElementById("stageGate");
-‎function showStage(el){ [stageIntro,stageQuiz,stageGate,stageResults].forEach(s=>s.classList.remove("active")); el.classList.add("active"); window.scrollTo({top:0}); }
-‎
-‎document.getElementById("startBtn").addEventListener("click", ()=>{ idx = answers.findIndex(a=>a===null); if(idx===-1) idx=0; showStage(stageQuiz); renderQuestion(); });
-‎
-‎function renderQuestion(){
-‎  const q = QUESTIONS[idx];
-‎  document.getElementById("progLabel").textContent = `Question ${idx+1} of ${QUESTIONS.length}`;
-‎  document.getElementById("progCat").textContent = CAT_LABEL[q.cat];
-‎  document.getElementById("progFill").style.width = ((idx)/QUESTIONS.length*100)+"%";
-‎  document.getElementById("warnMsg").classList.remove("show");
-‎  const qcard = document.getElementById("qcard");
-‎  qcard.innerHTML = `<div class="qtext">${q.text}</div>` + q.opts.map((o,j)=>
-‎    `<button type="button" class="opt" role="radio" aria-checked="${answers[idx]===o[1]}" data-val="${o[1]}">${o[0]}</button>`
-‎  ).join("");
-‎  qcard.querySelectorAll(".opt").forEach(btn=>{
-‎    btn.addEventListener("click", ()=>{
-‎      answers[idx] = parseInt(btn.dataset.val);
-‎      sessionStorage.setItem("scorecard_answers", JSON.stringify(answers));
-‎      qcard.querySelectorAll(".opt").forEach(b=>b.setAttribute("aria-checked", b===btn ? "true":"false"));
-‎      document.getElementById("warnMsg").classList.remove("show");
-‎    });
-‎  });
-‎  document.getElementById("backBtn").style.visibility = idx===0 ? "hidden" : "visible";
-‎  document.getElementById("nextBtn").textContent = idx===QUESTIONS.length-1 ? "See My Results" : "Continue";
-‎}
-‎
-‎document.getElementById("backBtn").addEventListener("click", ()=>{ if(idx>0){ idx--; renderQuestion(); } });
-‎document.getElementById("nextBtn").addEventListener("click", ()=>{
-‎  if(answers[idx]===null){ document.getElementById("warnMsg").classList.add("show"); return; }
-‎  if(idx < QUESTIONS.length-1){ idx++; renderQuestion(); }
-‎  else { LAST_RESULT = scoreAssessment(answers); showStage(stageGate); }
-‎});
-‎
-‎/* =========================================================
+/* progress */
+.progress-wrap{ margin-bottom:1.6rem; }
+.progress-label{ font-family:'JetBrains Mono',monospace; font-size:.7rem; opacity:.65; margin-bottom:.5rem; display:flex; justify-content:space-between; }
+.progress-track{ height:4px; background:var(--border-dark); border-radius:3px; overflow:hidden; }
+.progress-fill{ height:100%; background:var(--fuchsia); width:0%; transition:width .35s ease; }
 
-  SCORING ENGINE — pure function
-‎   ========================================================= */
-‎function scoreAssessment(ans){
-‎  if(ans.some(a=>a===null)) throw new Error("Incomplete assessment");
-‎  const cat = {offer:0, market:0, content:0};
-‎  QUESTIONS.forEach((q,i)=>{ cat[q.cat] += ans[i]; });
-‎  const overall = cat.offer + cat.market + cat.content;
-‎  const tier = s => s>=12 ? "s" : s>=7 ? "m" : "w";
-‎  const verdictKey = overall>=36 ? "aligned" : overall>=24 ? "competing" : "invisible";
-‎  const weakCats = Object.entries(cat).filter(([,v])=>v<12).map(([k])=>k);
-‎  const weakest = Object.entries(cat).sort((a,b)=>a[1]-b[1])[0][0];
-‎  return { categoryScores:cat, overallScore:overall, tier, verdictKey, weakCount:weakCats.length, weakest };
-‎}
-‎
-‎/* =========================================================
-‎   RESULTS RENDER
-‎   ========================================================= */
-‎let LAST_RESULT = null;
-‎
-‎function computeAndShowResults(){
-‎  const r = scoreAssessment(answers);
-‎  LAST_RESULT = r;
-‎  const v = VERDICTS[r.verdictKey];
-‎
-‎  document.getElementById("resVerdict").textContent = v.label;
-‎  document.getElementById("resOpener").textContent = v.opener;
-‎  document.getElementById("scoreBig").textContent = r.overallScore;
-‎
-‎  const grid = document.getElementById("catGrid");
-‎  grid.innerHTML = Object.keys(CAT_LABEL).map(k=>{
-‎    const sc = r.categoryScores[k]; const t = r.tier(sc);
-‎    const tierLabel = t==="s"?"Strong signal":t==="m"?"Mixed signal":"Weak signal";
-‎    return `<div class="cat-card ${k===r.weakest?'weakest':''}">
-‎      <div class="cat-name">${CAT_LABEL[k]}</div>
-‎      <div class="cat-score">${sc}<span style="font-size:.9rem;opacity:.5;"> /16</span></div>
-‎      <div class="bar-track"><div class="bar-fill" style="width:${sc/16*100}%"></div></div>
-‎      <div class="cat-tier">${tierLabel}</div>
-‎    </div>`;
-‎  }).join("");
-‎
-‎  document.getElementById("diagTitle").textContent = CAT_LABEL[r.weakest] + " — your biggest single gap";
-‎  document.getElementById("diagCopy").textContent = COPY[r.weakest][r.tier(r.categoryScores[r.weakest])];
-‎
-‎  const exDiv = document.getElementById("exerciseFields");
-‎  exDiv.innerHTML = EXERCISES[r.weakest].map((pair,i)=>
-‎    `<div class="exercise-field"><label>${pair[0]}</label><textarea id="exf${i}" placeholder="Write your answer here..."></textarea></div>`
-‎  ).join("");
-‎
-‎  const routeCopy = document.getElementById("routeCopy");
-‎  const routeCta = document.getElementById("routeCta");
-‎  const nextTitle = document.getElementById("nextStepsTitle");
-‎  if(r.weakCount===0){
-‎    nextTitle.textContent="Your Next Step";
-‎    routeCopy.textContent="Your signals are strong. The next move is compounding recognition, not fixing a gap. Message me on WhatsApp and let's talk about what's next.";
-‎    routeCta.textContent="Message Me on WhatsApp →"; routeCta.href=NURTURE_LINK;
-‎  } else if(r.weakCount===1){
-‎    nextTitle.textContent="Your Next Step";
-‎    routeCopy.textContent="You have one specific gap. A 90-minute Clarity Call is built exactly for this — a focused diagnosis and a clear direction, $79.";
-‎    routeCta.textContent="Book Your Clarity Call →"; routeCta.href=CLARITY_CALL_LINK;
-‎  } else {
-‎    nextTitle.textContent="Your Next Step";
-‎    routeCopy.textContent="This isn't a single-session fix — it's a sequence. The Market Perception Blueprint walks the full path in 6–8 weeks, $400 founding rate.";
-‎    routeCta.textContent="Apply for the Blueprint →"; routeCta.href=BLUEPRINT_LINK;
-‎  }
-‎
-// printable worksheet mirror
+/* question card */
+.qcard{ margin-top:1.2rem; }
+.qtext{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(1.25rem,4.6vw,1.6rem); line-height:1.3; margin-bottom:1.4rem; }
+.opt{ display:block; width:100%; text-align:left; background:var(--ink-2); border:1px solid var(--border-dark); color:var(--bone); border-radius:10px; padding:.95rem 1.1rem; margin:.55rem 0; font-size:.98rem; }
+.opt[aria-checked="true"]{ border-color:var(--fuchsia); background:rgba(228,0,124,.1); }
+.opt:focus-visible{ outline:2px solid var(--fuchsia); outline-offset:2px; }
+.warn{ color:var(--fuchsia); font-size:.85rem; margin:.4rem 0 0; display:none; }
+.warn.show{ display:block; }
+.nav-row{ display:flex; gap:.7rem; margin-top:1.4rem; }
+.nav-row .btn-primary{ flex:1; }
+
+/* ===== LIGHT STAGE: results ===== */
+#stageResults{ background:var(--bone); color:var(--ink); }
+.light-wrap{ max-width:760px; margin:0 auto; padding:2.2rem 1.1rem 6rem; }
+.res-kicker{ font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--fuchsia); }
+.res-h1{ font-size:clamp(1.9rem,7vw,2.7rem); line-height:1.08; margin:.4rem 0 .6rem; }
+.res-sub{ font-size:1.02rem; opacity:.85; max-width:58ch; }
+.card{ background:var(--bone-2); border:1px solid var(--border-light); border-radius:12px; padding:1.2rem 1.3rem; margin:1rem 0; }
+.score-panel{ display:flex; align-items:baseline; gap:.8rem; flex-wrap:wrap; }
+.score-big{ font-family:'Fraunces',serif; font-weight:900; font-size:3.2rem; color:var(--fuchsia); line-height:1; }
+.score-scale{ font-family:'JetBrains Mono',monospace; font-size:.85rem; opacity:.65; }
+.cat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:.8rem; margin:1rem 0; }
+.cat-card{ background:var(--bone-2); border:1px solid var(--border-light); border-radius:10px; padding:1rem; }
+.cat-card.weakest{ border-color:var(--fuchsia); }
+.cat-name{ font-family:'JetBrains Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; opacity:.6; }
+.cat-score{ font-family:'Fraunces',serif; font-weight:900; font-size:1.7rem; margin:.2rem 0; }
+.bar-track{ height:8px; background:var(--border-light); border-radius:4px; overflow:hidden; margin:.4rem 0 .5rem; }
+.bar-fill{ height:100%; background:var(--fuchsia); }
+.cat-tier{ font-family:'JetBrains Mono',monospace; font-size:.66rem; text-transform:uppercase; opacity:.7; }
+.diagnosis-title{ font-family:'Fraunces',serif; font-weight:900; font-size:1.4rem; color:var(--fuchsia); margin-bottom:.4rem; }
+.exercise-field{ margin:.8rem 0; }
+.exercise-field label{ display:block; font-size:.9rem; font-weight:700; margin-bottom:.35rem; }
+.exercise-field textarea{ width:100%; min-height:64px; font-family:'Space Grotesk',sans-serif; font-size:.95rem; padding:.6rem .7rem; border:1px solid var(--border-light); border-radius:8px; background:var(--bone); color:var(--ink); resize:vertical; }
+.cta-block{ text-align:center; }
+.cta-link{ display:inline-block; background:var(--fuchsia); color:#fff; text-decoration:none; font-weight:700; border-radius:9px; padding:.9rem 1.6rem; margin-top:.8rem; }
+.gate-form{ display:flex; flex-direction:column; gap:.8rem; margin:1.4rem 0 .4rem; }
+.gate-form label{ font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; opacity:.75; }
+.gate-form input{ width:100%; box-sizing:border-box; font-family:'Space Grotesk',sans-serif; font-size:1rem; padding:.9rem 1rem; border:1px solid rgba(245,237,228,.3); border-radius:9px; background:rgba(245,237,228,.06); color:var(--bone); }
+.gate-form input:focus{ outline:2px solid var(--fuchsia); border-color:transparent; }
+.gate-consent{ font-size:.78rem; opacity:.6; margin:.2rem 0 0; }
+.email-row{ display:flex; gap:.5rem; flex-wrap:wrap; }
+.email-row input{ flex:1; min-width:160px; font-family:'Space Grotesk',sans-serif; font-size:.95rem; padding:.65rem .8rem; border:1px solid var(--border-light); border-radius:8px; background:var(--bone); color:var(--ink); }
+.email-row button{ background:var(--ink); color:var(--bone); border:none; border-radius:8px; padding:.65rem 1.1rem; font-weight:700; }
+.note-text{ font-size:.82rem; opacity:.65; margin-top:.5rem; }
+.util-row{ display:flex; gap:.8rem; justify-content:center; margin-top:2rem; flex-wrap:wrap; }
+.util-row button, .util-row a{ background:transparent; border:1px solid var(--border-light); color:var(--ink); border-radius:8px; padding:.6rem 1rem; font-size:.85rem; text-decoration:none; }
+footer{ text-align:center; font-family:'JetBrains Mono',monospace; font-size:.7rem; opacity:.6; margin-top:2.5rem; }
+
+/* worksheet (screen preview, printed separately) */
+.worksheet{ border:2px solid var(--ink); border-radius:12px; padding:1.4rem; margin-top:1.5rem; }
+.worksheet h3{ font-family:'Fraunces',serif; font-size:1.1rem; margin-bottom:.4rem; }
+.worksheet .wm-header{ display:flex; justify-content:space-between; align-items:baseline; border-bottom:2px solid var(--fuchsia); padding-bottom:.6rem; margin-bottom:.8rem; }
+
+@media print{
+  body *{ visibility:hidden; }
+  #printArea, #printArea *{ visibility:visible; }
+  #printArea{ position:absolute; top:0; left:0; width:100%; background:#fff; color:#000; padding:1cm; }
+  .no-print{ display:none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ STAGE A: INTRO ============ -->
+<section id="stageIntro" class="stage active">
+  <div class="dark-wrap">
+    <div class="kicker">Free Diagnostic — Market Perception Scorecard</div>
+    <h1 class="intro-h1">Why Clients Aren't Buying</h1>
+    <p class="intro-sub">A short, specific read of what your profile and content are currently signaling to a buyer who's never met you — not a grade, an actual diagnosis.</p>
+    <ul class="intro-list">
+      <li><span class="num">1</span><div><b>Who it's for</b>Skilled service providers, freelancers, and consultants who can do the work but aren't sure why it isn't translating into paying clients.</div></li>
+      <li><span class="num">2</span><div><b>What it helps you understand</b>Where the gap sits, offer clarity, market clarity, or content signals and which one is quietly costing you the most.</div></li>
+      <li><span class="num">3</span><div><b>What you leave with</b>Your scored breakdown, a plain-language diagnosis, a short reflection exercise, and one clear next step.</div></li>
+    </ul>
+    <button class="btn-primary" id="startBtn">Start the Scorecard →</button>
+    <div class="meta-row"><span>12 questions</span><span>About 90 seconds</span><span>Your result is emailed to you</span></div>
+  </div>
+</section>
+
+<!-- ============ STAGE B: QUIZ ============ -->
+<section id="stageQuiz" class="stage">
+  <div class="dark-wrap">
+    <div class="progress-wrap">
+      <div class="progress-label"><span id="progLabel">Question 1 of 12</span><span id="progCat" class="mono"></span></div>
+      <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+    </div>
+    <div class="qcard" id="qcard" role="radiogroup" aria-label="Scorecard question"></div>
+    <p class="warn" id="warnMsg">Select an answer to continue.</p>
+    <div class="nav-row">
+      <button class="btn-ghost" id="backBtn">Back</button>
+      <button class="btn-primary" id="nextBtn">Continue</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STAGE B2: LEAD GATE ============ -->
+<section id="stageGate" class="stage">
+  <div class="dark-wrap">
+    <div class="kicker">Your scorecard is ready</div>
+    <h1 class="intro-h1" style="font-size:clamp(1.8rem,7vw,2.6rem);">Where should we send your results?</h1>
+    <p class="intro-sub">Enter your name and email to see your scored breakdown and diagnosis. A copy goes straight to your inbox.</p>
+    <div class="gate-form">
+      <div><label for="gName">First name</label><input type="text" id="gName" autocomplete="given-name" placeholder="Your first name"></div>
+      <div><label for="gEmail">Email address</label><input type="email" id="gEmail" autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
+      <p class="warn" id="gWarn"></p>
+      <button class="btn-primary" id="gSubmit">Show Me My Results →</button>
+      <p class="gate-consent">By continuing, you agree to get your results by email and occasional emails from Brenda Blanche. Unsubscribe anytime.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STAGE C: RESULTS ============ -->
+<section id="stageResults" class="stage">
+  <div class="light-wrap">
+    <div class="res-kicker">Your Result</div>
+    <h1 class="res-h1" id="resVerdict"></h1>
+    <p class="res-sub" id="resOpener"></p>
+
+    <div class="card score-panel">
+      <div class="score-big" id="scoreBig"></div>
+      <div class="score-scale">out of 48, reflects three signal areas, not a percentage or a comparison to anyone else</div>
+    </div>
+
+    <div class="cat-grid" id="catGrid"></div>
+
+    <div class="card">
+      <div class="diagnosis-title" id="diagTitle"></div>
+      <p id="diagCopy"></p>
+    </div>
+
+    <div class="card">
+      <h3>A Short Exercise Worth Actually Writing</h3>
+      <div id="exerciseFields"></div>
+    </div>
+
+    <div class="card cta-block">
+      <h3 id="nextStepsTitle" style="font-size:1.2rem;"></h3>
+      <p id="routeCopy"></p>
+      <a class="cta-link" id="routeCta" href="#" target="_blank" rel="noopener">Continue →</a>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:1.05rem;">Your emailed copy</h3>
+      <p class="note-text" id="emNote" style="opacity:1;">Sending...</p>
+      <div class="email-row"><button id="emSubmit" style="display:none;">Try sending again</button></div>
+    </div>
+
+    <!-- printable worksheet -->
+    <div id="printArea" class="worksheet">
+      <div class="wm-header">
+        <div><strong>Brenda Blanche</strong><br><span class="mono" style="font-size:.7rem;">Unapologetically You™ — Market Perception Scorecard</span></div>
+        <div class="mono" style="font-size:.75rem;" id="wsDate"></div>
+      </div>
+      <h3>Overall: <span id="wsScore"></span> / 48 — <span id="wsVerdict"></span></h3>
+      <p id="wsOpener"></p>
+      <h3>Category Breakdown</h3>
+      <p id="wsCats"></p>
+      <h3>Diagnosis</h3>
+      <p id="wsDiag"></p>
+      <h3>Your Exercise</h3>
+      <div id="wsExercise"></div>
+      <h3>Next Step</h3>
+      <p id="wsRoute"></p>
+    </div>
+
+    <div class="util-row no-print">
+      <button id="printBtn">Print / Save as PDF</button>
+      <button id="restartBtn">Retake the Scorecard</button>
+    </div>
+    <footer>Brenda Blanche · Market Perception Strategist</footer>
+  </div>
+</section>
+
+<script src="/config.js"></script>
+<script>
+/* =========================================================
+   CONFIG — replace before going live
+   ========================================================= */
+// Edit links in config.js, not here.
+const { LEAD_CAPTURE_ENDPOINT, CLARITY_CALL_LINK, BLUEPRINT_LINK, NURTURE_LINK } = window.SCORECARD_CONFIG;
+
+/* =========================================================
+   QUESTION CONFIG — approved, unchanged from prior build
+   ========================================================= */
+const QUESTIONS = [
+ {cat:"offer", text:"If a stranger looked at your profile with zero context, could they describe in one sentence what you help people do?", opts:[["Yes, clearly",4],["Sort of, they'd have to piece it together",2],["No, they'd guess wrong",1]]},
+ {cat:"offer", text:"How many distinct things do you currently present yourself as capable of?", opts:[["One clear service",4],["Two or three related things",2],["A long list of skills",1]]},
+ {cat:"offer", text:"When someone asks what you do, how long does your answer take?", opts:[["One sentence",4],["A paragraph",2],["I usually have to think about it first",1]]},
+ {cat:"offer", text:"Can you name the exact outcome a buyer gets from working with you?", opts:[["Yes, specific and measurable",4],["Roughly, but it's vague",2],["Not really — it depends",1]]},
+ {cat:"market", text:"If three people who know your work described what you're known for, would they say the same thing?", opts:[["Yes",4],["Close, but not identical",2],["No, all different",1]]},
+ {cat:"market", text:"Do you know specifically who you're trying to reach — not just \"professionals\" or \"business owners\"?", opts:[["Yes, a specific buyer type",4],["A general category",2],["Not really defined",1]]},
+ {cat:"market", text:"Can you name a real competitor and explain exactly what makes you different from them?", opts:[["Yes, clearly",4],["Sort of",2],["No",1]]},
+ {cat:"market", text:"Do people ever describe you using a label you didn't choose for yourself?", opts:[["No, my label sticks",4],["Sometimes",2],["Often",1]]},
+ {cat:"content", text:"Does your content mostly show your conclusions, or does it also show how you actually think and work?", opts:[["Shows my process/mechanism",4],["Mostly conclusions, no process",2],["Mostly random topics",1]]},
+ {cat:"content", text:"Do you have a recurring idea or phrase people associate specifically with you?", opts:[["Yes",4],["Sort of",2],["No",1]]},
+ {cat:"content", text:"Does your content connect to an actual next step?", opts:[["Yes, clearly",4],["Sometimes",2],["Rarely",1]]},
+ {cat:"content", text:"Looking at your last 10 posts, could a stranger tell what you sell?", opts:[["Yes",4],["Maybe",2],["No",1]]}
+];
+
+const CAT_LABEL = {offer:"Offer Clarity", market:"Market Clarity", content:"Content Signals"};
+
+const COPY = {
+ offer:{s:"Your offer is clear enough that most people who land on your profile can describe what you do. That's rarer than you'd think. Your gap, if you have one, is probably not clarity — it's whether that clear offer is reaching the right buyer.",
+        m:"People can tell you're skilled. They can't always tell what, specifically, they'd hire you for. You know internally what you do, but it hasn't been translated into a sentence a stranger could repeat back to someone else.",
+        w:"Right now, a stranger looking at your profile would have to guess what you actually sell. That's not a content problem — it means the offer itself hasn't been defined narrowly enough yet to describe."},
+ market:{s:"People who know your work would describe you consistently. That consistency is what recognition is built from.",
+        m:"You have an association, but it's inconsistent — some people would call you a content person, some a coach, some something else entirely. Nobody's wrong. They're each reacting to a different signal.",
+        w:"Right now there isn't a consistent answer to \"what is this person known for.\" That's the actual translation problem — not a lack of expertise, a lack of a decided association."},
+ content:{s:"Your content shows your thinking, not just your conclusions — which is what makes someone trust the process, not just the opinion.",
+        m:"Your content is useful, but it mostly shows what you believe, not how you got there. That's the gap between content that gets liked and content that gets someone to think \"I need to hire this person specifically.\"",
+        w:"Right now your content isn't yet connected to a clear next step or a repeated idea — which means even consistent posting isn't compounding into recognition."}
+};
+
+const EXERCISES = {
+ offer:[["In one sentence, no jargon: what do you actually help people do?",""],["Name the exact outcome someone gets after working with you — a result, not a feeling.",""]],
+ market:["If three people who know your work were asked what you're known for, what would each of them say right now?","What's the one thing you want all three to say instead?"].map(q=>[q,""]),
+ content:[["Look at your last 3 posts. Do they show a conclusion, or the thinking behind it? Write one sentence showing your process instead of your opinion.",""],["What's one phrase or idea you keep coming back to that could become recognizably yours?",""]]
+};
+
+const VERDICTS = {
+ aligned:{label:"Aligned Perception", opener:"Your signals are largely doing their job. The work from here isn't a rebuild — it's refinement."},
+ competing:{label:"Competing Signals", opener:"You're not invisible. You're inconsistent. Different people are getting different, incomplete versions of who you are — and none of them are wrong, which is exactly the problem."},
+ invisible:{label:"Invisible Expert", opener:"The gap here isn't your skill. It's that almost none of your actual capability is currently visible in what the market can see."}
+};
+
+/* =========================================================
+   STATE + NAV
+   ========================================================= */
+let idx = 0;
+const saved = sessionStorage.getItem("scorecard_answers");
+let answers = saved ? JSON.parse(saved) : new Array(QUESTIONS.length).fill(null);
+
+const stageIntro = document.getElementById("stageIntro");
+const stageQuiz = document.getElementById("stageQuiz");
+const stageResults = document.getElementById("stageResults");
+const stageGate = document.getElementById("stageGate");
+function showStage(el){ [stageIntro,stageQuiz,stageGate,stageResults].forEach(s=>s.classList.remove("active")); el.classList.add("active"); window.scrollTo({top:0}); }
+
+document.getElementById("startBtn").addEventListener("click", ()=>{ idx = answers.findIndex(a=>a===null); if(idx===-1) idx=0; showStage(stageQuiz); renderQuestion(); });
+
+function renderQuestion(){
+  const q = QUESTIONS[idx];
+  document.getElementById("progLabel").textContent = `Question ${idx+1} of ${QUESTIONS.length}`;
+  document.getElementById("progCat").textContent = CAT_LABEL[q.cat];
+  document.getElementById("progFill").style.width = ((idx)/QUESTIONS.length*100)+"%";
+  document.getElementById("warnMsg").classList.remove("show");
+  const qcard = document.getElementById("qcard");
+  qcard.innerHTML = `<div class="qtext">${q.text}</div>` + q.opts.map((o,j)=>
+    `<button type="button" class="opt" role="radio" aria-checked="${answers[idx]===o[1]}" data-val="${o[1]}">${o[0]}</button>`
+  ).join("");
+  qcard.querySelectorAll(".opt").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      answers[idx] = parseInt(btn.dataset.val);
+      sessionStorage.setItem("scorecard_answers", JSON.stringify(answers));
+      qcard.querySelectorAll(".opt").forEach(b=>b.setAttribute("aria-checked", b===btn ? "true":"false"));
+      document.getElementById("warnMsg").classList.remove("show");
+    });
+  });
+  document.getElementById("backBtn").style.visibility = idx===0 ? "hidden" : "visible";
+  document.getElementById("nextBtn").textContent = idx===QUESTIONS.length-1 ? "See My Results" : "Continue";
+}
+
+document.getElementById("backBtn").addEventListener("click", ()=>{ if(idx>0){ idx--; renderQuestion(); } });
+document.getElementById("nextBtn").addEventListener("click", ()=>{
+  if(answers[idx]===null){ document.getElementById("warnMsg").classList.add("show"); return; }
+  if(idx < QUESTIONS.length-1){ idx++; renderQuestion(); }
+  else { LAST_RESULT = scoreAssessment(answers); showStage(stageGate); }
+});
+
+/* =========================================================
+   SCORING ENGINE — pure function
+   ========================================================= */
+function scoreAssessment(ans){
+  if(ans.some(a=>a===null)) throw new Error("Incomplete assessment");
+  const cat = {offer:0, market:0, content:0};
+  QUESTIONS.forEach((q,i)=>{ cat[q.cat] += ans[i]; });
+  const overall = cat.offer + cat.market + cat.content;
+  const tier = s => s>=12 ? "s" : s>=7 ? "m" : "w";
+  const verdictKey = overall>=36 ? "aligned" : overall>=24 ? "competing" : "invisible";
+  const weakCats = Object.entries(cat).filter(([,v])=>v<12).map(([k])=>k);
+  const weakest = Object.entries(cat).sort((a,b)=>a[1]-b[1])[0][0];
+  return { categoryScores:cat, overallScore:overall, tier, verdictKey, weakCount:weakCats.length, weakest };
+}
+
+/* =========================================================
+   RESULTS RENDER
+   ========================================================= */
+let LAST_RESULT = null;
+
+function computeAndShowResults(){
+  const r = scoreAssessment(answers);
+  LAST_RESULT = r;
+  const v = VERDICTS[r.verdictKey];
+
+  document.getElementById("resVerdict").textContent = v.label;
+  document.getElementById("resOpener").textContent = v.opener;
+  document.getElementById("scoreBig").textContent = r.overallScore;
+
+  const grid = document.getElementById("catGrid");
+  grid.innerHTML = Object.keys(CAT_LABEL).map(k=>{
+    const sc = r.categoryScores[k]; const t = r.tier(sc);
+    const tierLabel = t==="s"?"Strong signal":t==="m"?"Mixed signal":"Weak signal";
+    return `<div class="cat-card ${k===r.weakest?'weakest':''}">
+      <div class="cat-name">${CAT_LABEL[k]}</div>
+      <div class="cat-score">${sc}<span style="font-size:.9rem;opacity:.5;"> /16</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${sc/16*100}%"></div></div>
+      <div class="cat-tier">${tierLabel}</div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("diagTitle").textContent = CAT_LABEL[r.weakest] + " — your biggest single gap";
+  document.getElementById("diagCopy").textContent = COPY[r.weakest][r.tier(r.categoryScores[r.weakest])];
+
+  const exDiv = document.getElementById("exerciseFields");
+  exDiv.innerHTML = EXERCISES[r.weakest].map((pair,i)=>
+    `<div class="exercise-field"><label>${pair[0]}</label><textarea id="exf${i}" placeholder="Write your answer here..."></textarea></div>`
+  ).join("");
+
+  const routeCopy = document.getElementById("routeCopy");
+  const routeCta = document.getElementById("routeCta");
+  const nextTitle = document.getElementById("nextStepsTitle");
+  if(r.weakCount===0){
+    nextTitle.textContent="Your Next Step";
+    routeCopy.textContent="Your signals are strong. The next move is compounding recognition, not fixing a gap. Message me on WhatsApp and let's talk about what's next.";
+    routeCta.textContent="Message Me on WhatsApp →"; routeCta.href=NURTURE_LINK;
+  } else if(r.weakCount===1){
+    nextTitle.textContent="Your Next Step";
+    routeCopy.textContent="You have one specific gap. A 90-minute Clarity Call is built exactly for this — a focused diagnosis and a clear direction, $79.";
+    routeCta.textContent="Book Your Clarity Call →"; routeCta.href=CLARITY_CALL_LINK;
+  } else {
+    nextTitle.textContent="Your Next Step";
+    routeCopy.textContent="This isn't a single-session fix — it's a sequence. The Market Perception Blueprint walks the full path in 6–8 weeks, $400 founding rate.";
+    routeCta.textContent="Apply for the Blueprint →"; routeCta.href=BLUEPRINT_LINK;
+  }
+
+  // printable worksheet mirror
   document.getElementById("wsDate").textContent = new Date().toLocaleDateString();
   document.getElementById("wsScore").textContent = r.overallScore;
   document.getElementById("wsVerdict").textContent = v.label;
