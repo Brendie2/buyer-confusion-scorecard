@@ -29,17 +29,17 @@ const VERDICT_LABEL = { aligned: "Aligned Perception", competing: "Competing Sig
 const COPY = {
   offer: {
     s: "Your offer is clear enough that most people who land on your profile can describe what you do. That's rarer than you'd think.",
-    m: "People can tell you're skilled. They can't always tell what, specifically, they'd hire you for.",
+    m: "People can tell you're skilled. They can't always tell what, specifically, they'd hire you for. You know internally what you do, but it hasn't been translated into a sentence a stranger could repeat back to someone else.",
     w: "Right now, a stranger looking at your profile would have to guess what you actually sell."
   },
   market: {
     s: "People who know your work would describe you consistently. That consistency is what recognition is built from.",
-    m: "You have an association, but it's inconsistent — different people would describe you differently.",
+    m: "You have an association, but it's inconsistent — some people would call you a content person, some a coach, some something else entirely. Nobody's wrong. They're each reacting to a different signal.",
     w: "Right now there isn't a consistent answer to \"what is this person known for.\""
   },
   content: {
     s: "Your content shows your thinking, not just your conclusions — which is what makes someone trust the process.",
-    m: "Your content is useful, but it mostly shows what you believe, not how you got there.",
+    m: "Your content is useful, but it mostly shows what you believe, not how you got there. That's the gap between content that gets liked and content that gets someone to think \"I need to hire this person specifically.\"",
     w: "Right now your content isn't yet connected to a clear next step or a repeated idea."
   }
 };
@@ -221,8 +221,16 @@ async function onRequestPost(context) {
       body: JSON.stringify(brevoBody)
     });
     if (!brevoRes.ok) {
-      crmSaved = false;
-      console.error("Brevo rejected the contact:", await brevoRes.text());
+      console.error("Brevo rejected the full contact:", await brevoRes.text());
+      // Retry with just name + email (+ list) so the lead is never lost.
+      const minimal = { email, updateEnabled: true, attributes: { FIRSTNAME: name } };
+      if (brevoBody.listIds) minimal.listIds = brevoBody.listIds;
+      const retry = await fetch("https://api.brevo.com/v3/contacts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "api-key": env.BREVO_API_KEY },
+        body: JSON.stringify(minimal)
+      });
+      if (!retry.ok) { crmSaved = false; console.error("Brevo rejected the minimal contact too:", await retry.text()); }
     }
   } catch (e) {
     crmSaved = false;
@@ -238,6 +246,8 @@ async function onRequestPost(context) {
       body: JSON.stringify({
         from: env.RESEND_FROM || "onboarding@resend.dev",
         to: [email],
+        ...(env.NOTIFY_EMAIL ? { reply_to: [env.NOTIFY_EMAIL] } : {}),
+        text: `Hi ${name},\n\nYour Market Perception Scorecard result: ${overallScore}/48 (${VERDICT_LABEL[verdict]}).\nBiggest gap: ${CAT_LABEL[weakest]}.\n\nReply to this email with any questions.\n\nBrenda Blanche`,
         subject: `Your Scorecard result — ${overallScore}/48`,
         html: buildResultsEmailHtml({
           name, overallScore, categoryScores, verdict, weakest,
@@ -293,6 +303,32 @@ export default {
     if (url.pathname === "/api/submit-scorecard") {
       if (request.method === "POST") return onRequestPost({ request, env });
       // Opening this address in a browser shows a status check (true/false only, never the keys).
+      if (request.method === "GET" && url.searchParams.get("check") === "brevo") {
+        const out = { check: "brevo" };
+        const H = { "api-key": env.BREVO_API_KEY || "" };
+        try {
+          const a = await fetch("https://api.brevo.com/v3/contacts/attributes", { headers: H });
+          out.keyWorks = a.ok;
+          if (a.ok) {
+            const names = ((await a.json()).attributes || []).map((x) => x.name);
+            out.missingAttributes = ["FIRSTNAME","SCORE_TOTAL","SCORE_OFFER","SCORE_MARKET","SCORE_CONTENT","RESULT_VERDICT","PRIMARY_GAP"].filter((n) => !names.includes(n));
+          } else out.error = (await a.text()).slice(0, 200);
+          if (env.BREVO_LIST_ID) {
+            const l = await fetch("https://api.brevo.com/v3/contacts/lists/" + parseInt(env.BREVO_LIST_ID, 10), { headers: H });
+            out.list = l.ok ? { found: true, name: (await l.json()).name } : { found: false };
+          }
+        } catch (e) { out.error = "Could not reach Brevo"; }
+        return new Response(JSON.stringify(out, null, 2), { headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
+      }
+      if (request.method === "GET" && url.searchParams.get("check") === "resend") {
+        const out = { check: "resend", RESEND_FROM: env.RESEND_FROM || null };
+        try {
+          const d = await fetch("https://api.resend.com/domains", { headers: { Authorization: "Bearer " + (env.RESEND_API_KEY || "") } });
+          if (d.ok) out.domains = ((await d.json()).data || []).map((x) => ({ name: x.name, status: x.status }));
+          else out.note = "Could not list domains (" + d.status + "). If this is a send-only key that is normal — check Domains in the Resend dashboard.";
+        } catch (e) { out.error = "Could not reach Resend"; }
+        return new Response(JSON.stringify(out, null, 2), { headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
+      }
       if (request.method === "GET") {
         const set = (k) => Boolean(env[k]);
         return new Response(JSON.stringify({
