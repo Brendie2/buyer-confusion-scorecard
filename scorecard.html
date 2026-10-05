@@ -119,7 +119,7 @@ footer{ text-align:center; font-family:'JetBrains Mono',monospace; font-size:.7r
     <p class="intro-sub">A short, specific read of what your profile and content are currently signaling to a buyer who's never met you — not a grade, an actual diagnosis.</p>
     <ul class="intro-list">
       <li><span class="num">1</span><div><b>Who it's for</b>Skilled service providers, freelancers, and consultants who can do the work but aren't sure why it isn't translating into paying clients.</div></li>
-      <li><span class="num">2</span><div><b>What it helps you understand</b>Where the gap sits, offer clarity, market clarity, or content signals and which one is quietly costing you the most.</div></li>
+      <li><span class="num">2</span><div><b>What it helps you understand</b>Where the gap sits — offer clarity, market clarity, or content signals — and which one is quietly costing you the most.</div></li>
       <li><span class="num">3</span><div><b>What you leave with</b>Your scored breakdown, a plain-language diagnosis, a short reflection exercise, and one clear next step.</div></li>
     </ul>
     <button class="btn-primary" id="startBtn">Start the Scorecard →</button>
@@ -168,7 +168,7 @@ footer{ text-align:center; font-family:'JetBrains Mono',monospace; font-size:.7r
 
     <div class="card score-panel">
       <div class="score-big" id="scoreBig"></div>
-      <div class="score-scale">out of 48, reflects three signal areas, not a percentage or a comparison to anyone else</div>
+      <div class="score-scale">out of 48 — reflects three signal areas, not a percentage or a comparison to anyone else</div>
     </div>
 
     <div class="cat-grid" id="catGrid"></div>
@@ -179,7 +179,7 @@ footer{ text-align:center; font-family:'JetBrains Mono',monospace; font-size:.7r
     </div>
 
     <div class="card">
-      <h3>A Short Exercise Worth Actually Writing</h3>
+      <h3>A Short Exercise — Worth Actually Writing</h3>
       <div id="exerciseFields"></div>
     </div>
 
@@ -187,6 +187,7 @@ footer{ text-align:center; font-family:'JetBrains Mono',monospace; font-size:.7r
       <h3 id="nextStepsTitle" style="font-size:1.2rem;"></h3>
       <p id="routeCopy"></p>
       <a class="cta-link" id="routeCta" href="#" target="_blank" rel="noopener">Continue →</a>
+      <p style="margin:1rem 0 0;"><a id="routeSecondary" href="#" target="_blank" rel="noopener" style="display:none;color:inherit;font-size:.9rem;text-decoration:underline;"></a></p>
     </div>
 
     <div class="card">
@@ -227,7 +228,7 @@ footer{ text-align:center; font-family:'JetBrains Mono',monospace; font-size:.7r
    CONFIG — replace before going live
    ========================================================= */
 // Edit links in config.js, not here.
-const { LEAD_CAPTURE_ENDPOINT, CLARITY_CALL_LINK, BLUEPRINT_LINK, NURTURE_LINK } = window.SCORECARD_CONFIG;
+const { LEAD_CAPTURE_ENDPOINT, CLARITY_CALL_LINK, BLUEPRINT_LINK, WHATSAPP_NUMBER } = window.SCORECARD_CONFIG;
 
 /* =========================================================
    QUESTION CONFIG — approved, unchanged from prior build
@@ -369,18 +370,27 @@ function computeAndShowResults(){
   const routeCopy = document.getElementById("routeCopy");
   const routeCta = document.getElementById("routeCta");
   const nextTitle = document.getElementById("nextStepsTitle");
+  const gap = CAT_LABEL[r.weakest];
+  const waMsg = r.weakCount===0
+    ? `Hi Brenda, I just took the Market Perception Scorecard and scored ${r.overallScore}/48 (${v.label}). I'd love to tell you what I'm building next.`
+    : r.weakCount===1
+      ? `Hi Brenda, I just took the Market Perception Scorecard and scored ${r.overallScore}/48. My biggest gap is ${gap}. I'd love to talk it through with you.`
+      : `Hi Brenda, I just took the Market Perception Scorecard and scored ${r.overallScore}/48. My biggest gap is ${gap}, and I'd like help figuring out where to start.`;
+  routeCta.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`;
+  const routeSecondary = document.getElementById("routeSecondary");
+  routeSecondary.style.display = "none";
+  nextTitle.textContent = r.weakCount===0 ? "Where this goes next" : r.weakCount===1 ? "What I'd look at first" : "Why it feels harder than it should";
   if(r.weakCount===0){
-    nextTitle.textContent="Your Next Step";
-    routeCopy.textContent="Your signals are strong. The next move is compounding recognition, not fixing a gap. Message me on WhatsApp and let's talk about what's next.";
-    routeCta.textContent="Message Me on WhatsApp →"; routeCta.href=NURTURE_LINK;
+    routeCopy.textContent = "Your signals are strong, which means the work now isn't fixing a gap. It's compounding what's already working. I'd love to hear where you're taking your business next.";
+    routeCta.textContent = "Tell me what you're building →";
   } else if(r.weakCount===1){
-    nextTitle.textContent="Your Next Step";
-    routeCopy.textContent="You have one specific gap. A 90-minute Clarity Call is built exactly for this — a focused diagnosis and a clear direction, $79.";
-    routeCta.textContent="Book Your Clarity Call →"; routeCta.href=CLARITY_CALL_LINK;
+    routeCopy.textContent = `Most of what you're doing is working. Your ${gap} is the one place people lose the thread, and that's good news, because one gap is something we can work through together, not a rebuild. Tell me where you are with it and I'll give you my honest read.`;
+    routeCta.textContent = `Let's talk through your ${gap} →`;
+    if(CLARITY_CALL_LINK && CLARITY_CALL_LINK!=="#"){ routeSecondary.textContent="Prefer a dedicated one-on-one session? See the Clarity Call"; routeSecondary.href=CLARITY_CALL_LINK; routeSecondary.style.display="inline-block"; }
   } else {
-    nextTitle.textContent="Your Next Step";
-    routeCopy.textContent="This isn't a single-session fix — it's a sequence. The Market Perception Blueprint walks the full path in 6–8 weeks, $400 founding rate.";
-    routeCta.textContent="Apply for the Blueprint →"; routeCta.href=BLUEPRINT_LINK;
+    routeCopy.textContent = `Your scores show a pattern, not one isolated problem: more than one signal is working against you at the same time, which is why effort doesn't always translate into results. The good news is that it can be fixed in order, and it starts with your ${gap}. Message me and we'll work out where to begin.`;
+    routeCta.textContent = "Let's map where to start →";
+    if(BLUEPRINT_LINK && BLUEPRINT_LINK!=="#"){ routeSecondary.textContent="Want to see how we'd work through it together? Learn about the Blueprint"; routeSecondary.href=BLUEPRINT_LINK; routeSecondary.style.display="inline-block"; }
   }
 
   // printable worksheet mirror
