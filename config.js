@@ -1,8 +1,8 @@
 // The ONLY front-end file you need to edit for links.
-// (The links inside the results EMAIL come from Cloudflare environment variables — see README.)
+// (The Clarity Call / Blueprint links inside the results EMAIL come from Cloudflare variables.)
 window.SCORECARD_CONFIG = {
   LEAD_CAPTURE_ENDPOINT: "/api/submit-scorecard",
-  CLARITY_CALL_LINK: "#",   // your Clarity Call booking URL
-  BLUEPRINT_LINK: "#",      // your Blueprint application URL
-  NURTURE_LINK: "https://wa.me/237672411155?text=Hi%20Brenda%2C%20I%20just%20took%20your%20Market%20Perception%20Scorecard%20and%20my%20signals%20came%20out%20strong.%20I%27d%20love%20to%20talk%20about%20what%27s%20next."   // WhatsApp (strong scorers) — preloaded message
+  WHATSAPP_NUMBER: "237672411155",   // country code + number, digits only
+  CLARITY_CALL_LINK: "claritycall.brendablanche.site",            // optional soft link shown to people with one gap
+  BLUEPRINT_LINK: "blueprint.brendablanche.site"                // optional soft link shown to people with several gaps
 };
