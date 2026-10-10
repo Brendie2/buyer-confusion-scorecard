@@ -1,362 +1,93 @@
-// Cloudflare Worker (static assets + form handler)
-// Route: POST /api/submit-scorecard
-// Deployed automatically because this file lives at /functions/api/submit-scorecard.js
-//
-// Required environment variables (set in Cloudflare Pages > Settings > Environment variables,
-// as *encrypted* secrets, for both Production and Preview):
-//   BREVO_API_KEY     - from Brevo > Settings > SMTP & API > API Keys
-//   BREVO_LIST_ID      - (optional) numeric ID of the Brevo contact list to add people to
-//   RESEND_API_KEY     - from Resend > API Keys
-//   RESEND_FROM        - a verified sender on your domain, e.g. "Brenda Blanche <hello@yourdomain.com>"
-//   NOTIFY_EMAIL       - (optional) your own inbox, to get an alert every time someone completes the Scorecard
-//   CLARITY_CALL_LINK  - (optional) your real Clarity Call booking URL — falls back to "#" if unset
-//   BLUEPRINT_LINK     - (optional) your real Blueprint application URL — falls back to "#" if unset
-//   WHATSAPP_NUMBER    - (optional) digits only, defaults to 237672411155
-//
-// Brevo setup required BEFORE this works:
-//   Go to Brevo > Contacts > Settings > Contact Attributes and create these (type Number unless noted):
-//     SCORE_TOTAL, SCORE_OFFER, SCORE_MARKET, SCORE_CONTENT
-//     RESULT_VERDICT (type Text), PRIMARY_GAP (type Text)
-//   Brevo already has FIRSTNAME as a default attribute.
-//
-// Resend setup required BEFORE this works:
-//   Verify your domain in Resend > Domains (add the DNS records they give you to your registrar),
-//   then send from an address on that domain.
+/* Scorecard worker. Serves the site and handles POST /api/scorecard.
+   When someone enters their name + email (with consent) before seeing results:
+     1) BREVO   saves/updates the contact (the "table"): scores, primary gap, consent, results link
+     2) RESEND  emails Brenda: "This person took the Scorecard", with the full results
+     3) RESEND  emails the person: "Your results are in" with their results link
+   Variables and Secrets (Settings > Variables and Secrets):
+     BREVO_API_KEY (Secret) · BREVO_LIST_ID
+     RESEND_API_KEY (Secret) · RESEND_FROM  e.g.  Brenda Blanche <hello@brendablanche.site>
+     NOTIFY_EMAIL           where Brenda's notifications go                                          */
 
-const CAT_LABEL = { offer: "Offer Clarity", market: "Market Clarity", content: "Content Signals" };
-const VERDICT_LABEL = { aligned: "Aligned Perception", competing: "Competing Signals", invisible: "Invisible Expert" };
+const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'Content-Type': 'application/json' } });
+const t = v => String(v ?? '').trim().slice(0, 300);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const DIMS = ['Market & Problem Clarity', 'Offer Design', 'Positioning & Differentiation', 'Evidence & Trust', 'Market Signals & Recognition', 'Buyer Journey & Conversion'];
+const band = s => s >= 10 ? 'Stronger foundation' : s >= 7 ? 'Inconsistent or incomplete' : 'Priority to investigate';
+const gapNames = v => String(v || '').split(' + ').filter(x => DIMS.includes(x));   // only known dimension names are ever put in an email
 
-const COPY = {
-  offer: {
-    s: "Your offer is clear enough that most people who land on your profile can describe what you do. That's rarer than you'd think.",
-    m: "People can tell you're skilled. They can't always tell what, specifically, they'd hire you for. You know internally what you do, but it hasn't been translated into a sentence a stranger could repeat back to someone else.",
-    w: "Right now, a stranger looking at your profile would have to guess what you actually sell."
-  },
-  market: {
-    s: "People who know your work would describe you consistently. That consistency is what recognition is built from.",
-    m: "You have an association, but it's inconsistent — some people would call you a content person, some a coach, some something else entirely. Nobody's wrong. They're each reacting to a different signal.",
-    w: "Right now there isn't a consistent answer to \"what is this person known for.\""
-  },
-  content: {
-    s: "Your content shows your thinking, not just your conclusions — which is what makes someone trust the process.",
-    m: "Your content is useful, but it mostly shows what you believe, not how you got there. That's the gap between content that gets liked and content that gets someone to think \"I need to hire this person specifically.\"",
-    w: "Right now your content isn't yet connected to a clear next step or a repeated idea."
-  }
-};
+const brevo = (env, body) => fetch('https://api.brevo.com/v3/contacts', { method: 'POST',
+  headers: { 'api-key': env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' }, body: JSON.stringify(body) });
+const resend = (env, to, subject, html, replyTo) => fetch('https://api.resend.com/emails', { method: 'POST',
+  headers: { Authorization: 'Bearer ' + env.RESEND_API_KEY, 'content-type': 'application/json' },
+  body: JSON.stringify({ from: env.RESEND_FROM, to: [to], subject, html, ...(replyTo ? { reply_to: replyTo } : {}) }) });
 
-const TIER_LABEL = { s: "Strong signal", m: "Mixed signal", w: "Weak signal" };
-
-const EXERCISES = {
-  offer: [
-    "In one sentence, no jargon: what do you actually help people do?",
-    "Name the exact outcome someone gets after working with you — a result, not a feeling."
-  ],
-  market: [
-    "If three people who know your work were asked what you're known for, what would each of them say right now?",
-    "What's the one thing you want all three to say instead?"
-  ],
-  content: [
-    "Look at your last 3 posts. Do they show a conclusion, or the thinking behind it? Write one sentence showing your process instead of your opinion.",
-    "What's one phrase or idea you keep coming back to that could become recognizably yours?"
-  ]
-};
-
-function tierOf(score) { return score >= 12 ? "s" : score >= 7 ? "m" : "w"; }
-
-function json(obj, status = 200) {
-  return new Response(JSON.stringify(obj), {
-    status,
-    headers: { "Content-Type": "application/json" }
-  });
+const P = 'margin:0 0 18px;font:17px/1.65 Georgia,\'Times New Roman\',serif;color:#14100F';
+function firstEmail(name, kind, gaps, url) {
+  const g = gaps.join(' + ');
+  const line = kind === 'single' && g ? `Your lowest-scoring area was <b>${esc(g)}</b>. That is where your answers suggest it may be worth looking first.`
+    : kind === 'combined' && g ? `More than one area scored equally low: <b>${esc(g)}</b>. Your answers suggest the gap may not sit in just one place.`
+    : kind === 'strong' ? 'None of your six areas scored in the lower bands. Your results page explains how to check whether your market-facing evidence supports that.' : '';
+  const btn = l => `<p style="margin:6px 0 24px"><a href="${esc(url)}" style="display:inline-block;background:#E4007C;color:#ffffff;text-decoration:none;font:600 15px Arial,sans-serif;letter-spacing:.04em;padding:14px 26px;border-radius:999px">${l}</a></p>`;
+  return `<!DOCTYPE html><html><body style="margin:0;background:#ffffff"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:28px 16px"><table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%"><tr><td>
+<p style="${P}">Hi ${esc(name)},</p><p style="${P}">Your Market Perception Scorecard results are ready.</p>${btn('VIEW YOUR RESULTS')}
+<p style="${P}">Your answers examine six areas of your market-facing business:</p>
+<ul style="margin:0 0 18px;padding-left:22px;font:17px/1.65 Georgia,serif;color:#14100F">${DIMS.map(d => `<li>${esc(d)}</li>`).join('')}</ul>
+<p style="${P}">As you review your breakdown, pay attention to the dimension or dimensions that scored lowest.</p>
+${line ? `<p style="${P}">${line}</p>` : ''}
+<p style="${P}">That can give you a useful starting point—but it isn't proof of the underlying problem. Your answers tell us where to investigate, not exactly what every potential buyer thinks.</p>
+<p style="${P}">Here's one exercise to begin with:</p><p style="${P}">Ask yourself: What would a relevant buyer need to understand, believe, or see before feeling comfortable taking the next step with me?</p>
+<p style="${P}">Write down your answer. Then compare it with what your current offer, profile, content, and evidence actually communicate.</p><p style="${P}">You may notice a gap worth addressing.</p>
+<p style="${P}">Over the next few days, I'll share some practical ways to examine that gap without immediately assuming you need to post more, redesign everything, or change your entire business.</p>
+<p style="${P}">Start with your results here:</p>${btn('VIEW MY RESULTS')}<p style="${P}">Brenda</p>
+<p style="margin:0;padding-top:18px;border-top:1px solid #e6dfd8;font:12px/1.6 Arial,sans-serif;color:#8a8079">Brenda Blanche · Market Perception Strategist<br>You're receiving this because you completed the Market Perception Scorecard and agreed to receive your results and follow-up emails. Reply to this email to unsubscribe.</p>
+</td></tr></table></td></tr></table></body></html>`;
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function notifyEmail(d, name, email, gaps, scores, url) {
+  const row = (a, b) => `<tr><td style="padding:6px 14px 6px 0;color:#6b625b">${esc(a)}</td><td style="padding:6px 0"><b>${b}</b></td></tr>`;
+  return `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.5;color:#14100F">
+<p style="font-size:18px"><b>${esc(name)}</b> just took the Market Perception Scorecard.</p>
+<table style="border-collapse:collapse">${row('Email', esc(email))}${row('Result type', esc(t(d.result_type)))}${row('Priority area', esc(gaps.join(' + ') || 'None flagged'))}${row('Total (context only)', esc(Number(d.score) || 0) + ' / 72')}</table>
+<p style="margin:18px 0 6px"><b>Six-dimension breakdown</b></p>
+<table style="border-collapse:collapse">${DIMS.map((n, i) => row(n, `${scores[i]} / 12 · ${esc(band(scores[i]))}`)).join('')}</table>
+<p style="margin:18px 0 6px"><b>About them</b></p>
+<table style="border-collapse:collapse">${row('Role / industry', esc(t(d.role)) || '(blank)')}${row('Primary service', esc(t(d.service)) || '(blank)')}${row('Who they want to help', esc(t(d.audience)) || '(blank)')}${row('Biggest struggle', esc(t(d.struggle)) || '(blank)')}</table>
+${url ? `<p style="margin-top:18px"><a href="${esc(url)}">Open their results page</a></p>` : ''}</div>`;
 }
 
-const VERDICT_OPENER = {
-  aligned: "Your signals are largely doing their job. The work from here isn't a rebuild — it's refinement.",
-  competing: "You're not invisible. You're inconsistent. Different people are getting different, incomplete versions of who you are — and none of them are wrong, which is exactly the problem.",
-  invisible: "The gap here isn't your skill. It's that almost none of your actual capability is currently visible in what the market can see."
-};
+async function handle(request, env) {
+  let d; try { d = await request.json(); } catch { return json({ ok: false }, 400); }
+  if (d['bot-field']) return json({ ok: true });
+  const email = t(d.email).toLowerCase(), name = t(d.name);
+  if (!name || !/^\S+@\S+\.\S+$/.test(email)) return json({ ok: false }, 400);
+  if (d.consent !== true) return json({ ok: false, error: 'consent_required' }, 400);   // only people who agreed to the emails are saved or emailed
+  const scores = [d.market_problem, d.offer_design, d.positioning, d.evidence_trust, d.signals, d.buyer_journey].map(n => Math.max(0, Math.min(12, Number(n) || 0)));
+  const kind = ['single', 'combined', 'strong'].includes(d.result_type) ? d.result_type : '';
+  const gaps = gapNames(d.primary_gap);
+  let url = ''; try { const u = new URL(String(d.results_url || '')); if (u.origin === new URL(request.url).origin) url = u.toString().slice(0, 300); } catch {}   // only links back to this site
 
-function categoryRowHtml(key, score) {
-  const tier = tierOf(score);
-  const pct = Math.round((score / 16) * 100);
-  return `
-    <div style="margin-bottom:18px;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:4px;"><tr>
-        <td style="font-size:11px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:.5px;color:#14100F;opacity:.65;">${CAT_LABEL[key]}</td>
-        <td align="right" style="font-size:11px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:.5px;color:#14100F;opacity:.65;">${TIER_LABEL[tier]}</td>
-      </tr></table>
-      <div style="margin-bottom:6px;">
-        <span style="font-family:Georgia,serif;font-weight:bold;font-size:20px;">${score}<span style="font-size:12px;opacity:.5;"> /16</span></span>
-      </div>
-      <div style="background:#e9e2d8;border-radius:4px;height:8px;overflow:hidden;margin-bottom:8px;">
-        <div style="background:#E4007C;height:8px;width:${pct}%;"></div>
-      </div>
-      <p style="font-size:14px;line-height:1.6;margin:0;color:#14100F;">${COPY[key][tier]}</p>
-    </div>`;
+  const full = { FIRSTNAME: name, SCORE: Number(d.score) || 0, RESULT_TYPE: kind, CONSENT: true, RESULTS_URL: url, PRIMARY_GAP: gaps.join(' + '), SECONDARY_GAP: gapNames(d.secondary_gap).join(' + '),
+    PRIMARY_SCORE: Number(d.primary_score) || 0, SECONDARY_SCORE: Number(d.secondary_score) || 0, STRONGEST: DIMS.includes(d.strongest) ? d.strongest : '',
+    MARKET_PROBLEM: scores[0], OFFER_DESIGN: scores[1], POSITIONING: scores[2], EVIDENCE_TRUST: scores[3], SIGNALS: scores[4], BUYER_JOURNEY: scores[5],
+    ROLE: t(d.role), PRIMARY_SERVICE: t(d.service), AUDIENCE: t(d.audience), STRUGGLE: t(d.struggle) };
+  const ids = env.BREVO_LIST_ID ? [Number(env.BREVO_LIST_ID)] : undefined;
+  const saveContact = async () => {
+    let r = await brevo(env, { email, attributes: full, listIds: ids, updateEnabled: true });
+    if (r.status === 400) r = await brevo(env, { email, attributes: { FIRSTNAME: name }, listIds: ids, updateEnabled: true });   // attributes not created yet
+    return r.ok;
+  };
+  const jobs = [
+    env.BREVO_API_KEY ? saveContact() : Promise.resolve(false),
+    env.RESEND_API_KEY && env.RESEND_FROM && env.NOTIFY_EMAIL ? resend(env, env.NOTIFY_EMAIL, `New Scorecard: ${name}${gaps.length ? ' · ' + gaps.join(' + ') : ''}`, notifyEmail(d, name, email, gaps, scores, url), email).then(r => r.ok) : Promise.resolve(false),
+    env.RESEND_API_KEY && env.RESEND_FROM && url ? resend(env, email, 'Your Market Perception Scorecard results', firstEmail(name, kind, gaps, url), env.NOTIFY_EMAIL).then(r => r.ok) : Promise.resolve(false),
+  ];
+  const [contact, notified, welcomed] = (await Promise.allSettled(jobs)).map(x => x.status === 'fulfilled' && x.value);
+  return (contact || notified || welcomed) ? json({ ok: true, contact, notified, welcomed }) : json({ ok: false }, 502);
 }
 
-function buildResultsEmailHtml({ name, overallScore, categoryScores, verdict, weakest, links }) {
-  const categoryRows = Object.keys(CAT_LABEL).map(k => categoryRowHtml(k, categoryScores[k])).join("");
-  const diagnosis = COPY[weakest][tierOf(categoryScores[weakest])];
-  const exerciseItems = EXERCISES[weakest].map(q =>
-    `<li style="margin-bottom:14px;font-size:14px;line-height:1.6;">${escapeHtml(q)}<br><span style="display:inline-block;border-bottom:1px solid #14100F;width:100%;height:18px;"></span></li>`
-  ).join("");
-
-  const weakCount = Object.values(categoryScores).filter(v => v < 12).length;
-  const gap = CAT_LABEL[weakest];
-  const waMsg = weakCount === 0
-    ? `Hi Brenda, I just took the Market Perception Scorecard and scored ${overallScore}/48 (${VERDICT_LABEL[verdict]}). I'd love to tell you what I'm building next.`
-    : weakCount === 1
-      ? `Hi Brenda, I just took the Market Perception Scorecard and scored ${overallScore}/48. My biggest gap is ${gap}. I'd love to talk it through with you.`
-      : `Hi Brenda, I just took the Market Perception Scorecard and scored ${overallScore}/48. My biggest gap is ${gap}, and I'd like help figuring out where to start.`;
-  const waHref = `https://wa.me/${links.whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
-  let routeTitle, routeCopy, routeCtaText, routeCtaHref = waHref, routeSecondaryText = "", routeSecondaryHref = "";
-  if (weakCount === 0) {
-    routeTitle = "Where this goes next";
-    routeCopy = "Your signals are strong, which means the work now isn't fixing a gap. It's compounding what's already working. I'd love to hear where you're taking your business next.";
-    routeCtaText = "Tell me what you're building →";
-  } else if (weakCount === 1) {
-    routeTitle = "What I'd look at first";
-    routeCopy = `Most of what you're doing is working. Your ${gap} is the one place people lose the thread, and that's good news, because one gap is something we can work through together, not a rebuild. Tell me where you are with it and I'll give you my honest read.`;
-    routeCtaText = `Let's talk through your ${gap} →`;
-    if (links.clarity && links.clarity !== "#") { routeSecondaryText = "Prefer a dedicated one-on-one session? See the Clarity Call"; routeSecondaryHref = links.clarity; }
-  } else {
-    routeTitle = "Why it feels harder than it should";
-    routeCopy = `Your scores show a pattern, not one isolated problem: more than one signal is working against you at the same time, which is why effort doesn't always translate into results. The good news is that it can be fixed in order, and it starts with your ${gap}. Message me and we'll work out where to begin.`;
-    routeCtaText = "Let's map where to start →";
-    if (links.blueprint && links.blueprint !== "#") { routeSecondaryText = "Want to see how we'd work through it together? Learn about the Blueprint"; routeSecondaryHref = links.blueprint; }
-  }
-  const routeSecondaryHtml = routeSecondaryHref
-    ? `<p style="margin:14px 0 0;font-size:13px;"><a href="${routeSecondaryHref}" style="color:#14100F;text-decoration:underline;">${routeSecondaryText}</a></p>`
-    : "";
-
-  return `
-  <div style="font-family:Arial,Helvetica,sans-serif;background:#F5EDE4;padding:32px 16px;color:#14100F;">
-    <div style="max-width:560px;margin:0 auto;">
-
-      <p style="font-family:'Courier New',monospace;font-weight:bold;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#E4007C;margin:0 0 6px;">Your Scorecard Result</p>
-      <h1 style="font-family:Georgia,serif;font-size:28px;margin:0 0 4px;">Hi ${escapeHtml(name)},</h1>
-      <p style="font-size:15px;opacity:.85;margin:0 0 24px;">Here's your full, personalized breakdown — not just the number.</p>
-
-      <div style="background:#ffffff;border-radius:12px;padding:24px;margin-bottom:16px;">
-        <div style="margin-bottom:6px;">
-          <span style="font-family:Georgia,serif;font-weight:bold;font-size:44px;color:#E4007C;">${overallScore}</span>
-          <span style="font-family:'Courier New',monospace;font-size:12px;opacity:.6;margin-left:10px;">out of 48 — reflects three signal areas, not a percentage</span>
-        </div>
-        <h2 style="font-family:Georgia,serif;font-size:20px;margin:8px 0 4px;">${VERDICT_LABEL[verdict] || verdict}</h2>
-        <p style="font-size:14px;line-height:1.6;margin:0;opacity:.9;">${VERDICT_OPENER[verdict] || ""}</p>
-      </div>
-
-      <div style="background:#ffffff;border-radius:12px;padding:24px;margin-bottom:16px;">
-        <h3 style="font-family:Georgia,serif;font-size:17px;margin:0 0 16px;">Your Breakdown, Category by Category</h3>
-        ${categoryRows}
-      </div>
-
-      <div style="background:#ffffff;border-radius:12px;padding:24px;margin-bottom:16px;border-left:4px solid #E4007C;">
-        <p style="font-family:'Courier New',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#E4007C;margin:0 0 6px;">Your Biggest Single Gap</p>
-        <h3 style="font-family:Georgia,serif;font-size:19px;margin:0 0 8px;">${CAT_LABEL[weakest]}</h3>
-        <p style="font-size:14px;line-height:1.6;margin:0;">${diagnosis}</p>
-      </div>
-
-      <div style="background:#ffffff;border-radius:12px;padding:24px;margin-bottom:16px;">
-        <h3 style="font-family:Georgia,serif;font-size:17px;margin:0 0 6px;">Your Action Plan — Worth Actually Writing</h3>
-        <p style="font-size:13px;opacity:.7;margin:0 0 14px;">Two questions, specific to your biggest gap. Answer them now, while it's fresh.</p>
-        <ol style="padding-left:18px;margin:0;">${exerciseItems}</ol>
-      </div>
-
-      <div style="background:#ffffff;border-radius:12px;padding:24px;text-align:center;">
-        <h3 style="font-family:Georgia,serif;font-size:19px;margin:0 0 8px;">${routeTitle}</h3>
-        <p style="font-size:14px;line-height:1.6;margin:0 0 16px;">${routeCopy}</p>
-        <a href="${routeCtaHref}" style="display:inline-block;background:#E4007C;color:#ffffff;text-decoration:none;font-weight:bold;border-radius:8px;padding:12px 24px;font-size:14px;">${routeCtaText}</a>
-        ${routeSecondaryHtml}
-      </div>
-
-      <p style="font-size:13px;text-align:center;opacity:.6;margin-top:24px;font-family:'Courier New',monospace;">Brenda Blanche · Market Perception Strategist</p>
-    </div>
-  </div>`;
-}
-
-async function onRequestPost(context) {
-  const { request, env } = context;
-
-  let data;
-  try {
-    data = await request.json();
-  } catch (e) {
-    return json({ ok: false, error: "Invalid request body" }, 400);
-  }
-
-  const { name, email, overallScore, categoryScores, verdict, weakest } = data || {};
-
-  if (!name || !email || typeof email !== "string" || !email.includes("@")) {
-    return json({ ok: false, error: "A name and valid email are required" }, 400);
-  }
-  const okScore = (v) => Number.isInteger(v) && v >= 4 && v <= 16;
-  if (
-    typeof name !== "string" || name.length > 80 || email.length > 254 ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
-    !categoryScores || typeof categoryScores !== "object" ||
-    !okScore(categoryScores.offer) || !okScore(categoryScores.market) || !okScore(categoryScores.content) ||
-    overallScore !== categoryScores.offer + categoryScores.market + categoryScores.content ||
-    !VERDICT_LABEL[verdict] || !CAT_LABEL[weakest]
-  ) {
-    return json({ ok: false, error: "Missing or invalid scorecard results" }, 400);
-  }
-  if (!env.BREVO_API_KEY || !env.RESEND_API_KEY) {
-    return json({ ok: false, error: "Server is missing BREVO_API_KEY or RESEND_API_KEY configuration" }, 500);
-  }
-
-  let crmSaved = true;
-  // 1. Upsert the contact + their results into Brevo (the CRM record)
-  try {
-    const brevoBody = {
-      email,
-      updateEnabled: true,
-      attributes: {
-        FIRSTNAME: name,
-        SCORE_TOTAL: overallScore,
-        SCORE_OFFER: categoryScores.offer,
-        SCORE_MARKET: categoryScores.market,
-        SCORE_CONTENT: categoryScores.content,
-        RESULT_VERDICT: verdict || "",
-        PRIMARY_GAP: weakest || ""
-      }
-    };
-    if (env.BREVO_LIST_ID) brevoBody.listIds = [parseInt(env.BREVO_LIST_ID, 10)];
-
-    const brevoRes = await fetch("https://api.brevo.com/v3/contacts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "api-key": env.BREVO_API_KEY },
-      body: JSON.stringify(brevoBody)
-    });
-    if (!brevoRes.ok) {
-      console.error("Brevo rejected the full contact:", await brevoRes.text());
-      // Retry with just name + email (+ list) so the lead is never lost.
-      const minimal = { email, updateEnabled: true, attributes: { FIRSTNAME: name } };
-      if (brevoBody.listIds) minimal.listIds = brevoBody.listIds;
-      const retry = await fetch("https://api.brevo.com/v3/contacts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "api-key": env.BREVO_API_KEY },
-        body: JSON.stringify(minimal)
-      });
-      if (!retry.ok) { crmSaved = false; console.error("Brevo rejected the minimal contact too:", await retry.text()); }
-    }
-  } catch (e) {
-    crmSaved = false;
-    console.error("Could not reach Brevo");
-  }
-
-  // 2. Send the personalized results email via Resend
-  let emailedLead = true, emailWarning = null;
-  try {
-    const resendRes = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${env.RESEND_API_KEY}` },
-      body: JSON.stringify({
-        from: env.RESEND_FROM || "onboarding@resend.dev",
-        to: [email],
-        ...(env.NOTIFY_EMAIL ? { reply_to: [env.NOTIFY_EMAIL] } : {}),
-        text: `Hi ${name},\n\nYour Market Perception Scorecard result: ${overallScore}/48 (${VERDICT_LABEL[verdict]}).\nBiggest gap: ${CAT_LABEL[weakest]}.\n\nReply to this email with any questions.\n\nBrenda Blanche`,
-        subject: `Your Scorecard result — ${overallScore}/48`,
-        html: buildResultsEmailHtml({
-          name, overallScore, categoryScores, verdict, weakest,
-          links: {
-            clarity: env.CLARITY_CALL_LINK || "#",
-            blueprint: env.BLUEPRINT_LINK || "#",
-            whatsappNumber: env.WHATSAPP_NUMBER || "237672411155"
-          }
-        })
-      })
-    });
-    if (!resendRes.ok) {
-      emailedLead = false;
-      emailWarning = "The results email failed to send: " + (await resendRes.text());
-    }
-  } catch (e) {
-    emailedLead = false;
-    emailWarning = "The results email could not be sent";
-  }
-
-  // 3. Notify you (Brenda) that a new lead just completed the Scorecard — separate send, never blocks the response
-  if (env.NOTIFY_EMAIL) {
-    try {
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${env.RESEND_API_KEY}` },
-        body: JSON.stringify({
-          from: env.RESEND_FROM || "onboarding@resend.dev",
-          to: [env.NOTIFY_EMAIL],
-          subject: `New Scorecard lead: ${name} (${overallScore}/48)`,
-          html: `<div style="font-family:Arial,sans-serif;">
-            <p><strong>${escapeHtml(name)}</strong> (${escapeHtml(email)}) just completed the Scorecard.</p>
-            <p>Overall: ${overallScore}/48 — ${VERDICT_LABEL[verdict] || verdict}</p>
-            <p>Offer Clarity: ${categoryScores.offer}/16 · Market Clarity: ${categoryScores.market}/16 · Content Signals: ${categoryScores.content}/16</p>
-            <p>Biggest gap: ${CAT_LABEL[weakest] || weakest}</p>
-          </div>`
-        })
-      });
-    } catch (e) {
-      // Notification failing should never break the visitor's experience — swallow silently.
-    }
-  }
-
-  return json({ ok: true, emailed: emailedLead, warning: emailWarning, crmSaved });
-}
-
-
-// ---- Cloudflare Pages "advanced mode" entry point (_worker.js) ----
-// Sends /api/submit-scorecard to the code above; everything else is served as normal website files.
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
-    if (url.pathname === "/api/submit-scorecard") {
-      if (request.method === "POST") return onRequestPost({ request, env });
-      // Opening this address in a browser shows a status check (true/false only, never the keys).
-      if (request.method === "GET" && url.searchParams.get("check") === "brevo") {
-        const out = { check: "brevo" };
-        const H = { "api-key": env.BREVO_API_KEY || "" };
-        try {
-          const a = await fetch("https://api.brevo.com/v3/contacts/attributes", { headers: H });
-          out.keyWorks = a.ok;
-          if (a.ok) {
-            const names = ((await a.json()).attributes || []).map((x) => x.name);
-            out.missingAttributes = ["FIRSTNAME","SCORE_TOTAL","SCORE_OFFER","SCORE_MARKET","SCORE_CONTENT","RESULT_VERDICT","PRIMARY_GAP"].filter((n) => !names.includes(n));
-          } else out.error = (await a.text()).slice(0, 200);
-          if (env.BREVO_LIST_ID) {
-            const l = await fetch("https://api.brevo.com/v3/contacts/lists/" + parseInt(env.BREVO_LIST_ID, 10), { headers: H });
-            out.list = l.ok ? { found: true, name: (await l.json()).name } : { found: false };
-          }
-        } catch (e) { out.error = "Could not reach Brevo"; }
-        return new Response(JSON.stringify(out, null, 2), { headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
-      }
-      if (request.method === "GET" && url.searchParams.get("check") === "resend") {
-        const out = { check: "resend", RESEND_FROM: env.RESEND_FROM || null };
-        try {
-          const d = await fetch("https://api.resend.com/domains", { headers: { Authorization: "Bearer " + (env.RESEND_API_KEY || "") } });
-          if (d.ok) out.domains = ((await d.json()).data || []).map((x) => ({ name: x.name, status: x.status }));
-          else out.note = "Could not list domains (" + d.status + "). If this is a send-only key that is normal — check Domains in the Resend dashboard.";
-        } catch (e) { out.error = "Could not reach Resend"; }
-        return new Response(JSON.stringify(out, null, 2), { headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
-      }
-      if (request.method === "GET") {
-        const set = (k) => Boolean(env[k]);
-        return new Response(JSON.stringify({
-          running: true,
-          RESEND_API_KEY: set("RESEND_API_KEY"),
-          RESEND_FROM: set("RESEND_FROM"),
-          NOTIFY_EMAIL: set("NOTIFY_EMAIL"),
-          BREVO_API_KEY: set("BREVO_API_KEY"),
-          BREVO_LIST_ID: set("BREVO_LIST_ID")
-        }, null, 2), { headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
-      }
-      return new Response(JSON.stringify({ ok: false, error: "Method not allowed" }), {
-        status: 405, headers: { "Content-Type": "application/json", Allow: "POST, GET" }
-      });
-    }
+    if (new URL(request.url).pathname === '/api/scorecard') return request.method === 'POST' ? handle(request, env) : new Response('Method not allowed', { status: 405 });
     return env.ASSETS.fetch(request);
-  }
+  },
 };
