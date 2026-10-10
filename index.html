@@ -1,131 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Why Clients Aren't Buying — Free Scorecard | Brenda Blanche</title>
-<meta name="description" content="A free 12-question diagnostic that shows skilled service providers exactly where their offer, market clarity, or content signals are costing them clients.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Market Perception Scorecard — Brenda Blanche</title>
+<meta name="description" content="A free 18-question assessment across six areas that shows where your expertise may be getting stuck on the way to an offer people understand, trust, and consider buying.">
+<meta property="og:title" content="The Market Perception Scorecard"><meta property="og:description" content="You know you're good at what you do. So why is it still so hard to sell your expertise?">
+<meta name="theme-color" content="#14100F">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,900;1,9..144,900&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{ --ink:#14100F; --bone:#F5EDE4; --fuchsia:#E4007C; --border:rgba(245,237,228,.16);
- box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); }
-html{ scroll-padding-top:env(safe-area-inset-top,0px); }
-*{box-sizing:border-box;}
-body{ margin:0; background:var(--ink); color:var(--bone); font-family:'Space Grotesk',system-ui,sans-serif; line-height:1.55; overflow-x:hidden; }
-@media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
-h1,h2{ font-family:'Fraunces',serif; font-weight:900; margin:0; }
-.mono{ font-family:'JetBrains Mono',monospace; }
-img{ max-width:100%; height:auto; display:block; }
+:root{--ink:#14100F;--bone:#F5EDE4;--fu:#E4007C;--mu:rgba(245,237,228,.72);--ln:rgba(245,237,228,.18);--card:rgba(245,237,228,.055);--pad:clamp(1.2rem,5vw,3rem)}
+*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--bone);font:18px/1.6 'Space Grotesk',sans-serif;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom,0px);
+ background-image:radial-gradient(rgba(245,237,228,.09) 1px,transparent 1.5px);background-size:56px 56px}
+h1,h2,h3{font-family:Fraunces,serif;font-weight:900;letter-spacing:-.03em;line-height:1.04}.fu{color:var(--fu)}
+.mono{font:500 .78rem 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
+.g{max-width:1100px;margin:0 auto;padding:0 var(--pad)}
+nav{padding:calc(14px + env(safe-area-inset-top,0px)) 0 14px}nav .g{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.logo{font-family:Fraunces,serif;font-weight:900;font-size:1.3rem;color:var(--bone);text-decoration:none;letter-spacing:-.02em}.logo b{color:var(--fu)}
+.nb{display:inline-flex;align-items:center;white-space:nowrap;background:var(--fu);color:#fff;text-decoration:none;font:600 .92rem/1 'Space Grotesk',sans-serif;padding:.85rem 1.4rem;border-radius:999px;box-shadow:0 10px 24px -12px rgba(228,0,124,.9);transition:transform .25s,box-shadow .25s}.nb:hover{transform:translateY(-2px);box-shadow:0 16px 28px -12px rgba(228,0,124,1)}@media(max-width:480px){.nb{font-size:.84rem;padding:.75rem 1.1rem}}
+.hero{text-align:center;padding:clamp(2rem,6vw,4.5rem) 0 clamp(3rem,7vw,5rem);background:radial-gradient(55% 60% at 50% 38%,rgba(228,0,124,.2),transparent 70%)}
+.badge{display:inline-block;border:1px solid var(--ln);border-radius:999px;padding:.8rem 1.5rem;color:var(--fu);max-width:100%}
+h1{font-size:clamp(2.7rem,8.4vw,5.6rem);margin:clamp(1.8rem,4vw,2.6rem) auto 0;max-width:19ch}
+.sub{max-width:34rem;margin:1.8rem auto 0;color:var(--mu);font-size:clamp(1.1rem,2.4vw,1.3rem)}
+.cta{display:inline-flex;align-items:center;gap:.7rem;background:var(--bone);color:var(--ink);border-radius:999px;padding:1.15rem 2.4rem;font:600 clamp(1.05rem,2.6vw,1.25rem) 'Space Grotesk',sans-serif;text-decoration:none;margin-top:2.4rem;box-shadow:0 18px 40px -18px rgba(228,0,124,.7);transition:transform .25s,box-shadow .25s}
+.cta:hover{transform:translateY(-3px);box-shadow:0 26px 46px -18px rgba(228,0,124,.9)}.cta.p{background:var(--fu);color:#fff}
+.stats{display:flex;justify-content:center;flex-wrap:wrap;gap:2rem clamp(2rem,6vw,4.5rem);margin-top:clamp(2.6rem,6vw,4rem)}
+.stats div{min-width:7.5rem}.stats b{display:block;font:900 clamp(2.4rem,6vw,3.3rem)/1 Fraunces,serif;color:var(--mu)}.stats span{display:block;margin-top:.5rem;font:400 .85rem 'JetBrains Mono',monospace;color:var(--mu)}
+section{padding:clamp(3.4rem,8vw,6.5rem) 0}section.l{background:var(--bone);color:var(--ink)}
+.c{text-align:center}h2{font-size:clamp(2rem,5.4vw,3.5rem);max-width:19ch;margin:1rem auto 0}.c .lead{margin:1.4rem auto 0}.lead{font-size:clamp(1.1rem,2.2vw,1.3rem);max-width:37rem;color:var(--mu)}.l .lead{color:rgba(20,16,15,.78)}
+.l .mono{color:var(--fu)}
+.says{display:flex;flex-wrap:wrap;justify-content:center;gap:.8rem;margin-top:2.4rem}.says span{border:1px solid rgba(20,16,15,.18);border-radius:999px;padding:.75rem 1.3rem;font-size:1.02rem;background:rgba(20,16,15,.04)}
+.chain{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-top:2.6rem;text-align:left;counter-reset:c}@media(max-width:900px){.chain{grid-template-columns:1fr 1fr}}@media(max-width:560px){.chain{grid-template-columns:1fr}}
+.chain div{position:relative;border-radius:22px;padding:1.4rem 1.3rem;background:var(--card);box-shadow:inset 0 0 0 1px var(--ln)}.chain div::before{counter-increment:c;content:"0" counter(c);font:500 .78rem 'JetBrains Mono',monospace;color:var(--fu)}
+.chain h3{font-size:1.35rem;margin-top:.5rem}.chain p{color:var(--mu);font-size:.95rem;margin-top:.4rem}
+.pull{font:900 clamp(1.5rem,3.8vw,2.4rem)/1.12 Fraunces,serif;letter-spacing:-.025em;max-width:26ch;margin:2.6rem auto 0}.pull em{color:var(--fu)}
+.six{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2.6rem;text-align:left}@media(max-width:900px){.six{grid-template-columns:1fr 1fr}}@media(max-width:560px){.six{grid-template-columns:1fr}}
+.six div{position:relative;border-radius:22px;padding:1.5rem 1.4rem 1.5rem 2.8rem;background:rgba(20,16,15,.045);box-shadow:inset 0 0 0 1px rgba(20,16,15,.13);transition:transform .35s,box-shadow .35s}
+.six div::before{content:"";position:absolute;left:1.2rem;top:2.05rem;width:9px;height:9px;border-radius:50%;background:var(--fu);box-shadow:0 0 0 5px rgba(228,0,124,.16)}
+.six h3{font-size:1.4rem}.six p{margin-top:.4rem;color:rgba(20,16,15,.76);font-size:.97rem}.six i{display:block;margin-top:.7rem;font:normal 500 .72rem 'JetBrains Mono',monospace;color:var(--fu);letter-spacing:.04em}
+@media(hover:hover){.six div:hover{transform:translateY(-4px);box-shadow:inset 0 0 0 1px rgba(228,0,124,.4),0 22px 40px -24px rgba(20,16,15,.5)}}
+.res{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4rem);align-items:center;text-align:left}@media(max-width:820px){.res{grid-template-columns:1fr}}
+.res h2{margin-left:0}.res ul{list-style:none;padding:0;display:grid;gap:.8rem;margin-top:1.6rem}.res li{padding-left:1.7rem;position:relative}.res li::before{content:"";position:absolute;left:0;top:.62rem;width:9px;height:9px;border-radius:50%;background:var(--fu)}
+.rc{background:var(--bone);color:var(--ink);border-radius:26px;padding:1.4rem 1.4rem 1.5rem;box-shadow:0 40px 70px -30px rgba(228,0,124,.55);animation:fl 6.5s ease-in-out infinite;max-width:380px;margin:0 auto;width:100%}
+@keyframes fl{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(1deg)}}
+.rc .mono{font-size:.68rem;color:rgba(20,16,15,.55)}.rc h3{font-size:1.25rem;margin:.4rem 0 1rem}
+.rb{display:grid;gap:.7rem}.rb div{display:grid;grid-template-columns:8.4rem 1fr;gap:.6rem;align-items:center;font-size:.78rem;font-weight:600}.rb i{display:block;height:8px;border-radius:8px;background:rgba(20,16,15,.12);overflow:hidden}.rb i::after{content:"";display:block;height:100%;width:0;border-radius:8px;background:var(--ink);animation:rw 1.4s .4s cubic-bezier(.2,.7,.2,1) forwards}
+.rb .gp{color:var(--fu)}.rb .gp i::after{background:var(--fu)}@keyframes rw{to{width:var(--w)}}
+.rc .nx{margin-top:1.1rem;padding:.8rem 1rem;border-radius:14px;background:rgba(228,0,124,.1);font-size:.84rem}.rc .nx b{color:var(--fu)}.rc .tg{margin-top:.9rem;font:500 .66rem 'JetBrains Mono',monospace;color:rgba(20,16,15,.5)}
+.fit{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.4rem;text-align:left}@media(max-width:760px){.fit{grid-template-columns:1fr}}
+.fit div{border-radius:24px;padding:1.6rem;box-shadow:inset 0 0 0 1px rgba(20,16,15,.15);background:rgba(20,16,15,.04)}.fit .y{background:linear-gradient(120deg,rgba(228,0,124,.12),rgba(228,0,124,.03));box-shadow:inset 0 0 0 1px rgba(228,0,124,.45)}
+.fit h3{font-size:1.4rem;margin-bottom:.8rem}.fit ul{list-style:none;padding:0;display:grid;gap:.55rem}.fit li{padding-left:1.4rem;position:relative;font-size:.98rem;color:rgba(20,16,15,.82)}.fit li::before{content:"";position:absolute;left:0;top:.6rem;width:8px;height:8px;border-radius:50%;background:var(--fu)}.fit .n li::before{background:none;border:1.5px solid rgba(20,16,15,.5)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2.4rem;text-align:left}@media(max-width:760px){.steps{grid-template-columns:1fr}}
+.steps div{border-radius:22px;padding:1.5rem;background:var(--card);box-shadow:inset 0 0 0 1px var(--ln)}.steps b{font:500 .78rem 'JetBrains Mono',monospace;color:var(--fu)}.steps h3{font-size:1.35rem;margin:.4rem 0}.steps p{color:var(--mu);font-size:.97rem}
+.note{max-width:40rem;margin:2.4rem auto 0;color:var(--mu);font-size:.92rem;border:1px dashed var(--ln);border-radius:20px;padding:1.1rem 1.4rem;text-align:left}
+.fin{text-align:center;background:radial-gradient(55% 60% at 50% 100%,rgba(228,0,124,.22),transparent 70%)}
+footer{padding:2rem 0 3rem;color:var(--mu);font-size:.85rem}footer .g{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}footer a{color:var(--mu);margin-left:1rem}
+.js .rv{opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}.js .rv.on{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.js .rv{opacity:1;transform:none;transition:none}.rc{animation:none}.rb i::after{animation:none;width:var(--w)}}
 
-nav{ display:flex; justify-content:space-between; align-items:center; gap:.5rem; flex-wrap:nowrap; padding:1rem 1rem; max-width:1100px; margin:0 auto; }
-.logo{ font-family:'Fraunces',serif; font-weight:900; font-size:clamp(.85rem,4vw,1.15rem); white-space:nowrap; flex:none; }
-.logo span{ color:var(--fuchsia); }
-.nav-cta{ font-family:'JetBrains Mono',monospace; font-size:clamp(.6rem,2.6vw,.75rem); border:1px solid var(--border); border-radius:999px; padding:.45rem .7rem; text-decoration:none; color:var(--bone); white-space:nowrap; flex:none; }
+.hero h1{font-size:clamp(2.1rem,5.6vw,3.9rem);max-width:24ch;line-height:1.06}
+.st{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.4rem;text-align:left}@media(max-width:760px){.st{grid-template-columns:1fr}}
+.st div{border-radius:22px;padding:1.4rem 1.5rem 1.4rem 2.8rem;position:relative;background:rgba(20,16,15,.045);box-shadow:inset 0 0 0 1px rgba(20,16,15,.13);font-size:1.05rem;line-height:1.5}
+.st div::before{content:"";position:absolute;left:1.2rem;top:1.95rem;width:9px;height:9px;border-radius:50%;background:var(--fu);box-shadow:0 0 0 5px rgba(228,0,124,.16)}
+.pl{max-width:36rem;margin:1.5rem auto 0;color:var(--mu);font-size:1.15rem}.l .pl{color:rgba(20,16,15,.8)}
+.six h3 span{display:block;font:500 .72rem 'JetBrains Mono',monospace;color:var(--fu);letter-spacing:.06em;margin-bottom:.35rem}
+.six.w3{grid-template-columns:repeat(3,1fr)}
+.fine{max-width:38rem;margin:1.8rem auto 0;color:var(--mu);font-size:.96rem}
+.final-note{margin-top:1.4rem;color:var(--mu);font-size:.95rem}
+</style></head><body>
 
-.hero{ position:relative; padding:.8rem 1.4rem 3.5rem; overflow:hidden; text-align:center;
-  background-image: radial-gradient(rgba(245,237,228,.35) 1px, transparent 1px), radial-gradient(rgba(245,237,228,.22) 1px, transparent 1px);
-  background-size:120px 120px, 90px 90px; background-position:0 0, 45px 60px; }
-.hero::after{ content:""; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 20%, rgba(228,0,124,.14), transparent 60%); pointer-events:none; }
-.hero-inner{ position:relative; z-index:1; max-width:680px; margin:0 auto; display:flex; flex-direction:column; align-items:center; }
-.kicker{ font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--fuchsia); border:1px solid var(--border); display:inline-block; padding:.4rem .8rem; border-radius:999px; margin-bottom:1.2rem; background:rgba(20,16,15,.5); }
-.hero h1{ font-size:clamp(2.1rem,7vw,3.6rem); line-height:1.08; }
-.hero h1 .accent{ display:block; color:var(--fuchsia); }
-.hero p{ font-size:1.05rem; opacity:.85; margin:1.2rem 0 1.7rem; max-width:52ch; }
-.btn{ display:inline-flex; align-items:center; gap:.5rem; background:var(--bone); color:var(--ink); border:none; border-radius:999px; padding:1rem 1.8rem; font-weight:700; font-size:1.02rem; text-decoration:none; }
-.stat-row{ display:flex; gap:2.4rem; margin-top:2.6rem; flex-wrap:wrap; justify-content:center; }
-.stat{ font-family:'JetBrains Mono',monospace; font-size:.75rem; opacity:.7; text-align:center; }
-.stat b{ display:block; font-family:'Fraunces',serif; font-size:1.5rem; color:var(--bone); }
+<nav><div class="g"><a class="logo" data-l="home" href="#">Brenda<b>Blanche</b></a><a class="nb" data-l="take" href="#">Take the Scorecard</a></div></nav>
 
-.mockup-wrap{ max-width:1100px; margin:0 auto; padding:0 1.4rem 3rem; }
-.mockup-wrap img{ width:100%; height:auto; border-radius:14px; }
+<header class="hero"><div class="g">
+  <span class="badge mono">Free diagnostic — Market Perception Scorecard</span>
+  <h1>You Know You’re Good at What You Do.<br><span class="fu">So Why Is It Still So Hard to Sell Your Expertise?</span></h1>
+  <p class="sub">You have skills people can benefit from. Find out what’s getting in the way.</p>
+  <a class="cta" data-l="take" href="#" id="start">Take the Free Scorecard <span>→</span></a>
+  <div class="stats"><div><b>5</b><span>Minutes</span></div><div><b>18</b><span>Questions</span></div><div><b>6</b><span>Areas to assess</span></div></div>
+</div></header>
 
-section.dark{ padding:3.5rem 1.4rem; }
-.section-inner{ max-width:1100px; margin:0 auto; }
-.belief{ font-family:'Fraunces',serif; font-weight:900; font-size:clamp(1.4rem,4.4vw,2.1rem); line-height:1.3; color:var(--fuchsia); max-width:22ch; }
-
-section.bone{ background:var(--bone); color:var(--ink); padding:3.5rem 1.4rem; }
-.cat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-top:1.6rem; }
-.cat-card{ background:#fff; border:1px solid rgba(20,16,15,.12); border-radius:12px; padding:1.4rem; }
-.cat-card h3{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.05rem; margin:0 0 .4rem; }
-.cat-card p{ font-size:.92rem; opacity:.8; margin:0; }
-.dot{ width:10px; height:10px; border-radius:50%; background:var(--fuchsia); display:inline-block; margin-bottom:.7rem; }
-
-.getlist{ list-style:none; padding:0; margin:1.6rem 0 0; }
-.getlist li{ padding:.9rem 0; border-top:1px solid rgba(20,16,15,.12); font-size:.98rem; }
-.getlist li:last-child{ border-bottom:1px solid rgba(20,16,15,.12); }
-
-.final-cta{ text-align:center; padding:4rem 1.4rem; }
-.final-cta h2{ font-size:clamp(1.7rem,6vw,2.6rem); max-width:20ch; margin:0 auto 1.3rem; }
-.final-cta .btn{ background:var(--fuchsia); color:#fff; }
-
-footer{ text-align:center; padding:2rem 1.4rem 3rem; font-family:'JetBrains Mono',monospace; font-size:.72rem; opacity:.6; }
-</style>
-</head>
-<body>
-
-<nav>
-  <div class="logo">Brenda<span>Blanche</span></div>
-  <a class="nav-cta" href="scorecard.html">Start the Scorecard →</a>
-</nav>
-
-<div class="hero">
-  <div class="hero-inner">
-    <div class="kicker">Free Diagnostic — Market Perception Scorecard</div>
-    <h1>Why Clients<span class="accent">Aren't Buying</span></h1>
-    <p>You're good at what you do. So why does the client still go to someone else? Twelve questions. Ninety seconds. A real, specific read of what your profile and content are currently signaling — not a grade, an actual diagnosis.</p>
-    <a class="btn" href="scorecard.html">Take the Free Scorecard →</a>
-    <div class="stat-row">
-      <div class="stat"><b>12</b>Questions</div>
-      <div class="stat"><b>3</b>Signal areas scored</div>
-      <div class="stat"><b>0</b>Cost to find out</div>
-    </div>
+<section class="l"><div class="g c">
+  <h2 class="rv" style="max-width:20ch">You know how to do the work. <span class="fu">Selling it is the hard part.</span></h2>
+  <p class="pl rv">You may even have years of experience, results you’re proud of, and knowledge that could genuinely help someone. But turning all of that into an offer people understand, value, and want to pay for? That’s where things can get frustrating.</p>
+  <div class="st">
+    <div class="rv">Maybe you can do five different things well, but you’re not sure which one to build your business around.</div>
+    <div class="rv" style="--d:.05s">Maybe people look at your profile and still don’t understand exactly what they should hire you for.</div>
+    <div class="rv" style="--d:.1s">Maybe you keep creating content, explaining your expertise, and showing up online, but it doesn’t seem to translate into the kind of buying conversations you’re hoping for.</div>
+    <div class="rv" style="--d:.15s">Or maybe you know your work is valuable, but when someone asks what you do, you struggle to explain it in a way that makes them immediately understand why it matters to them.</div>
   </div>
-</div>
+  <p class="pull rv">You’re good at the work. But you’re not sure the market sees its value <em>as clearly as you do.</em></p>
+</div></section>
 
-<div class="mockup-wrap">
-  <img src="assets/results-mockup-devices.webp" width="1400" height="1048" alt="Preview of the Scorecard results dashboard on laptop and phone" loading="lazy">
-</div>
+<section><div class="g c">
+  <p class="mono fu rv">Before you change anything</p>
+  <h2 class="rv">The answer isn’t necessarily <span class="fu">more.</span></h2>
+  <p class="pl rv">The answer isn’t necessarily to post more, redesign your profile, or learn another marketing strategy.</p>
+  <p class="pl rv" style="color:var(--bone);font-size:1.3rem">First, you need to understand where the disconnect actually is.</p>
+</div></section>
 
-<section class="dark">
-  <div class="section-inner">
-    <p class="belief">"Most skilled people don't have a visibility problem. They have a translation problem."</p>
+<section class="l"><div class="g c">
+  <p class="mono rv">Find out what’s getting in the way</p>
+  <h2 class="rv">Six areas that decide how well your expertise <span class="fu">turns into business.</span></h2>
+  <p class="pl rv">The Market Perception Scorecard helps you examine six areas that influence how effectively your expertise translates into a business people can understand and consider buying from. In about five minutes, you’ll assess:</p>
+  <div class="six">
+    <div class="rv"><h3><span>01</span>Market &amp; Problem Clarity</h3><p>Are you solving a problem your intended buyers actually recognize and care about?</p></div>
+    <div class="rv" style="--d:.05s"><h3><span>02</span>Offer Design</h3><p>Have you turned your skills into something specific that people can understand and buy?</p></div>
+    <div class="rv" style="--d:.1s"><h3><span>03</span>Positioning &amp; Differentiation</h3><p>Is it clear why your work matters and why your approach is worth considering?</p></div>
+    <div class="rv"><h3><span>04</span>Evidence &amp; Trust</h3><p>Can potential buyers find reasons to believe you can deliver what you say you can?</p></div>
+    <div class="rv" style="--d:.05s"><h3><span>05</span>Market Signals &amp; Recognition</h3><p>Do your profile, content, and messaging reinforce what you want to be known for?</p></div>
+    <div class="rv" style="--d:.1s"><h3><span>06</span>Buyer Journey &amp; Conversion</h3><p>Is there a clear next step for someone who becomes interested in working with you?</p></div>
   </div>
-</section>
+</div></section>
 
-<section class="bone">
-  <div class="section-inner">
-    <h2 style="font-size:clamp(1.4rem,4vw,1.9rem);">The market never sees your actual expertise, only the signals you put out.</h2>
-    <div class="cat-grid">
-      <div class="cat-card"><div class="dot"></div><h3>Offer Clarity</h3><p>Can a stranger tell, in one sentence, exactly what you help people do?</p></div>
-      <div class="cat-card"><div class="dot"></div><h3>Market Clarity</h3><p>Would three people who know your work describe you the same way?</p></div>
-      <div class="cat-card"><div class="dot"></div><h3>Content Signals</h3><p>Does your content show your thinking, or just your conclusions?</p></div>
-    </div>
+<section><div class="g"><div class="res">
+  <div>
+    <p class="mono fu rv">Stop guessing what needs to change</p>
+    <h2 class="rv" style="max-width:14ch">A clearer picture, <span class="fu">not another tactic list.</span></h2>
+    <p class="lead rv" style="margin-top:1.3rem">You don’t need another list of marketing tactics to try blindly. You need a clearer picture of what’s working, what’s incomplete, and where to focus first.</p>
+    <ul class="rv"><li>A breakdown of your results across all six areas</li><li>An indication of where your biggest potential gap may be</li><li>A practical next step to investigate</li></ul>
   </div>
-</section>
+  <div class="rv"><div class="rc"><span class="mono">Example · illustrative only</span><h3>Your six-area breakdown</h3>
+    <div class="rb"><div>Market &amp; Problem<i style="--w:75%"></i></div><div class="gp">Offer Design<i style="--w:30%"></i></div><div>Positioning<i style="--w:58%"></i></div><div>Evidence &amp; Trust<i style="--w:66%"></i></div><div>Market Signals<i style="--w:50%"></i></div><div>Buyer Journey<i style="--w:82%"></i></div></div>
+    <div class="nx"><b>Possible starting point:</b> Your answers suggest buyers may find it hard to tell exactly what they would be buying.</div><p class="tg">Sample layout, not a real result</p></div></div>
+</div></div>
+<div class="g c"><p class="fine rv">Your results are based on your answers, so they aren’t a substitute for examining your actual market or speaking with potential buyers. They’re a starting point for asking better questions about your business.</p></div></section>
 
-<div class="mockup-wrap" style="padding-top:1rem;">
-  <img src="assets/results-mockup-mobile-card.webp" width="1400" height="977" alt="Detailed breakdown view of a Scorecard result" loading="lazy" style="max-width:560px; margin:0 auto;">
-</div>
+<section class="l"><div class="g c">
+  <h2 class="rv" style="max-width:18ch">This isn’t a test of how <span class="fu">talented you are.</span></h2>
+  <p class="pl rv">It’s an opportunity to examine whether the value you can deliver is being translated into an offer and market presence that the right people can understand, trust, and consider buying.</p>
+</div></section>
 
-<section class="dark">
-  <div class="section-inner" style="max-width:640px;">
-    <h2 style="font-size:clamp(1.4rem,4vw,1.9rem); margin-bottom:1rem;">What you leave with</h2>
-    <ul class="getlist">
-      <li>Your scored breakdown across all 3 signal areas, not just a single number.</li>
-      <li>A plain-language diagnosis of your single biggest gap.</li>
-      <li>A short reflection exercise you can act on immediately.</li>
-      <li>One clear next step, matched to what your actual results show, not a generic pitch.</li>
-    </ul>
-  </div>
-</section>
+<section class="fin"><div class="g">
+  <h2 class="rv" style="max-width:18ch;margin:0 auto">Take the Free Market Perception <span class="fu">Scorecard</span></h2>
+  <p class="pl rv">Discover where the disconnect may be and what to focus on next.</p>
+  <a class="cta p rv" data-l="take" href="#">Take the Free Scorecard <span>→</span></a>
+  <p class="final-note rv">About 5 minutes. 18 questions. 6 areas to assess.</p>
+  <p class="final-note rv" style="margin-top:.4rem">No judgment. No guessing. Just a clearer starting point.</p>
+</div></section>
 
-<div class="final-cta">
-  <h2>Find out what your profile is actually saying before your next prospect does.</h2>
-  <a class="btn" href="scorecard.html">Take the Free Scorecard →</a>
-</div>
-
-<footer>Brenda Blanche · Market Perception Strategist · Unapologetically You™</footer>
-</body>
-</html>
+<footer><div class="g"><span>© Brenda Blanche · Market Perception Strategist</span><span><a data-l="home" href="#">Home</a><a data-l="privacy" href="#">Privacy</a></span></div></footer>
+<script>
+var LINKS={home:"https://brendablanche.site",privacy:"https://brendablanche.site/privacy",take:"assessment.html"};
+document.querySelectorAll("[data-l]").forEach(function(a){a.href=LINKS[a.dataset.l]});
+document.documentElement.classList.add("js");
+var els=document.querySelectorAll(".rv");
+if("IntersectionObserver" in window){var io=new IntersectionObserver(function(a){a.forEach(function(x){if(x.isIntersecting){x.target.classList.add("on");io.unobserve(x.target)}})},{threshold:.12});els.forEach(function(e){io.observe(e)})}else els.forEach(function(e){e.classList.add("on")});
+</script></body></html>
