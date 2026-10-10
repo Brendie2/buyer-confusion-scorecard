@@ -131,12 +131,13 @@ var Q=[];D.forEach(function(d,di){d.q.forEach(function(q,qi){Q.push({d:di,t:q.t,
 var A=[],i=0,R=null;
 function $(s){return document.querySelector(s)}
 function show(id){document.querySelectorAll("section.s").forEach(function(s){s.classList.toggle("on",s.id===id)});window.scrollTo({top:0})}
-function start(){A=[];i=0;show("q");draw()}
+var lock=false;
+function start(){A=[];i=0;lock=false;show("q");draw()}
 function draw(){var q=Q[i],d=D[q.d];$("#pgb").style.width=(i/Q.length*100)+"%";$("#qm").textContent=d.n+" · "+(i%3+1)+" of 3 · "+(i+1)+"/"+Q.length;$("#qt").textContent=q.t;$("#bk").hidden=i===0;
  $("#op").innerHTML=q.a.map(function(t,n){var v=4-n;return '<button class="opt'+(A[i]===v?' on':'')+'" onclick="pick('+v+')"><i></i><span>'+t+'</span></button>'}).join("")}
-function pick(v){A[i]=v;draw();setTimeout(function(){if(i<Q.length-1){i++;draw()}else{finish()}},280)}
-function back(){if(i>0){i--;draw()}}
-function finish(){$("#pgb").style.width="100%";R=score();show("gate")}
+function pick(v){if(lock)return;lock=true;A[i]=v;draw();setTimeout(function(){lock=false;if(i<Q.length-1){i++;draw()}else{finish()}},280)}
+function back(){if(lock)return;if(i>0){i--;draw()}}
+function finish(){for(var k=0;k<Q.length;k++){if(!(A[k]>=1&&A[k]<=4)){i=k;draw();return}}$("#pgb").style.width="100%";R=score();show("gate")}
 /* scoring: 3 questions x 1-4 per area (3-12), total 18-72.
    Lowest area = starting point. If two or more areas tie at the lowest score (and it is 9 or below) the result is the combined-gap version. If the lowest area is 10+, no area is flagged. */
 function score(){var ds=D.map(function(d,di){return A[di*3]+A[di*3+1]+A[di*3+2]});var tot=ds.reduce(function(a,b){return a+b},0),mn=Math.min.apply(null,ds);
@@ -151,11 +152,12 @@ function resultsUrl(){return location.origin+location.pathname+"?a="+A.join("")+
 $("#gf").addEventListener("submit",function(e){e.preventDefault();var n=$("#fn").value.trim(),m=$("#em").value.trim().toLowerCase(),er=$("#ge");
  if(!n||!/^\S+@\S+\.\S+$/.test(m)){er.textContent="Please add your first name and a valid email.";er.style.display="block";return}
  if(!$("#cn").checked){er.textContent="Please tick the box to receive your results and the follow-up emails.";er.style.display="block";return}er.style.display="none";
- var b=$("#gb");b.disabled=true;b.textContent="Preparing your report…";R.name=n;var d=R.ds;
+ var b=$("#gb");b.disabled=true;b.textContent="Preparing your report…";R.name=n;
+ try{results()}catch(err){er.innerHTML="Something went wrong showing your results ("+err.message+"). Please refresh and try again, or <a href=\"https://wa.me/237672411155\">message me</a> and I’ll send them to you.";er.style.display="block";b.disabled=false;b.textContent="Show my results →";return}
+ try{var d=R.ds;
  var pl={"bot-field":$("#gf [name=bot-field]").value,name:n,email:m,consent:true,role:$("#ro").value.trim(),service:$("#sv").value.trim(),audience:$("#au").value.trim(),struggle:$("#st").value,score:R.tot,result_type:R.kind,
   market_problem:d[0],offer_design:d[1],positioning:d[2],evidence_trust:d[3],signals:d[4],buyer_journey:d[5],primary_gap:R.kind==="strong"?"":R.tied.map(function(x){return D[x].n}).join(" + "),secondary_gap:D[R.s2].n,primary_score:R.min,secondary_score:d[R.s2],strongest:D[R.st].n,results_url:resultsUrl(),answers:A.map(function(v,i){return{s:v,t:Q[i].a[4-v]}})};
- try{results()}catch(err){er.innerHTML="Something went wrong showing your results ("+err.message+"). Please refresh and try again, or <a href=\"https://wa.me/237672411155\">message me</a> and I’ll send them to you.";er.style.display="block";b.disabled=false;b.textContent="Show my results →";return}
- try{fetch("/api/scorecard",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},body:JSON.stringify(pl)}).catch(function(){})}catch(x){}
+ fetch("/api/scorecard",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},body:JSON.stringify(pl)}).catch(function(){})}catch(x){}
 });
 var QL=["Knowing who needs your expertise","Describing their problem in their words","Evidence that the problem matters","Buyers knowing what to hire you for","Connecting your work to a buyer outcome","Confidence buyers will pay for this offer","Seeing quickly why your work matters","What makes your approach different","What you want to be associated with","Visible proof of your ability","Addressing buyer hesitations","Clarity on what working with you involves","Consistency across profile, offer and content","Whether a follower knows what you’re known for","A deliberate way to make your value visible","A clear next step after interest","A path from discovery to considering you","Learning from buyer questions and decisions"];
 var LV={4:"Strong",3:"Mostly there",2:"Inconsistent",1:"Not yet in place"};
