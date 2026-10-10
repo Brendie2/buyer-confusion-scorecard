@@ -1,472 +1,162 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Why Clients Aren't Buying — Free Scorecard | Brenda Blanche</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Take the Market Perception Scorecard — Brenda Blanche</title>
+<meta name="description" content="A 5-minute, 18-question assessment that finds the gap between what you are capable of and what the market currently understands about you.">
+<meta name="theme-color" content="#14100F">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,900;1,9..144,900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ===== DESIGN TOKENS ===== */
-:root{
-  --ink:#14100F; --bone:#F5EDE4; --fuchsia:#E4007C;
-  --ink-2:#211a18; --bone-2:#ffffff; --border-dark:rgba(245,237,228,.14); --border-light:rgba(20,16,15,.13);
-  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
-}
-html{ scroll-padding-top:env(safe-area-inset-top,0px); }
-*{box-sizing:border-box;}
-body{ margin:0; font-family:'Space Grotesk',system-ui,sans-serif; line-height:1.55; background:var(--ink); color:var(--bone); }
-@media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
-.stage{ display:none; min-height:100vh; }
-.stage.active{ display:block; }
-.mono{ font-family:'JetBrains Mono',monospace; }
-h1,h2,h3{ font-family:'Fraunces',serif; font-weight:900; margin:0; }
-button{ font-family:'Space Grotesk',sans-serif; cursor:pointer; }
-a{ color:inherit; }
+:root{--ink:#14100F;--bone:#F5EDE4;--fu:#E4007C;--mu:rgba(245,237,228,.68);--ln:rgba(245,237,228,.16);--card:rgba(245,237,228,.06)}
+*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--bone);font:17px/1.6 Inter,sans-serif;min-height:100vh;padding-bottom:env(safe-area-inset-bottom,0px);overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(60% 50% at 80% 0%,rgba(228,0,124,.22),transparent 70%),radial-gradient(40% 40% at 0% 100%,rgba(228,0,124,.1),transparent 70%)}
+h1,h2,h3{font-family:Fraunces,serif;font-weight:900;letter-spacing:-.03em;line-height:1.04}
+.it{font-style:italic;color:var(--fu)}.mono{font:500 .74rem 'JetBrains Mono',monospace;letter-spacing:.05em;color:var(--fu);text-transform:uppercase}
+.w{position:relative;max-width:760px;margin:0 auto;padding:0 22px}
+header{position:sticky;top:0;z-index:5;padding:calc(10px + env(safe-area-inset-top,0px)) 0 10px;background:rgba(20,16,15,.78);backdrop-filter:blur(14px)}
+header .w{display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:Fraunces,serif;font-weight:900;font-size:1.1rem;color:var(--bone);text-decoration:none}.logo b{color:var(--fu)}
+.btn{display:inline-block;border:0;border-radius:999px;background:var(--fu);color:#fff;font:600 1rem Inter,sans-serif;padding:.85rem 1.5rem;cursor:pointer;text-decoration:none;transition:transform .25s,box-shadow .25s;box-shadow:0 10px 26px -12px rgba(228,0,124,.8)}
+.btn:hover{transform:translateY(-2px)}.btn.o{background:none;border:1px solid var(--ln);color:var(--bone);box-shadow:none}.btn.o:hover{border-color:var(--fu)}.btn:disabled{opacity:.6;cursor:wait}
+section.s{display:none;padding:clamp(2.2rem,7vw,4.5rem) 0 4rem;animation:in .6s cubic-bezier(.2,.7,.2,1)}section.s.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(2.4rem,8vw,4.4rem)}h2{font-size:clamp(1.9rem,5.4vw,3rem)}
+.lead{font-size:1.2rem;color:var(--mu);max-width:36rem;margin-top:1.1rem}
+.dims{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.8rem 0 0}.dims span{border:1px solid var(--ln);border-radius:999px;padding:.35rem .9rem;font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:22px;padding:clamp(1.2rem,4vw,1.9rem);margin-top:1.4rem}
+.card.f{border-color:rgba(228,0,124,.55);background:linear-gradient(120deg,rgba(228,0,124,.16),rgba(228,0,124,.04))}
+.scale{display:grid;gap:.4rem;margin-top:.8rem;color:var(--mu);font-size:.98rem}.scale b{color:var(--fu);font-family:'JetBrains Mono',monospace;margin-right:.6rem}
+.hook{font-family:Fraunces,serif;font-weight:900;font-size:clamp(1.3rem,3.4vw,1.8rem);line-height:1.2;margin-top:2.2rem;max-width:30rem}
+/* question */
+.pg{height:4px;border-radius:4px;background:var(--ln);overflow:hidden;margin-bottom:1.2rem}.pg i{display:block;height:100%;width:0;background:var(--fu);transition:width .5s}
+.qh{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.6rem}
+.qt{font-family:Fraunces,serif;font-weight:900;font-size:clamp(1.55rem,5vw,2.3rem);line-height:1.14;letter-spacing:-.02em;min-height:7rem}
+.opts{display:grid;gap:.6rem;margin-top:1.4rem}
+.opt{display:flex;align-items:center;gap:1rem;text-align:left;width:100%;background:var(--card);color:var(--bone);border:1px solid var(--ln);border-radius:16px;padding:.95rem 1.1rem;font:500 1.02rem Inter,sans-serif;cursor:pointer;transition:all .2s}
+.opt b{flex:none;display:grid;place-items:center;width:2.1rem;height:2.1rem;border-radius:50%;border:1px solid var(--fu);font:500 .84rem 'JetBrains Mono',monospace;color:var(--fu)}
+.opt:hover{border-color:var(--fu);transform:translateX(3px)}.opt.on{background:var(--fu);border-color:var(--fu)}.opt.on b{background:#fff;color:var(--fu);border-color:#fff}
+.back{background:none;border:0;color:var(--mu);font:inherit;cursor:pointer;padding:.4rem 0}.back:hover{color:var(--bone)}.back[hidden]{visibility:hidden}
+/* form */
+label{display:block;font-size:.88rem;color:var(--mu);margin:1rem 0 .3rem}
+input,select{width:100%;background:rgba(245,237,228,.06);color:var(--bone);border:1px solid var(--ln);border-radius:14px;padding:.8rem 1rem;font:inherit}
+input:focus,select:focus{outline:0;border-color:var(--fu);box-shadow:0 0 0 4px rgba(228,0,124,.18)}select option{color:#14100F}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem}@media(max-width:600px){.row2{grid-template-columns:1fr}}
+.hp{position:absolute;left:-9999px}.err{color:#ff7aa8;margin-top:.8rem;display:none}
+/* results */
+.ring{width:170px;height:170px;position:relative;flex:none}.ring svg{transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:10}
+.ring .bg{stroke:var(--ln)}.ring .fg{stroke:var(--fu);stroke-linecap:round;stroke-dasharray:339.3;stroke-dashoffset:339.3;transition:stroke-dashoffset 1.6s cubic-bezier(.2,.7,.2,1)}
+.ring div{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-family:Fraunces,serif;font-weight:900;font-size:3rem;line-height:1}.ring small{display:block;font:500 .72rem 'JetBrains Mono',monospace;color:var(--mu)}
+.top{display:flex;gap:1.6rem;align-items:center;flex-wrap:wrap}
+.band{font-family:Fraunces,serif;font-weight:900;font-size:1.7rem;line-height:1.1}
+.bars{display:grid;gap:1rem;margin-top:1.2rem}.bar .l{display:flex;justify-content:space-between;font-weight:600;margin-bottom:.35rem}.bar .l span{font:500 .8rem 'JetBrains Mono',monospace;color:var(--mu)}
+.bar .t{height:10px;border-radius:10px;background:var(--ln);overflow:hidden}.bar .t i{display:block;height:100%;width:0;border-radius:10px;background:var(--bone);transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
+.bar.gap .t i{background:var(--fu)}.bar.gap .l{color:var(--fu)}.tag{font:500 .7rem 'JetBrains Mono',monospace;color:var(--mu);margin-left:.5rem}
+.think{display:grid;gap:.7rem;margin:1rem 0}.think p{border-left:3px solid var(--fu);padding:.2rem 0 .2rem 1rem;font-size:1.1rem}.think p.no{border-color:var(--ln);color:var(--mu)}
+ul.pts{list-style:none;padding:0;display:grid;gap:.5rem;margin-top:.8rem}ul.pts li{position:relative;padding-left:1.6rem}ul.pts li::before{content:"";position:absolute;left:0;top:.62rem;width:8px;height:8px;border-radius:50%;background:var(--fu)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem}@media(max-width:600px){.two{grid-template-columns:1fr}}
+.two .card{margin-top:0}.mu{color:var(--mu)}.p{margin-top:.9rem}
+.snap{border:1px dashed var(--fu);border-radius:22px;padding:1.4rem;margin-top:1.4rem}.snap p{margin:.2rem 0}
+.act{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.1rem}
+footer{padding:2rem 0 3rem;text-align:center;color:var(--mu);font-size:.85rem}
+@media print{body::before,header,.act,#cta,.back,footer{display:none!important}body{background:#fff;color:#14100F}.card,.snap{border-color:#bbb;background:none}.mu,.lead{color:#444}section.s{display:none}section#res{display:block}.bar .t i{background:#14100F}.bar.gap .t i{background:#E4007C}.ring .fg{stroke:#E4007C;transition:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-/* ===== DARK STAGES: intro + quiz ===== */
-#stageIntro, #stageQuiz{ background:var(--ink); color:var(--bone); }
-#stageIntro{ position:relative; overflow:hidden; }
-#stageIntro::before{ content:""; position:absolute; top:-20%; right:-25%; width:70vw; max-width:560px; height:70vw; max-height:560px; background:radial-gradient(circle at 40% 40%, rgba(228,0,124,.55), rgba(228,0,124,0) 70%); pointer-events:none; }
-.dark-wrap{ max-width:620px; margin:0 auto; padding:2.4rem 1.2rem 4rem; position:relative; z-index:1; }
-.kicker{ font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--fuchsia); }
-.intro-h1{ font-size:clamp(2rem,8vw,3.4rem); line-height:1.03; margin:.5rem 0 1rem; }
-.intro-sub{ font-size:1.05rem; opacity:.85; max-width:52ch; }
-.intro-list{ margin:1.8rem 0; padding:0; list-style:none; display:grid; gap:.7rem; }
-.intro-list li{ display:flex; gap:.9rem; align-items:flex-start; background:linear-gradient(180deg, rgba(245,237,228,.05), rgba(245,237,228,.02)); border:1px solid var(--border-dark); border-radius:12px; padding:1.1rem 1.2rem; font-size:.95rem; backdrop-filter:blur(2px); }
-.intro-list .num{ flex:none; width:28px; height:28px; border-radius:50%; background:var(--fuchsia); color:#fff; font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
-.intro-list b{ color:var(--fuchsia); font-family:'JetBrains Mono',monospace; font-size:.72rem; text-transform:uppercase; display:block; margin-bottom:.3rem; letter-spacing:.05em; }
-.btn-primary{ display:inline-flex; align-items:center; gap:.5rem; background:var(--fuchsia); color:#fff; border:none; border-radius:9px; padding:1rem 1.6rem; font-weight:700; font-size:1.02rem; width:100%; justify-content:center; }
-.btn-primary:disabled{ opacity:.35; cursor:not-allowed; }
-.btn-ghost{ background:transparent; border:1px solid var(--border-dark); color:var(--bone); border-radius:9px; padding:.85rem 1.2rem; font-weight:700; }
-.meta-row{ display:flex; gap:1.4rem; margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:.72rem; opacity:.65; }
+.opt{align-items:flex-start;font-size:1rem;line-height:1.45;padding:1rem 1.1rem}.opt i{flex:none;width:1.3rem;height:1.3rem;border-radius:50%;border:1.5px solid var(--fu);margin-top:.12rem;position:relative}.opt.on i{background:#fff;border-color:#fff}.opt.on i::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--fu)}
+.qt{min-height:6rem}.dsc{border:1px dashed var(--ln);border-radius:18px;padding:1rem 1.2rem;margin-top:1.4rem;color:var(--mu);font-size:.95rem}.bar .l small{display:block;font:400 .78rem Inter;color:var(--mu);margin-top:.1rem}
+.cons{display:flex;gap:.8rem;align-items:flex-start;margin-top:1.3rem;font-size:.9rem;color:var(--mu);cursor:pointer}.cons input{width:1.1rem;height:1.1rem;margin-top:.25rem;accent-color:#E4007C;flex:none}.cons a{color:var(--fu)}.help{margin-top:2rem;font-size:.88rem;color:var(--mu)}.help a{color:var(--fu)}.note2{margin-top:1rem;border-left:3px solid var(--fu);padding:.3rem 0 .3rem 1rem}.leg{display:grid;gap:.6rem;margin-top:.8rem}.leg div{font-size:.93rem}.leg b{color:var(--bone)}.mod{margin-top:1.4rem}.mod h3{font-size:1.7rem;margin:.5rem 0 .2rem}.mod .k{display:block;font:500 .72rem 'JetBrains Mono',monospace;color:var(--fu);text-transform:uppercase;letter-spacing:.05em;margin-top:1.1rem}</style></head><body>
+<header><div class="w"><a class="logo" data-l="home" href="#">Brenda <b>Blanche</b></a><span class="mono">Market Perception Scorecard · 18 questions</span></div></header>
+<div class="w">
 
-/* progress */
-.progress-wrap{ margin-bottom:1.6rem; }
-.progress-label{ font-family:'JetBrains Mono',monospace; font-size:.7rem; opacity:.65; margin-bottom:.5rem; display:flex; justify-content:space-between; }
-.progress-track{ height:4px; background:var(--border-dark); border-radius:3px; overflow:hidden; }
-.progress-fill{ height:100%; background:var(--fuchsia); width:0%; transition:width .35s ease; }
-
-/* question card */
-.qcard{ margin-top:1.2rem; }
-.qtext{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(1.25rem,4.6vw,1.6rem); line-height:1.3; margin-bottom:1.4rem; }
-.opt{ display:block; width:100%; text-align:left; background:var(--ink-2); border:1px solid var(--border-dark); color:var(--bone); border-radius:10px; padding:.95rem 1.1rem; margin:.55rem 0; font-size:.98rem; }
-.opt[aria-checked="true"]{ border-color:var(--fuchsia); background:rgba(228,0,124,.1); }
-.opt:focus-visible{ outline:2px solid var(--fuchsia); outline-offset:2px; }
-.warn{ color:var(--fuchsia); font-size:.85rem; margin:.4rem 0 0; display:none; }
-.warn.show{ display:block; }
-.nav-row{ display:flex; gap:.7rem; margin-top:1.4rem; }
-.nav-row .btn-primary{ flex:1; }
-
-/* ===== LIGHT STAGE: results ===== */
-#stageResults{ background:var(--bone); color:var(--ink); }
-.light-wrap{ max-width:760px; margin:0 auto; padding:2.2rem 1.1rem 6rem; }
-.res-kicker{ font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--fuchsia); }
-.res-h1{ font-size:clamp(1.9rem,7vw,2.7rem); line-height:1.08; margin:.4rem 0 .6rem; }
-.res-sub{ font-size:1.02rem; opacity:.85; max-width:58ch; }
-.card{ background:var(--bone-2); border:1px solid var(--border-light); border-radius:12px; padding:1.2rem 1.3rem; margin:1rem 0; }
-.score-panel{ display:flex; align-items:baseline; gap:.8rem; flex-wrap:wrap; }
-.score-big{ font-family:'Fraunces',serif; font-weight:900; font-size:3.2rem; color:var(--fuchsia); line-height:1; }
-.score-scale{ font-family:'JetBrains Mono',monospace; font-size:.85rem; opacity:.65; }
-.cat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:.8rem; margin:1rem 0; }
-.cat-card{ background:var(--bone-2); border:1px solid var(--border-light); border-radius:10px; padding:1rem; }
-.cat-card.weakest{ border-color:var(--fuchsia); }
-.cat-name{ font-family:'JetBrains Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; opacity:.6; }
-.cat-score{ font-family:'Fraunces',serif; font-weight:900; font-size:1.7rem; margin:.2rem 0; }
-.bar-track{ height:8px; background:var(--border-light); border-radius:4px; overflow:hidden; margin:.4rem 0 .5rem; }
-.bar-fill{ height:100%; background:var(--fuchsia); }
-.cat-tier{ font-family:'JetBrains Mono',monospace; font-size:.66rem; text-transform:uppercase; opacity:.7; }
-.diagnosis-title{ font-family:'Fraunces',serif; font-weight:900; font-size:1.4rem; color:var(--fuchsia); margin-bottom:.4rem; }
-.exercise-field{ margin:.8rem 0; }
-.exercise-field label{ display:block; font-size:.9rem; font-weight:700; margin-bottom:.35rem; }
-.exercise-field textarea{ width:100%; min-height:64px; font-family:'Space Grotesk',sans-serif; font-size:.95rem; padding:.6rem .7rem; border:1px solid var(--border-light); border-radius:8px; background:var(--bone); color:var(--ink); resize:vertical; }
-.cta-block{ text-align:center; }
-.cta-link{ display:inline-block; background:var(--fuchsia); color:#fff; text-decoration:none; font-weight:700; border-radius:9px; padding:.9rem 1.6rem; margin-top:.8rem; }
-.gate-form{ display:flex; flex-direction:column; gap:.8rem; margin:1.4rem 0 .4rem; }
-.gate-form label{ font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; opacity:.75; }
-.gate-form input{ width:100%; box-sizing:border-box; font-family:'Space Grotesk',sans-serif; font-size:1rem; padding:.9rem 1rem; border:1px solid rgba(245,237,228,.3); border-radius:9px; background:rgba(245,237,228,.06); color:var(--bone); }
-.gate-form input:focus{ outline:2px solid var(--fuchsia); border-color:transparent; }
-.gate-consent{ font-size:.78rem; opacity:.6; margin:.2rem 0 0; }
-.email-row{ display:flex; gap:.5rem; flex-wrap:wrap; }
-.email-row input{ flex:1; min-width:160px; font-family:'Space Grotesk',sans-serif; font-size:.95rem; padding:.65rem .8rem; border:1px solid var(--border-light); border-radius:8px; background:var(--bone); color:var(--ink); }
-.email-row button{ background:var(--ink); color:var(--bone); border:none; border-radius:8px; padding:.65rem 1.1rem; font-weight:700; }
-.note-text{ font-size:.82rem; opacity:.65; margin-top:.5rem; }
-.util-row{ display:flex; gap:.8rem; justify-content:center; margin-top:2rem; flex-wrap:wrap; }
-.util-row button, .util-row a{ background:transparent; border:1px solid var(--border-light); color:var(--ink); border-radius:8px; padding:.6rem 1rem; font-size:.85rem; text-decoration:none; }
-footer{ text-align:center; font-family:'JetBrains Mono',monospace; font-size:.7rem; opacity:.6; margin-top:2.5rem; }
-
-/* worksheet (screen preview, printed separately) */
-.worksheet{ border:2px solid var(--ink); border-radius:12px; padding:1.4rem; margin-top:1.5rem; }
-.worksheet h3{ font-family:'Fraunces',serif; font-size:1.1rem; margin-bottom:.4rem; }
-.worksheet .wm-header{ display:flex; justify-content:space-between; align-items:baseline; border-bottom:2px solid var(--fuchsia); padding-bottom:.6rem; margin-bottom:.8rem; }
-
-@media print{
-  body *{ visibility:hidden; }
-  #printArea, #printArea *{ visibility:visible; }
-  #printArea{ position:absolute; top:0; left:0; width:100%; background:#fff; color:#000; padding:1cm; }
-  .no-print{ display:none !important; }
-}
-</style>
-</head>
-<body>
-
-<!-- ============ STAGE A: INTRO ============ -->
-<section id="stageIntro" class="stage active">
-  <div class="dark-wrap">
-    <div class="kicker">Free Diagnostic — Market Perception Scorecard</div>
-    <h1 class="intro-h1">Why Clients Aren't Buying</h1>
-    <p class="intro-sub">A short, specific read of what your profile and content are currently signaling to a buyer who's never met you — not a grade, an actual diagnosis.</p>
-    <ul class="intro-list">
-      <li><span class="num">1</span><div><b>Who it's for</b>Skilled service providers, freelancers, and consultants who can do the work but aren't sure why it isn't translating into paying clients.</div></li>
-      <li><span class="num">2</span><div><b>What it helps you understand</b>Where the gap sits — offer clarity, market clarity, or content signals — and which one is quietly costing you the most.</div></li>
-      <li><span class="num">3</span><div><b>What you leave with</b>Your scored breakdown, a plain-language diagnosis, a short reflection exercise, and one clear next step.</div></li>
-    </ul>
-    <button class="btn-primary" id="startBtn">Start the Scorecard →</button>
-    <div class="meta-row"><span>12 questions</span><span>About 90 seconds</span><span>Your result is emailed to you</span></div>
-  </div>
+<section class="s on" id="intro">
+  <p class="mono">Market Perception Scorecard</p>
+  <h1 style="margin-top:1rem;font-size:clamp(2.2rem,7vw,3.8rem)">Let’s find <span class="it">the gap.</span></h1>
+  <p class="lead">18 questions · about 5 minutes. Answer based on what is true today, not what you plan to do. If you don’t have a deliberate process or clear evidence for something, answer accordingly. An honest answer is more useful than an impressive score.</p>
+  <div class="act"><button class="btn" onclick="start()">Start the assessment →</button></div>
+  <p class="mu" style="margin-top:1rem;font-size:.9rem">This is an initial self-assessment. It points to where to investigate; it can’t prove why buyers do or don’t choose you.</p>
 </section>
 
-<!-- ============ STAGE B: QUIZ ============ -->
-<section id="stageQuiz" class="stage">
-  <div class="dark-wrap">
-    <div class="progress-wrap">
-      <div class="progress-label"><span id="progLabel">Question 1 of 12</span><span id="progCat" class="mono"></span></div>
-      <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
-    </div>
-    <div class="qcard" id="qcard" role="radiogroup" aria-label="Scorecard question"></div>
-    <p class="warn" id="warnMsg">Select an answer to continue.</p>
-    <div class="nav-row">
-      <button class="btn-ghost" id="backBtn">Back</button>
-      <button class="btn-primary" id="nextBtn">Continue</button>
-    </div>
-  </div>
+<section class="s" id="q">
+  <div class="pg"><i id="pgb"></i></div>
+  <div class="qh"><button class="back" id="bk" onclick="back()">← Back</button><span class="mono" id="qm"></span></div>
+  <p class="mu" id="nt" style="font-size:.95rem;margin-bottom:.9rem">Choose the answer that best describes your situation today, not the one you hope will be true.</p>
+  <h2 class="qt" id="qt"></h2>
+  <div class="opts" id="op"></div>
 </section>
 
-<!-- ============ STAGE B2: LEAD GATE ============ -->
-<section id="stageGate" class="stage">
-  <div class="dark-wrap">
-    <div class="kicker">Your scorecard is ready</div>
-    <h1 class="intro-h1" style="font-size:clamp(1.8rem,7vw,2.6rem);">Where should we send your results?</h1>
-    <p class="intro-sub">Enter your name and email to see your scored breakdown and diagnosis. A copy goes straight to your inbox.</p>
-    <div class="gate-form">
-      <div><label for="gName">First name</label><input type="text" id="gName" autocomplete="given-name" placeholder="Your first name"></div>
-      <div><label for="gEmail">Email address</label><input type="email" id="gEmail" autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
-      <p class="warn" id="gWarn"></p>
-      <button class="btn-primary" id="gSubmit">Show Me My Results →</button>
-      <p class="gate-consent">By continuing, you agree to get your results by email and occasional emails from Brenda Blanche. Unsubscribe anytime.</p>
-    </div>
-  </div>
+<section class="s" id="gate">
+  <p class="mono">Assessment complete ✓</p>
+  <h2 style="margin-top:1rem">Your Market Perception Report <span class="it">is ready.</span></h2>
+  <p class="lead">Enter your details to see your 6 area scores, your most important potential gap, and a recommended next step.</p>
+  <form class="card" id="gf" novalidate>
+    <input class="hp" name="bot-field" tabindex="-1" autocomplete="off">
+    <div class="row2"><div><label for="fn">First name</label><input id="fn" required autocomplete="given-name"></div><div><label for="em">Email</label><input id="em" type="email" required autocomplete="email"></div></div>
+    <p class="mono" style="margin-top:1.6rem">Optional: helps me tailor what I share</p>
+    <div class="row2"><div><label for="ro">Your role or industry</label><input id="ro"></div><div><label for="sv">Your primary service</label><input id="sv"></div></div>
+    <label for="au">Who do you want to help?</label><input id="au">
+    <label for="st">What’s your biggest struggle right now?</label>
+    <select id="st"><option value="">Choose one</option><option>Getting people to understand what I do</option><option>Turning expertise into a clear service</option><option>Getting the right people to notice me</option><option>Building trust</option><option>Standing out</option><option>Converting attention into inquiries</option><option>Something else</option></select>
+    <p class="err" id="ge"></p>
+    <div class="act"><button class="btn" id="gb" type="submit">Show my results →</button></div>
+    <label class="cons"><input type="checkbox" id="cn" required><span>Email me my results link and a short series of follow-up emails from Brenda about the Scorecard (about one every 1–3 days for 10 days). I can unsubscribe at any time. <a data-l="privacy" href="#" target="_blank" rel="noopener">Privacy policy</a></span></label>
+  </form>
 </section>
 
-<!-- ============ STAGE C: RESULTS ============ -->
-<section id="stageResults" class="stage">
-  <div class="light-wrap">
-    <div class="res-kicker">Your Result</div>
-    <h1 class="res-h1" id="resVerdict"></h1>
-    <p class="res-sub" id="resOpener"></p>
-
-    <div class="card score-panel">
-      <div class="score-big" id="scoreBig"></div>
-      <div class="score-scale">out of 48 — reflects three signal areas, not a percentage or a comparison to anyone else</div>
-    </div>
-
-    <div class="cat-grid" id="catGrid"></div>
-
-    <div class="card">
-      <div class="diagnosis-title" id="diagTitle"></div>
-      <p id="diagCopy"></p>
-    </div>
-
-    <div class="card">
-      <h3>A Short Exercise — Worth Actually Writing</h3>
-      <div id="exerciseFields"></div>
-    </div>
-
-    <div class="card cta-block">
-      <h3 id="nextStepsTitle" style="font-size:1.2rem;"></h3>
-      <p id="routeCopy"></p>
-      <a class="cta-link" id="routeCta" href="#" target="_blank" rel="noopener">Continue →</a>
-      <p style="margin:1rem 0 0;"><a id="routeSecondary" href="#" target="_blank" rel="noopener" style="display:none;color:inherit;font-size:.9rem;text-decoration:underline;"></a></p>
-    </div>
-
-    <div class="card">
-      <h3 style="font-size:1.05rem;">Your emailed copy</h3>
-      <p class="note-text" id="emNote" style="opacity:1;">Sending...</p>
-      <div class="email-row"><button id="emSubmit" style="display:none;">Try sending again</button></div>
-    </div>
-
-    <!-- printable worksheet -->
-    <div id="printArea" class="worksheet">
-      <div class="wm-header">
-        <div><strong>Brenda Blanche</strong><br><span class="mono" style="font-size:.7rem;">Unapologetically You™ — Market Perception Scorecard</span></div>
-        <div class="mono" style="font-size:.75rem;" id="wsDate"></div>
-      </div>
-      <h3>Overall: <span id="wsScore"></span> / 48 — <span id="wsVerdict"></span></h3>
-      <p id="wsOpener"></p>
-      <h3>Category Breakdown</h3>
-      <p id="wsCats"></p>
-      <h3>Diagnosis</h3>
-      <p id="wsDiag"></p>
-      <h3>Your Exercise</h3>
-      <div id="wsExercise"></div>
-      <h3>Next Step</h3>
-      <p id="wsRoute"></p>
-    </div>
-
-    <div class="util-row no-print">
-      <button id="printBtn">Print / Save as PDF</button>
-      <button id="restartBtn">Retake the Scorecard</button>
-    </div>
-    <footer>Brenda Blanche · Market Perception Strategist</footer>
-  </div>
-</section>
-
-<script src="/config.js"></script>
+<section class="s" id="res"></section>
+</div>
+<footer>© Brenda Blanche · Market Perception Strategist</footer>
 <script>
-/* =========================================================
-   CONFIG — replace before going live
-   ========================================================= */
-// Edit links in config.js, not here.
-const { LEAD_CAPTURE_ENDPOINT, CLARITY_CALL_LINK, BLUEPRINT_LINK, WHATSAPP_NUMBER } = window.SCORECARD_CONFIG;
-
-/* =========================================================
-   QUESTION CONFIG — approved, unchanged from prior build
-   ========================================================= */
-const QUESTIONS = [
- {cat:"offer", text:"If a stranger looked at your profile with zero context, could they describe in one sentence what you help people do?", opts:[["Yes, clearly",4],["Sort of, they'd have to piece it together",2],["No, they'd guess wrong",1]]},
- {cat:"offer", text:"How many distinct things do you currently present yourself as capable of?", opts:[["One clear service",4],["Two or three related things",2],["A long list of skills",1]]},
- {cat:"offer", text:"When someone asks what you do, how long does your answer take?", opts:[["One sentence",4],["A paragraph",2],["I usually have to think about it first",1]]},
- {cat:"offer", text:"Can you name the exact outcome a buyer gets from working with you?", opts:[["Yes, specific and measurable",4],["Roughly, but it's vague",2],["Not really — it depends",1]]},
- {cat:"market", text:"If three people who know your work described what you're known for, would they say the same thing?", opts:[["Yes",4],["Close, but not identical",2],["No, all different",1]]},
- {cat:"market", text:"Do you know specifically who you're trying to reach — not just \"professionals\" or \"business owners\"?", opts:[["Yes, a specific buyer type",4],["A general category",2],["Not really defined",1]]},
- {cat:"market", text:"Can you name a real competitor and explain exactly what makes you different from them?", opts:[["Yes, clearly",4],["Sort of",2],["No",1]]},
- {cat:"market", text:"Do people ever describe you using a label you didn't choose for yourself?", opts:[["No, my label sticks",4],["Sometimes",2],["Often",1]]},
- {cat:"content", text:"Does your content mostly show your conclusions, or does it also show how you actually think and work?", opts:[["Shows my process/mechanism",4],["Mostly conclusions, no process",2],["Mostly random topics",1]]},
- {cat:"content", text:"Do you have a recurring idea or phrase people associate specifically with you?", opts:[["Yes",4],["Sort of",2],["No",1]]},
- {cat:"content", text:"Does your content connect to an actual next step?", opts:[["Yes, clearly",4],["Sometimes",2],["Rarely",1]]},
- {cat:"content", text:"Looking at your last 10 posts, could a stranger tell what you sell?", opts:[["Yes",4],["Maybe",2],["No",1]]}
-];
-
-const CAT_LABEL = {offer:"Offer Clarity", market:"Market Clarity", content:"Content Signals"};
-
-const COPY = {
- offer:{s:"Your offer is clear enough that most people who land on your profile can describe what you do. That's rarer than you'd think. Your gap, if you have one, is probably not clarity — it's whether that clear offer is reaching the right buyer.",
-        m:"People can tell you're skilled. They can't always tell what, specifically, they'd hire you for. You know internally what you do, but it hasn't been translated into a sentence a stranger could repeat back to someone else.",
-        w:"Right now, a stranger looking at your profile would have to guess what you actually sell. That's not a content problem — it means the offer itself hasn't been defined narrowly enough yet to describe."},
- market:{s:"People who know your work would describe you consistently. That consistency is what recognition is built from.",
-        m:"You have an association, but it's inconsistent — some people would call you a content person, some a coach, some something else entirely. Nobody's wrong. They're each reacting to a different signal.",
-        w:"Right now there isn't a consistent answer to \"what is this person known for.\" That's the actual translation problem — not a lack of expertise, a lack of a decided association."},
- content:{s:"Your content shows your thinking, not just your conclusions — which is what makes someone trust the process, not just the opinion.",
-        m:"Your content is useful, but it mostly shows what you believe, not how you got there. That's the gap between content that gets liked and content that gets someone to think \"I need to hire this person specifically.\"",
-        w:"Right now your content isn't yet connected to a clear next step or a repeated idea — which means even consistent posting isn't compounding into recognition."}
-};
-
-const EXERCISES = {
- offer:[["In one sentence, no jargon: what do you actually help people do?",""],["Name the exact outcome someone gets after working with you — a result, not a feeling.",""]],
- market:["If three people who know your work were asked what you're known for, what would each of them say right now?","What's the one thing you want all three to say instead?"].map(q=>[q,""]),
- content:[["Look at your last 3 posts. Do they show a conclusion, or the thinking behind it? Write one sentence showing your process instead of your opinion.",""],["What's one phrase or idea you keep coming back to that could become recognizably yours?",""]]
-};
-
-const VERDICTS = {
- aligned:{label:"Aligned Perception", opener:"Your signals are largely doing their job. The work from here isn't a rebuild — it's refinement."},
- competing:{label:"Competing Signals", opener:"You're not invisible. You're inconsistent. Different people are getting different, incomplete versions of who you are — and none of them are wrong, which is exactly the problem."},
- invisible:{label:"Invisible Expert", opener:"The gap here isn't your skill. It's that almost none of your actual capability is currently visible in what the market can see."}
-};
-
-/* =========================================================
-   STATE + NAV
-   ========================================================= */
-let idx = 0;
-const saved = sessionStorage.getItem("scorecard_answers");
-let answers = saved ? JSON.parse(saved) : new Array(QUESTIONS.length).fill(null);
-
-const stageIntro = document.getElementById("stageIntro");
-const stageQuiz = document.getElementById("stageQuiz");
-const stageResults = document.getElementById("stageResults");
-const stageGate = document.getElementById("stageGate");
-function showStage(el){ [stageIntro,stageQuiz,stageGate,stageResults].forEach(s=>s.classList.remove("active")); el.classList.add("active"); window.scrollTo({top:0}); }
-
-document.getElementById("startBtn").addEventListener("click", ()=>{ idx = answers.findIndex(a=>a===null); if(idx===-1) idx=0; showStage(stageQuiz); renderQuestion(); });
-
-function renderQuestion(){
-  const q = QUESTIONS[idx];
-  document.getElementById("progLabel").textContent = `Question ${idx+1} of ${QUESTIONS.length}`;
-  document.getElementById("progCat").textContent = CAT_LABEL[q.cat];
-  document.getElementById("progFill").style.width = ((idx)/QUESTIONS.length*100)+"%";
-  document.getElementById("warnMsg").classList.remove("show");
-  const qcard = document.getElementById("qcard");
-  qcard.innerHTML = `<div class="qtext">${q.text}</div>` + q.opts.map((o,j)=>
-    `<button type="button" class="opt" role="radio" aria-checked="${answers[idx]===o[1]}" data-val="${o[1]}">${o[0]}</button>`
-  ).join("");
-  qcard.querySelectorAll(".opt").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      answers[idx] = parseInt(btn.dataset.val);
-      sessionStorage.setItem("scorecard_answers", JSON.stringify(answers));
-      qcard.querySelectorAll(".opt").forEach(b=>b.setAttribute("aria-checked", b===btn ? "true":"false"));
-      document.getElementById("warnMsg").classList.remove("show");
-    });
-  });
-  document.getElementById("backBtn").style.visibility = idx===0 ? "hidden" : "visible";
-  document.getElementById("nextBtn").textContent = idx===QUESTIONS.length-1 ? "See My Results" : "Continue";
-}
-
-document.getElementById("backBtn").addEventListener("click", ()=>{ if(idx>0){ idx--; renderQuestion(); } });
-document.getElementById("nextBtn").addEventListener("click", ()=>{
-  if(answers[idx]===null){ document.getElementById("warnMsg").classList.add("show"); return; }
-  if(idx < QUESTIONS.length-1){ idx++; renderQuestion(); }
-  else { LAST_RESULT = scoreAssessment(answers); showStage(stageGate); }
+var LINKS={home:"https://brendablanche.site",clarity:"https://clarity.brendablanche.site",blueprint:"https://blueprint.brendablanche.site",privacy:"https://brendablanche.site/privacy"};
+document.querySelectorAll("[data-l]").forEach(function(a){a.href=LINKS[a.dataset.l]});
+var D=[{"k": "market", "n": "Market & Problem Clarity", "sub": "Can you identify a relevant buyer, the problem they need solved, and why it matters?", "bp": "Weeks 1–2 · SEE + DEFINE", "q": [{"t": "Can you identify the specific type of person or business most likely to need your expertise?", "a": ["Yes. I can identify a clear priority buyer and the situation they’re in.", "Mostly. I know the type of buyer, but my focus could be sharper.", "Not consistently. I describe my audience in broad terms.", "No. I haven’t clearly decided who my expertise is for."]}, {"t": "Can you explain the problem your ideal buyer needs solved in terms they would actually use?", "a": ["Yes. I understand the problem and can describe it in the buyer’s language.", "Mostly. I understand the problem, but my explanation needs refinement.", "I usually describe it through my professional expertise or terminology.", "I’m not sure which specific problem my buyer would recognize as urgent or important."]}, {"t": "Do you have evidence that the problem matters to the people you want to serve?", "a": ["Yes. Conversations, client experience, research, or buying behavior support this.", "I have some supporting evidence, but important assumptions remain.", "I mainly rely on my professional judgment or general observations.", "I haven’t investigated whether my intended market sees this as a problem worth solving."]}]}, {"k": "offer", "n": "Offer Design", "sub": "Have you translated your skills into a specific service with a clear outcome, scope, and buying decision?", "bp": "Week 3 · BUILD", "q": [{"t": "Can a prospective buyer understand exactly what they can hire you to do?", "a": ["Yes. My offer is specific, understandable, and easy to describe.", "Mostly. The service is clear after some explanation.", "I mainly describe my skills, capabilities, or a list of services.", "I struggle to explain what someone would actually be buying."]}, {"t": "Does your offer connect your work to a meaningful buyer outcome?", "a": ["Yes. The problem, intended outcome, scope, and deliverables are clear.", "The outcome is clear, but some elements of the offer remain vague.", "I describe the activities I perform more clearly than the value they create.", "I haven’t defined a specific outcome or a coherent offer around my expertise."]}, {"t": "How confident are you that the offer you’ve packaged addresses a problem your intended buyers will consider paying to solve?", "a": ["I have direct evidence from paying clients, repeated buying conversations, or other meaningful market behavior.", "I have promising evidence, but willingness to pay or demand isn’t fully established.", "I believe the offer is valuable, but I haven’t tested that belief adequately.", "I haven’t established whether the offer addresses a problem people will pay to solve."]}]}, {"k": "position", "n": "Positioning & Differentiation", "sub": "Can the right buyer understand what you do, why it matters, and why your approach is relevant?", "bp": "Weeks 2–5 · DEFINE + SIGNAL", "q": [{"t": "If a relevant buyer encountered your profile or offer, could they quickly understand why your work might matter to them?", "a": ["Yes. The relevance is explicit and specific.", "Mostly. They would understand it with a little interpretation.", "They would need to connect several pieces of information.", "They would probably struggle to see why my expertise is relevant to their situation."]}, {"t": "Can you explain what makes your approach meaningfully different from the alternatives available to your buyer?", "a": ["Yes. I can explain a relevant difference and support it with evidence or a clear rationale.", "I can explain my approach, but the difference may not matter much to the buyer.", "I mainly rely on broad claims such as quality, passion, or personalized service.", "I haven’t clearly established how my offer differs from alternatives."]}, {"t": "Do you know what you want the right people to associate you with?", "a": ["Yes. I have a clear primary association that guides my offer and communication.", "I have a direction, but I communicate several competing ideas.", "I talk about many areas of expertise without a clear priority.", "I haven’t decided what I want to be known for."]}]}, {"k": "evidence", "n": "Evidence & Trust", "sub": "Can a prospective buyer find credible reasons to believe you can help them?", "bp": "Weeks 3–4 · BUILD + TRUST", "q": [{"t": "What can a prospective buyer see that demonstrates your ability to do the work?", "a": ["Relevant evidence is easy to find and directly supports my offer.", "I have useful evidence, but it isn’t consistently visible or well connected to the offer.", "I mostly rely on claims, qualifications, or general statements about my expertise.", "I have little visible evidence that demonstrates my capability."]}, {"t": "Can you address the main reasons a prospective buyer might hesitate before hiring you?", "a": ["I understand the main uncertainties and have relevant evidence or explanations to address them.", "I can address some concerns, but gaps remain.", "I mainly respond when objections arise.", "I haven’t identified what would make a buyer uncertain about choosing me."]}, {"t": "Can a buyer understand what working with you involves and what they can reasonably expect?", "a": ["Yes. The process, scope, responsibilities, and realistic expectations are clear.", "Most are clear, but some uncertainties remain.", "I explain these things mainly during individual conversations.", "My method, process, or client experience is difficult to understand in advance."]}]}, {"k": "signals", "n": "Market Signals & Recognition", "sub": "Do your profile, content, proof, and other touchpoints reinforce the same meaningful association?", "bp": "Weeks 5–6 · SIGNAL + RECOGNIZE", "q": [{"t": "Do your LinkedIn profile, offer description, content, and other relevant touchpoints reinforce the same core message?", "a": ["Yes. They consistently reinforce the same primary association and offer.", "Mostly. Some touchpoints are less aligned than others.", "Each touchpoint communicates something different or incomplete.", "I haven’t deliberately aligned these parts of my market presence."]}, {"t": "If someone followed your content for a month, would they understand what you want to be known for?", "a": ["Yes. Repeated ideas and relevant examples make the association clear.", "Probably, although the main association could be reinforced more consistently.", "They would see useful content but might struggle to identify my core expertise.", "My content covers disconnected topics without a clear association."]}, {"t": "Do you have a deliberate way to make the value of your expertise visible to the right people?", "a": ["Yes. My content and other visibility activities deliberately communicate relevance, expertise, and proof.", "I have a direction, but some activities are inconsistent.", "I mainly publish or promote my work without a clear strategic connection.", "I don’t have a deliberate system for communicating my value."]}]}, {"k": "journey", "n": "Buyer Journey & Conversion", "sub": "Is there a clear, appropriate path from discovering you to understanding the offer, discussing fit, and deciding whether to buy?", "bp": "Weeks 5–8 · SIGNAL + LEARN + REFINE", "q": [{"t": "When someone becomes interested in your work, is the next step clear?", "a": ["Yes. They have a relevant, straightforward way to explore the offer or discuss fit.", "The next step exists, but it isn’t always obvious or consistent.", "People generally have to ask me what to do next.", "I haven’t established a clear path from interest to a buying conversation."]}, {"t": "Do you have a deliberate way to help potential buyers move from discovering you to seriously considering your offer?", "a": ["Yes. My content, resources, conversations, or referrals connect to a coherent next step.", "Some parts connect, but the journey has gaps.", "I rely mostly on visibility and hope interested people reach out.", "I haven’t considered how people move from first encountering me to considering a purchase."]}, {"t": "Do you learn from prospective buyers’ questions, objections, and decisions to improve your offer and communication?", "a": ["Yes. I systematically review market feedback and make evidence-informed adjustments.", "I pay attention to feedback, but I don’t review it consistently.", "I mainly react to individual comments or sales conversations.", "I rarely collect or use market feedback to improve my approach."]}]}],RES={"market": {"h": "You May Not Yet Know Exactly Who Needs This Most", "b": ["Your answers suggest that the main issue may be the starting point: which buyer, in which situation, with which problem they would recognize as worth solving. Without that, even a well-made offer and strong content can land vaguely."], "nx": "Choose one priority buyer and write their problem in the words they would use. Then look for evidence (conversations, client experience, buying behavior) that they care enough to seek help.", "bp": "Weeks 1–2", "pr": ["Who experiences the problem you want to solve?", "What evidence tells you they care enough to seek help?"], "min": "Watch for broad audience language and terminology that only you use."}, "offer": {"h": "Your Expertise Hasn’t Become a Clear Offer Yet", "b": ["Your answers suggest that the main issue may be the translation of your skills into a specific service buyers can understand and evaluate.", "You may know how to deliver valuable work, but a prospective buyer still needs to understand what they can hire you for, what problem it solves, and what they can reasonably expect."], "nx": "Define one priority buyer, one commercially relevant problem, and one offer built around the outcome you can credibly deliver.", "bp": "Weeks 1–3", "pr": ["What exactly can someone buy from you today?", "What outcome, scope, and process would make that offer easier to evaluate?"]}, "position": {"h": "Your Offer Exists. Its Value May Not Be Clear Enough.", "b": ["Your answers suggest that you have something to sell, but the right people may struggle to understand why it matters, why it is different, or why it fits their situation."], "nx": "Review how your offer describes the buyer’s problem, the intended outcome, and the reasons to choose your approach.", "bp": "Weeks 2–5", "pr": ["What do you want to be known for?", "What would make the right buyer choose your approach over an alternative?"]}, "evidence": {"h": "Your Value Needs Stronger Evidence", "b": ["Your answers suggest that your expertise or offer may not yet be supported by enough visible, relevant evidence for a prospective buyer to evaluate it confidently."], "nx": "Identify the biggest buyer uncertainty and the most relevant evidence you can surface, strengthen, or create to address it.", "bp": "Weeks 3–4", "pr": ["What would a skeptical buyer need to see before believing your claims?", "What evidence do you already have?"]}, "signals": {"h": "Your Market Signals May Be Working Against Each Other", "b": ["Your answers suggest that your profile, content, offer, and proof may be communicating different or incomplete versions of your value."], "nx": "Compare what you want to be known for with what a stranger could reasonably infer from your current market-facing presence.", "bp": "Weeks 5–6", "pr": ["What would a stranger conclude from your last ten posts and your profile?", "What should they understand instead?"]}, "journey": {"h": "The Path From Interest to Purchase Needs Attention", "b": ["Your answers suggest that even when someone becomes interested, the next step may not be sufficiently clear or supported."], "nx": "Map what happens from first discovery to the buying conversation, then identify where people are likely to hesitate or disengage.", "bp": "Weeks 5–8", "pr": ["What happens after someone expresses interest?", "Where could they get confused or hesitate?"]}},EX={"combined": {"h": "Several Parts of the Path May Need Attention Together", "b": ["Your answers suggest more than one gap, and they may be connected. For example, an unclear offer makes positioning, proof and next steps harder to get right, so fixing one piece in isolation may not hold."], "nx": "Start with your lowest area using the exercise below, then bring the whole picture to a Clarity Call so the connected issues can be investigated against real evidence.", "bp": "The Blueprint is designed for coordinated work like this, once a Clarity Call confirms it is the right next step."}, "strong": {"h": "Your Foundation Looks Strong. Pressure-Test It.", "b": ["Your answers suggest that no area is a major gap right now. Self-assessment is one view, though, and it can miss blind spots a buyer would notice."], "nx": "Compare your answers with what a stranger can actually see: your profile, offer and proof. A Clarity Call can pressure-test that against your real assets.", "bp": ""}};
+var Q=[];D.forEach(function(d,di){d.q.forEach(function(q,qi){Q.push({d:di,t:q.t,a:q.a})})});
+var A=[],i=0,R=null;
+function $(s){return document.querySelector(s)}
+function show(id){document.querySelectorAll("section.s").forEach(function(s){s.classList.toggle("on",s.id===id)});window.scrollTo({top:0})}
+function start(){A=[];i=0;show("q");draw()}
+function draw(){var q=Q[i],d=D[q.d];$("#pgb").style.width=(i/Q.length*100)+"%";$("#qm").textContent=d.n+" · "+(i%3+1)+" of 3 · "+(i+1)+"/"+Q.length;$("#qt").textContent=q.t;$("#bk").hidden=i===0;
+ $("#op").innerHTML=q.a.map(function(t,n){var v=4-n;return '<button class="opt'+(A[i]===v?' on':'')+'" onclick="pick('+v+')"><i></i><span>'+t+'</span></button>'}).join("")}
+function pick(v){A[i]=v;draw();setTimeout(function(){if(i<Q.length-1){i++;draw()}else{finish()}},280)}
+function back(){if(i>0){i--;draw()}}
+function finish(){$("#pgb").style.width="100%";R=score();show("gate")}
+/* scoring: 3 questions x 1-4 per area (3-12), total 18-72.
+   Lowest area = starting point. If two or more areas tie at the lowest score (and it is 9 or below) the result is the combined-gap version. If the lowest area is 10+, no area is flagged. */
+function score(){var ds=D.map(function(d,di){return A[di*3]+A[di*3+1]+A[di*3+2]});var tot=ds.reduce(function(a,b){return a+b},0),mn=Math.min.apply(null,ds);
+ var o=ds.map(function(s,di){return{s:s,di:di}});var desc=o.slice().sort(function(a,b){return b.s-a.s||b.di-a.di});
+ var tied=o.filter(function(x){return x.s===mn}).map(function(x){return x.di});
+ var sec=o.filter(function(x){return x.s>mn}).sort(function(a,b){return a.s-b.s||a.di-b.di})[0];
+ var kind=mn>=10?"strong":(tied.length>=2?"combined":"single");
+ return{ds:ds,tot:tot,min:mn,tied:tied,p:tied[0],s2:sec?sec.di:tied[0],st:desc[0].di,kind:kind}}
+function dband(s){return s>=10?"Stronger foundation":s>=7?"Inconsistent or incomplete":"Priority to investigate"}
+var WHY={market:"Without a clear buyer and a problem they recognize as worth solving, even a well-made offer can land vaguely.",offer:"A buyer who can’t tell what they would be buying finds it hard to evaluate its value, however good the work is.",position:"If buyers can’t see why your work is relevant or how it differs from their alternatives, it’s harder for them to choose you.",evidence:"Buyers weigh uncertainty before they weigh value. Visible, relevant evidence reduces what they have to take on trust.",signals:"Buyers form an impression from every touchpoint. When those touchpoints communicate different things, the impression blurs.",journey:"Interest can stall when a buyer doesn’t know what to do next, what will happen, or how to explore whether the offer is right for them."};
+function resultsUrl(){return location.origin+location.pathname+"?a="+A.join("")+"&n="+encodeURIComponent(R.name||"")}
+$("#gf").addEventListener("submit",function(e){e.preventDefault();var n=$("#fn").value.trim(),m=$("#em").value.trim().toLowerCase(),er=$("#ge");
+ if(!n||!/^\S+@\S+\.\S+$/.test(m)){er.textContent="Please add your first name and a valid email.";er.style.display="block";return}
+ if(!$("#cn").checked){er.textContent="Please tick the box to receive your results and the follow-up emails.";er.style.display="block";return}er.style.display="none";
+ var b=$("#gb");b.disabled=true;b.textContent="Preparing your report…";R.name=n;var d=R.ds;
+ var pl={"bot-field":$("#gf [name=bot-field]").value,name:n,email:m,consent:true,role:$("#ro").value.trim(),service:$("#sv").value.trim(),audience:$("#au").value.trim(),struggle:$("#st").value,score:R.tot,result_type:R.kind,
+  market_problem:d[0],offer_design:d[1],positioning:d[2],evidence_trust:d[3],signals:d[4],buyer_journey:d[5],primary_gap:R.kind==="strong"?"":R.tied.map(function(x){return D[x].n}).join(" + "),secondary_gap:D[R.s2].n,primary_score:R.min,secondary_score:d[R.s2],strongest:D[R.st].n,results_url:resultsUrl()};
+ try{results()}catch(err){er.innerHTML="Something went wrong showing your results ("+err.message+"). Please refresh and try again, or <a href=\"https://wa.me/237672411155\">message me</a> and I’ll send them to you.";er.style.display="block";b.disabled=false;b.textContent="Show my results →";return}
+ try{fetch("/api/scorecard",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},body:JSON.stringify(pl)}).catch(function(){})}catch(x){}
 });
-
-/* =========================================================
-   SCORING ENGINE — pure function
-   ========================================================= */
-function scoreAssessment(ans){
-  if(ans.some(a=>a===null)) throw new Error("Incomplete assessment");
-  const cat = {offer:0, market:0, content:0};
-  QUESTIONS.forEach((q,i)=>{ cat[q.cat] += ans[i]; });
-  const overall = cat.offer + cat.market + cat.content;
-  const tier = s => s>=12 ? "s" : s>=7 ? "m" : "w";
-  const verdictKey = overall>=36 ? "aligned" : overall>=24 ? "competing" : "invisible";
-  const weakCats = Object.entries(cat).filter(([,v])=>v<12).map(([k])=>k);
-  const weakest = Object.entries(cat).sort((a,b)=>a[1]-b[1])[0][0];
-  return { categoryScores:cat, overallScore:overall, tier, verdictKey, weakCount:weakCats.length, weakest };
-}
-
-/* =========================================================
-   RESULTS RENDER
-   ========================================================= */
-let LAST_RESULT = null;
-
-function computeAndShowResults(){
-  const r = scoreAssessment(answers);
-  LAST_RESULT = r;
-  const v = VERDICTS[r.verdictKey];
-
-  document.getElementById("resVerdict").textContent = v.label;
-  document.getElementById("resOpener").textContent = v.opener;
-  document.getElementById("scoreBig").textContent = r.overallScore;
-
-  const grid = document.getElementById("catGrid");
-  grid.innerHTML = Object.keys(CAT_LABEL).map(k=>{
-    const sc = r.categoryScores[k]; const t = r.tier(sc);
-    const tierLabel = t==="s"?"Strong signal":t==="m"?"Mixed signal":"Weak signal";
-    return `<div class="cat-card ${k===r.weakest?'weakest':''}">
-      <div class="cat-name">${CAT_LABEL[k]}</div>
-      <div class="cat-score">${sc}<span style="font-size:.9rem;opacity:.5;"> /16</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${sc/16*100}%"></div></div>
-      <div class="cat-tier">${tierLabel}</div>
-    </div>`;
-  }).join("");
-
-  document.getElementById("diagTitle").textContent = CAT_LABEL[r.weakest] + " — your biggest single gap";
-  document.getElementById("diagCopy").textContent = COPY[r.weakest][r.tier(r.categoryScores[r.weakest])];
-
-  const exDiv = document.getElementById("exerciseFields");
-  exDiv.innerHTML = EXERCISES[r.weakest].map((pair,i)=>
-    `<div class="exercise-field"><label>${pair[0]}</label><textarea id="exf${i}" placeholder="Write your answer here..."></textarea></div>`
-  ).join("");
-
-  const routeCopy = document.getElementById("routeCopy");
-  const routeCta = document.getElementById("routeCta");
-  const nextTitle = document.getElementById("nextStepsTitle");
-  const gap = CAT_LABEL[r.weakest];
-  const waMsg = r.weakCount===0
-    ? `Hi Brenda, I just took the Market Perception Scorecard and scored ${r.overallScore}/48 (${v.label}). I'd love to tell you what I'm building next.`
-    : r.weakCount===1
-      ? `Hi Brenda, I just took the Market Perception Scorecard and scored ${r.overallScore}/48. My biggest gap is ${gap}. I'd love to talk it through with you.`
-      : `Hi Brenda, I just took the Market Perception Scorecard and scored ${r.overallScore}/48. My biggest gap is ${gap}, and I'd like help figuring out where to start.`;
-  routeCta.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`;
-  const routeSecondary = document.getElementById("routeSecondary");
-  routeSecondary.style.display = "none";
-  nextTitle.textContent = r.weakCount===0 ? "Where this goes next" : r.weakCount===1 ? "What I'd look at first" : "Why it feels harder than it should";
-  if(r.weakCount===0){
-    routeCopy.textContent = "Your signals are strong, which means the work now isn't fixing a gap. It's compounding what's already working. I'd love to hear where you're taking your business next.";
-    routeCta.textContent = "Tell me what you're building →";
-  } else if(r.weakCount===1){
-    routeCopy.textContent = `Most of what you're doing is working. Your ${gap} is the one place people lose the thread, and that's good news, because one gap is something we can work through together, not a rebuild. Tell me where you are with it and I'll give you my honest read.`;
-    routeCta.textContent = `Let's talk through your ${gap} →`;
-    if(CLARITY_CALL_LINK && CLARITY_CALL_LINK!=="#"){ routeSecondary.textContent="Prefer a dedicated one-on-one session? See the Clarity Call"; routeSecondary.href=CLARITY_CALL_LINK; routeSecondary.style.display="inline-block"; }
-  } else {
-    routeCopy.textContent = `Your scores show a pattern, not one isolated problem: more than one signal is working against you at the same time, which is why effort doesn't always translate into results. The good news is that it can be fixed in order, and it starts with your ${gap}. Message me and we'll work out where to begin.`;
-    routeCta.textContent = "Let's map where to start →";
-    if(BLUEPRINT_LINK && BLUEPRINT_LINK!=="#"){ routeSecondary.textContent="Want to see how we'd work through it together? Learn about the Blueprint"; routeSecondary.href=BLUEPRINT_LINK; routeSecondary.style.display="inline-block"; }
-  }
-
-  // printable worksheet mirror
-  document.getElementById("wsDate").textContent = new Date().toLocaleDateString();
-  document.getElementById("wsScore").textContent = r.overallScore;
-  document.getElementById("wsVerdict").textContent = v.label;
-  document.getElementById("wsOpener").textContent = v.opener;
-  document.getElementById("wsCats").textContent = Object.keys(CAT_LABEL).map(k=>`${CAT_LABEL[k]}: ${r.categoryScores[k]}/16`).join("  ·  ");
-  document.getElementById("wsDiag").textContent = COPY[r.weakest][r.tier(r.categoryScores[r.weakest])];
-  document.getElementById("wsExercise").innerHTML = EXERCISES[r.weakest].map(p=>`<p><strong>${p[0]}</strong><br>_______________________________________________</p>`).join("");
-  document.getElementById("wsRoute").textContent = routeCopy.textContent;
-
-  showStage(stageResults);
-}
-
-/* =========================================================
-   LEAD GATE — name + email required before results are shown
-   ========================================================= */
-let LEAD = { name:"", email:"" };
-
-async function sendLead(){
-  const note = document.getElementById("emNote");
-  const retry = document.getElementById("emSubmit");
-  retry.style.display = "none";
-  note.textContent = "Sending your copy to " + LEAD.email + "...";
-  try{
-    const res = await fetch(LEAD_CAPTURE_ENDPOINT, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({
-        name: LEAD.name, email: LEAD.email,
-        overallScore: LAST_RESULT.overallScore,
-        categoryScores: LAST_RESULT.categoryScores,
-        verdict: LAST_RESULT.verdictKey,
-        weakest: LAST_RESULT.weakest
-      })
-    });
-    const data = await res.json().catch(()=>({}));
-    if(res.ok && data.ok && data.emailed){
-      note.textContent = "Sent — check your inbox at " + LEAD.email + " (and your spam folder just in case).";
-      return true;
-    }
-    note.textContent = "Your results are above, but we couldn't email your copy (" + (data.warning || data.error || ("server said " + res.status)) + ").";
-  } catch(e){
-    note.textContent = "Your results are above, but we couldn't reach the server to email your copy.";
-  }
-  retry.style.display = "inline-block";
-  return false;
-}
-
-document.getElementById("gSubmit").addEventListener("click", async ()=>{
-  const name = document.getElementById("gName").value.trim();
-  const email = document.getElementById("gEmail").value.trim();
-  const warn = document.getElementById("gWarn");
-  const btn = document.getElementById("gSubmit");
-  if(!name){ warn.textContent = "Please enter your first name."; warn.classList.add("show"); return; }
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ warn.textContent = "Please enter a valid email address."; warn.classList.add("show"); return; }
-  warn.classList.remove("show");
-  LEAD = { name, email };
-  btn.disabled = true; btn.textContent = "One moment...";
-  computeAndShowResults();          // show results immediately
-  await sendLead();                 // save lead + email in the background
-  btn.disabled = false; btn.textContent = "Show Me My Results →";
-});
-document.getElementById("emSubmit").addEventListener("click", sendLead);
-
-/* =========================================================
-   PRINT + RESTART
-   ========================================================= */
-document.getElementById("printBtn").addEventListener("click", ()=>window.print());
-document.getElementById("restartBtn").addEventListener("click", ()=>{
-  answers = new Array(QUESTIONS.length).fill(null);
-  sessionStorage.removeItem("scorecard_answers");
-  idx = 0;
-  showStage(stageIntro);
-});
-</script>
-</body>
-</html>
+function mod(di){var x=D[di],r=RES[x.k];return '<div class="card mod"><span class="mono">'+x.n+' · '+R.ds[di]+'/12</span><h3>'+r.h+'</h3>'+r.b.map(function(p){return '<p class="p">'+p+'</p>'}).join("")+'<span class="k">Why it matters</span><p>'+WHY[x.k]+'</p><span class="k">Try this</span><p>'+r.nx+'</p><span class="k">Reflection</span><div class="think" style="margin:.5rem 0">'+r.pr.map(function(p){return '<p>'+p+'</p>'}).join("")+'</div><p class="mono" style="margin-top:.8rem">Blueprint connection: '+r.bp+'</p></div>'}
+function results(){var d=R.ds,h="";
+ h+='<p class="mono">'+(R.name?R.name+', your':'Your')+' results</p><h2 style="margin-top:.8rem">Your Market Perception <span class="it">Results</span></h2>';
+ h+='<p class="lead">Your results offer a starting point for understanding how your expertise is currently translated into the market. Your answers highlight areas where you may already have a solid foundation and areas where your offer, positioning, evidence, or buyer journey may need closer examination.</p>';
+ h+='<p class="note2 mu">These scores reflect your responses to the assessment. They are not a direct measurement of what every buyer thinks, and they do not prove why a sale has or hasn’t happened. Use them to decide what to investigate first.</p>';
+ h+='<div class="card"><span class="mono">Your six-dimension breakdown</span><div class="bars">'+D.map(function(x,di){var s=d[di];return '<div class="bar'+(R.kind!=="strong"&&R.tied.indexOf(di)>-1?' gap':'')+'"><div class="l"><div>'+x.n+(di===R.st&&R.kind!=="strong"?'<span class="tag">STRONGEST</span>':'')+'<small>'+x.bp+'</small></div><span>'+s+'/12 · '+dband(s)+'</span></div><div class="t"><i data-w="'+(s/12*100)+'"></i></div></div>'}).join("")+'</div>'
+ +'<div class="leg"><div><b>10–12 · Stronger foundation.</b> Your answers suggest this area is relatively well developed. Check whether the market-facing evidence supports that impression.</div><div><b>7–9 · Inconsistent or incomplete.</b> Some elements may be in place, but there may be gaps in clarity, consistency, or execution.</div><div><b>3–6 · Priority to investigate.</b> Your answers suggest this area deserves closer attention. Identify the specific issue before deciding what to change.</div></div>'
+ +'<p class="mu" style="margin-top:1rem;font-size:.92rem">Overall: '+R.tot+' / 72. Don’t use the total alone to judge whether you’re ready to sell. Someone can score well overall and still have a major offer or trust gap.</p></div>';
+ h+='<div class="card f"><span class="mono">Your next step</span><p class="p">Start with the dimension or dimensions that appear most important to the problem you’re trying to solve. Choose one action, implement it, and look for evidence of how the market responds.</p></div>';
+ if(R.kind==="strong"){h+='<div class="card mod"><span class="mono">No area scored as a priority</span><h3>Your Foundation Looks Strong. Pressure-Test It.</h3><p class="p">Your answers suggest no area is a major gap right now. Self-assessment is one view, though, and it can miss blind spots a buyer would notice.</p><span class="k">Try this</span><p>Compare your answers with what a stranger can actually see: your profile, offer and proof.</p></div>'}
+ else{if(R.kind==="combined"){h+='<div class="card f mod"><span class="mono">More than one area may need attention</span><p class="p">Your answers suggest that the gap may not sit in a single part of your business.</p><p class="p">For example, an unclear offer can make positioning harder to communicate, while weak evidence can make an otherwise clear offer harder to trust.</p><p class="p">Before changing everything at once, look for the connection between the areas you’ve identified. Investigate the issue closest to your immediate commercial problem, choose one practical change, and observe what happens.</p><p class="p"><strong>The objective is not to fix every dimension at once. It’s to identify the right next move based on evidence.</strong></p></div>'}
+  R.tied.slice(0,3).forEach(function(di){h+=mod(di)});
+  if(R.kind==="single"&&d[R.s2]<=9){h+='<p class="mu" style="margin-top:1.2rem">Also worth watching later: <strong>'+D[R.s2].n+'</strong>. Work on one area first, then reassess.</p>'}}
+ h+='<div class="card" id="cta" style="margin-top:2.2rem"><span class="mono">Want a clearer answer than a score can provide?</span><p class="p">Your Scorecard identifies potential gaps based on your answers. But a score alone can’t tell you exactly why a buyer might misunderstand your offer, hesitate to trust your claims, or choose another provider. To understand that, we need to examine the evidence.</p>'
+ +'<h3 style="font-size:1.4rem;margin-top:1.4rem">Option 1: Start with your own action plan</h3><p class="p mu">Use your priority dimension to choose one change you can make now. Review your current offer, profile, proof, content, or buyer journey. Make the change for a specific reason, then observe how relevant people respond. You don’t need to overhaul your entire business at once.</p>'
+ +'<h3 style="font-size:1.4rem;margin-top:1.4rem">Option 2: Book a Market Perception Clarity Call · $27</h3><p class="p mu">If you want expert help understanding what to investigate, book a 90-minute Clarity Call. We’ll examine your Scorecard alongside your actual market-facing materials, offer, available evidence, and current buyer journey. The aim is to identify the most plausible source of friction, distinguish evidence from assumptions, and agree on a practical next step.</p><div class="act"><a class="btn" data-l="clarity" href="#">Book your $27 Clarity Call →</a></div><p class="mu" style="font-size:.88rem;margin-top:.6rem">The call is a diagnostic working session, not a guarantee of clients, sales, or revenue.</p>'
+ +'<h3 style="font-size:1.4rem;margin-top:1.6rem">Option 3: Explore the Market Perception Blueprint · $400</h3><p class="p mu">If your situation calls for a broader intervention, the Blueprint is an 8-week, one-to-one strategy and implementation engagement. We work through the connected system: your market and problem, offer, positioning, evidence, trust, market signals, recognition, and the way you learn from market response.</p><div class="act"><a class="btn o" data-l="blueprint" href="#">Explore the 8-week Blueprint</a></div><p class="mu" style="font-size:.88rem;margin-top:.6rem">The Blueprint is not necessary for everyone. The right next step depends on your situation, priorities, and readiness to implement.</p></div>';
+ h+='<div class="act"><button class="btn o" onclick="window.print()">Save my results</button></div><p class="help">Can’t see something, or need your results again? Refresh the page, use the link in your results email, or <a href="https://wa.me/237672411155">message me</a>.</p>';
+ var el=$("#res");el.innerHTML=h;el.querySelectorAll("[data-l]").forEach(function(a){a.href=LINKS[a.dataset.l]});show("res");
+ setTimeout(function(){document.querySelectorAll(".bar .t i").forEach(function(b){b.style.width=b.dataset.w+"%"})},250)}
+(function(){var q=new URLSearchParams(location.search),a=q.get("a");
+ if(a&&/^[1-4]{18}$/.test(a)){A=a.split("").map(Number);R=score();R.name=(q.get("n")||"").slice(0,40);try{results()}catch(e){}}})();
+</script></body></html>
