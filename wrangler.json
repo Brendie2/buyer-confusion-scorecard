@@ -1,14 +1,15 @@
 {
   "name": "market-perception-scorecard",
-  "main": "worker.js",
+  "main": "src/worker.js",
   "compatibility_date": "2026-10-01",
   "keep_vars": true,
   "vars": {
     "RESEND_FROM": "Brenda Blanche <notifications@mail.brendablanche.site>"
   },
   "assets": {
-    "directory": "./",
+    "directory": "./public",
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
-  }
+  },
+  "observability": { "enabled": true }
 }
