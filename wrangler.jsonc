@@ -9,7 +9,7 @@
     "RESEND_FROM": "Brenda Blanche <notifications@mail.brendablanche.site>"
   },
   "assets": {
-    "directory": "./public",
+    "directory": "public",
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
   },
